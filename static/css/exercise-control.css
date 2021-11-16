@@ -282,15 +282,20 @@ div.exercise-control button.btn-run-exercise svg.bi {
     margin-top: -2px;
 }
 
-#error-msg {    
-    display: inline-block;
+div.exercise-control #msg-container {
+    display: flex;
     width: auto;
     text-align: right;
-    vertical-align: middle;
     float: right;
+    height: 58px;
+    margin-top: 10px;
+    vertical-align: middle;
 }
 
-#error-msg p {
-    color: var(--danger);
+div.exercise-control #error-msg {
+    margin: auto;
     padding: 0;
+    color: var(--danger);
+    font-size: 90%;
+    line-height: 1.2em;
 }

@@ -60,7 +60,7 @@ function executeAndCheck( token, url_executeExercise, indicator_id_executed, url
                 console.log(data);
                 showError(indicator_id_executed);
                 showError(indicator_id_completed);
-                $('#error-msg').html("<p>Execution failed.</p>")
+                $('#error-msg').html("Execution failed.<br>")
             }
         })
         .catch(function (resp) {
@@ -71,7 +71,7 @@ function executeAndCheck( token, url_executeExercise, indicator_id_executed, url
             console.log(resp.responseJSON);
             showError(indicator_id_executed);
             showError(indicator_id_completed);
-            $('#error-msg').html("<p>Connection failed.</p>")
+            $('#error-msg').html("Connection failed.<br>")
         })
         .then(function () {
             $.when(sendAjax("GET", url_checkCompleted, token, indicator_id_completed))
@@ -90,7 +90,7 @@ function executeAndCheck( token, url_executeExercise, indicator_id_executed, url
                         console.log(data);
                         showError(indicator_id_completed);
                         if (connection) {
-                            $('#error-msg').append("<p>Not completed.</p>")
+                            $('#error-msg').append("Not completed.<br>")
                         }
                     }
                 })
@@ -101,7 +101,7 @@ function executeAndCheck( token, url_executeExercise, indicator_id_executed, url
                     console.log(resp.statusText);
                     console.log(resp.responseJSON);
                     showError(indicator_id_completed);
-                    $('#error-msg').append("<p>Connection failed.</p>")
+                    $('#error-msg').append("Connection failed.<br>")
                 });
         })
 }
