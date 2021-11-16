@@ -1,0 +1,302 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap");
+
+:root {
+
+    --MAIN-TEXT-color: #323232;
+    /* Color of text by default */
+    --MAIN-TITLES-TEXT-color: #5e5e5e;
+    /* Color of titles h2-h3-h4-h5 */
+    --MAIN-LINK-color: #d34a5d;
+    /* Color of links */
+    --MAIN-LINK-HOVER-color: #d34a5d;
+    /* Color of hovered links */
+    --MAIN-ANCHOR-color: #d34a5d;
+    /* color of anchors on titles */
+
+    --MENU-HEADER-BG-color: #f6f6f6;
+    /* Background color of menu header */
+    --MENU-HEADER-BORDER-color: #f6f6f6;
+    /*Color of menu header border */
+
+    --MENU-SEARCH-BG-color: #f6f6f6;
+    /* Search field background color (by default borders + icons) */
+    --MENU-SEARCH-BOX-color: #191b23;
+    /* Override search field border color */
+    --MENU-SEARCH-BOX-ICONS-color: #191b23;
+    /* Override search field icons color */
+
+    --MENU-SECTIONS-ACTIVE-BG-color: #f6f6f6;
+    /* Background color of the active section and its childs */
+    --MENU-SECTIONS-BG-color: #f6f6f6;
+    /* Background color of other sections */
+    --MENU-SECTIONS-LINK-color: #3c3e49;
+    /* Color of links in menu */
+    --MENU-SECTIONS-LINK-HOVER-color: #d34a5d;
+    /* Color of links in menu, when hovered */
+    --MENU-SECTION-ACTIVE-CATEGORY-color: #0f1017;
+    /* Color of active category text */
+    --MENU-SECTION-ACTIVE-CATEGORY-BG-color: #f6f6f6;
+    /* Color of background for the active category (only) */
+
+    --MENU-VISITED-color: #6cbd8e;
+    /* Color of 'page visited' icons in menu */
+    --MENU-SECTION-HR-color: #18211c;
+    /* Color of <hr> separator in menu */
+
+    --STAT-green: #6cbd8e;
+
+    --light: #dedfe4;
+    --light-1: #dedfe4;
+    --light-2: #7e7e85;
+
+    --mid-1: #3c3e49;
+    --mid-2: #32333c;
+
+    --dark: #191b23;
+    --dark-1: #191b23;
+    --dark-2: #0f1017;
+
+    --info: #619dc7;
+    --blue-light: #619dc7;
+
+    --primary: #d34a5d;
+    --danger: #d34a5d;
+    --red-light: #d34a5d;
+    --red-mid: #da1e55;
+
+    --success-light: #6cbd8e;
+    --green-light: #6cbd8e;
+    --success: #4a8864;
+    --green-mid: #4a8864;
+
+    --secondary: #70759d;
+    --purple-light: #70759d;
+    --purple-mid: #565a79;
+
+    --warning: #afa258;
+
+}
+
+body {
+    color: var(--MAIN-TEXT-color) !important;
+}
+
+html {
+    font-family: "Rubik", sans-serif !important;
+    font-size: 16px;
+}
+
+textarea:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="color"]:focus,
+input[type="date"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+select[multiple=multiple]:focus {
+    border-color: none;
+    box-shadow: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+input,
+label,
+ul {
+    font-family: "Rubik", sans-serif;
+    color: var(--dark);
+    text-align: left;
+    text-transform: none;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 3.2em !important;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.8em !important;
+    font-weight: 700;
+}
+
+h3 {
+    font-weight: 300;
+    color: var(--primary);
+    padding: 0 0 1.2em 0;
+}
+
+h4 {
+    font-weight: 700;
+    color: var(--dark);
+    padding: 0;
+}
+
+h5 {
+    font-weight: 300;
+    color: var(--primary);
+    padding: 0 0 0.6em 0;
+}
+
+.heading_highlight {
+    color: var(--primary);
+}
+
+#body .padding {
+    padding: 4rem 8rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+#chapter #body-inner {
+    padding-bottom: 3rem;
+    max-width: 100%;
+}
+
+#chapter {
+    padding: 0;
+    display: block;
+}
+
+#chapter p {
+    text-align: left;
+    font-size: 1.0em;
+}
+
+#chapter h1 {
+    border: none;
+}
+
+a {
+    font-family: "Rubik", sans-serif !important;
+    font-weight: 400;
+    color: var(--MAIN-LINK-color);
+    transition: all 200ms;
+}
+
+.anchor {
+    color: var(--MAIN-ANCHOR-color);
+}
+
+a:hover {
+    color: var(--MAIN-LINK-HOVER-color);
+}
+
+#sidebar ul li.visited>a .read-icon {
+    color: var(--MENU-VISITED-color);
+}
+
+#body a.highlight:after {
+    display: block;
+    content: "";
+    height: 1px;
+    width: 0%;
+    -webkit-transition: width 0.5s ease;
+    -moz-transition: width 0.5s ease;
+    -ms-transition: width 0.5s ease;
+    transition: width 0.5s ease;
+    background-color: var(--MAIN-LINK-HOVER-color);
+}
+
+#sidebar {
+    background-color: var(--MENU-SECTIONS-BG-color);
+}
+
+#sidebar #header-wrapper {
+    background: none;
+    background: var(--MENU-HEADER-BG-color);
+    color: var(--MENU-SEARCH-BOX-color);
+    border-color: var(--MENU-HEADER-BORDER-color);
+}
+
+#sidebar .searchbox {
+    border-color: var(--MENU-SEARCH-BOX-color);
+    background: var(--MENU-SEARCH-BG-color);
+}
+
+#sidebar ul.topics>li.parent,
+#sidebar ul.topics>li.active {
+    background: var(--MENU-SECTIONS-ACTIVE-BG-color);
+}
+
+#sidebar .searchbox * {
+    color: var(--MENU-SEARCH-BOX-ICONS-color);
+}
+
+#sidebar a {
+    color: var(--MENU-SECTIONS-LINK-color);
+}
+
+#sidebar a:hover {
+    color: var(--MENU-SECTIONS-LINK-HOVER-color);
+}
+
+#sidebar ul li.active>a {
+    background: var(--MENU-SECTION-ACTIVE-CATEGORY-BG-color);
+    color: var(--MENU-SECTION-ACTIVE-CATEGORY-color) !important;
+    font-weight: 600;
+}
+
+#sidebar hr {
+    border-color: var(--MENU-SECTION-HR-color);
+}
+
+
+#logo {
+    width: 50%;
+}
+
+.nav-prev,
+.nav-next {
+    display: none !important;
+}
+
+.icon_exercise {
+    display: inline-block;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145.982 182.314"><path d="M27.358,182.314h91.266a27.368,27.368,0,0,0,27.358-27.358V45.524a27.367,27.367,0,0,0-27.358-27.358h-1.751A27.271,27.271,0,0,0,91.266,0H54.716A27.272,27.272,0,0,0,29.109,18.166H27.358A27.367,27.367,0,0,0,0,45.524V154.956A27.368,27.368,0,0,0,27.358,182.314ZM54.716,18.166h36.55a9.248,9.248,0,0,1,9.193,9.192,9.254,9.254,0,0,1-9.412,8.973H54.716a9.247,9.247,0,0,1-9.192-9.192A9.061,9.061,0,0,1,54.716,18.166ZM18.166,45.524a9.248,9.248,0,0,1,9.192-9.193h1.751A27.272,27.272,0,0,0,54.716,54.5h36.55a27.271,27.271,0,0,0,25.607-18.166h1.751a9.249,9.249,0,0,1,9.193,9.193V154.956a9.248,9.248,0,0,1-9.193,9.192H27.358a9.247,9.247,0,0,1-9.192-9.192Z"/><rect x="36.331" y="72.882" width="72.882" height="18.166"/><rect x="36.331" y="100.24" width="72.882" height="18.166"/><rect x="36.331" y="127.598" width="54.716" height="18.166"/></svg>') 25% no-repeat;
+    background-size: 18px 18px;
+    background-position: center;
+    margin: 0 7px -2px 0;
+    filter: invert(60%);
+}
+
+.icon_developedby {
+    display: inline-block;
+    width: 60%;
+    padding: 10px;
+    fill: #565a79;
+}
+
+#prefooter {
+    display: block;
+    position: absolute;
+    bottom: 260px;
+    width: 100%;
+}
+
+#footer {
+    display: none;
+}
+
+#sidebar .highlightable {
+    height: 100% !important;
+}
+
+.anchor {
+    display: none !important;
+}

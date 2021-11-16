@@ -1,0 +1,297 @@
+/* exercise-control */
+
+div.exercise-control {
+    margin: 2rem 0;
+    position: relative;
+    border-radius: 4px;
+    background: var(--MENU-SECTIONS-BG-color);
+    color: var(--MAIN-TEXT-color);
+    padding: 30px;
+    display: block;
+    border-radius: 4px;
+}
+
+div.exercise-control h5 {
+    padding: 5px 0;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+div.exercise-control h4 {
+    padding: 5px 0px 20px 0px;
+    margin: 0;
+}
+
+div.exercise-control p {
+    padding: 15px 0;
+    display: block;
+    font-size: 1rem;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    color: var(--MAIN-TEXT-color);
+    clear: both;
+}
+
+.icon_play {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+div.exercise-control p:first-child:after {
+    position: absolute;
+    top: 2px;
+    color: #fff;
+    left: 2rem;
+}
+
+div.exercise-control.info p {
+    border-top: 30px solid #F0B37E;
+    background: #FFF2DB;
+}
+
+div.exercise-control.info p:first-child:after {
+    content: 'Info';
+}
+
+div.exercise-control.warning p {
+    border-top: 30px solid rgba(217, 83, 79, 0.8);
+    background: #FAE2E2;
+}
+
+div.exercise-control.warning p:first-child:after {
+    content: 'Warning';
+}
+
+div.exercise-control.tip p {
+    border-top: 30px solid rgba(92, 184, 92, 0.8);
+    background: #E6F9E6;
+}
+
+div.exercise-control.tip p:first-child:after {
+    content: 'Tip';
+}
+
+/* ---------------------------- Indicators ---------------------------- */
+
+.stat_indicator,
+.stat_label {
+    
+    height: 100%;
+    margin: auto;
+    vertical-align: middle;
+    line-height: 45px;
+}
+
+/* ---------------------------- circle ---------------------------- */
+
+.stat_circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 0;
+    stroke-miterlimit: 10;
+    stroke: var(--light-1);
+    fill: none;
+    animation:
+        stroke 1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.loading .stat_circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 0;
+    stroke-width: 10;
+    stroke-miterlimit: 10;
+    stroke: var(--light-1);
+    fill: none;
+    animation:
+        rot_circle 4s cubic-bezier(0.65, 0, 0.45, 1) forwards,
+        rot_circle 3s cubic-bezier(.15, 1.48, .84, -0.41) infinite;
+}
+
+@keyframes rot_circle {
+    0% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 83;
+    }
+
+    100% {
+        stroke-dashoffset: -332;
+        stroke-dasharray: 83;
+    }
+}
+
+
+/* ---------------------------- Check/Cross Icon ---------------------------- */
+
+.loading .stat_check,
+.loading .stat_cross {
+    display: none;
+}
+
+.loading .stat_icon {
+    animation: none;
+}
+
+.stat_icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 4;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    position: relative;
+    margin: auto;
+    top: 15%;
+}
+
+.success .stat_icon {
+    box-shadow: inset 0px 0px 0px var(--green-mid);
+    animation:
+        fill_green 0.8s ease-in-out .4s forwards,
+        scale .3s ease-in-out .9s both;
+}
+
+.failed .stat_icon {
+    box-shadow: inset 0px 0px 0px var(--danger);
+    animation:
+        fill_red 0.8s ease-in-out .4s forwards,
+        scale .3s ease-in-out .9s both;
+}
+
+.stat_check,
+.stat_cross {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation:
+        stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+.failed .stat_check {
+    display: none;
+}
+
+.success .stat_cross {
+    display: none;
+}
+
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+
+    0%,
+    100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill_green {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px var(--green-mid);
+    }
+}
+
+@keyframes fill_red {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px var(--danger);
+    }
+}
+
+
+.stats_display {
+    padding: 12px 20px;
+    border: 1px solid var(--mid-1);
+    border-radius: 4px;
+}
+
+ul.leaders {
+    max-width: 100%;
+    padding: 0;
+    overflow-x: hidden;
+    list-style: none;
+    margin: 0;
+}
+
+ul.leaders li {
+    line-height: 45px;
+}
+
+ul.leaders li:before {
+    float: left;
+    width: 0;
+    white-space: nowrap;
+    content:
+        ". . . . . . . . . . . . . . . . . . . . "
+        ". . . . . . . . . . . . . . . . . . . . "
+        ". . . . . . . . . . . . . . . . . . . . "
+        ". . . . . . . . . . . . . . . . . . . . "
+        ". . . . . . . . . . . . . . . . . . . . "
+        ". . . . . . . . . . . . . . . . . . . . "
+}
+
+ul.leaders span:first-child {
+    padding-right: 0.33em;
+    background: var(--MENU-SECTIONS-BG-color);
+}
+
+ul.leaders span+span {
+    float: right;
+    padding-left: 0.33em;
+    padding-right: 20px;
+    background: var(--MENU-SECTIONS-BG-color);
+    width: 50px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+
+
+
+
+
+button.btn-run-exercise {
+    display: inline-block;
+    color: #fff;
+    background-color: var(--green-mid);
+    padding: 16px 24px;
+    border-radius: 4px;
+    transition: 200ms ease;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+button.btn-run-exercise:hover {
+    background-color:  var(--green-light);
+}
+
+div.exercise-control button.btn-run-exercise svg.bi {
+    vertical-align: middle;
+    display: inline-block;
+    fill: #fff;
+    margin-top: -2px;
+}
+
+#error-msg {    
+    background: purple;
+    display: inline-block;
+    width: auto;
+    text-align: right;
+    vertical-align: middle;
+    float: right;
+}
+
+#error-msg p {
+    color: var(--danger);
+    padding: 0;
+}
