@@ -83,6 +83,7 @@ function executeAndCheck( token, url_executeExercise, indicator_id_executed, url
                         if (execution) {
                             completed = true;
                             showSuccess(indicator_id_completed);
+                            $('#success-msg').html("Execution completed.<br>")
                         }
                     } else {
                         // connection: ok

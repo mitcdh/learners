@@ -32,6 +32,7 @@ $(function () {
         showLoading(indicator_id_completed);
 
         $('#error-msg').html("");
+        $('#success-msg').html("");
         
         executeAndCheck(
             token, 

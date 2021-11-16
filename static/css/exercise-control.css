@@ -6,7 +6,7 @@ div.exercise-control {
     border-radius: 4px;
     background: var(--MENU-SECTIONS-BG-color);
     color: var(--MAIN-TEXT-color);
-    padding: 30px;
+    padding: 20px 30px;
     display: block;
     border-radius: 4px;
 }
@@ -214,7 +214,7 @@ div.exercise-control.tip p:first-child:after {
     border-radius: 4px;
 }
 
-ul.leaders {
+ul.stats-list {
     max-width: 100%;
     padding: 0;
     overflow-x: hidden;
@@ -222,11 +222,11 @@ ul.leaders {
     margin: 0;
 }
 
-ul.leaders li {
+ul.stats-list li {
     line-height: 45px;
 }
 
-ul.leaders li:before {
+ul.stats-list li:before {
     float: left;
     width: 0;
     white-space: nowrap;
@@ -239,12 +239,12 @@ ul.leaders li:before {
         ". . . . . . . . . . . . . . . . . . . . "
 }
 
-ul.leaders span:first-child {
+ul.stats-list span:first-child {
     padding-right: 0.33em;
     background: var(--MENU-SECTIONS-BG-color);
 }
 
-ul.leaders span+span {
+ul.stats-list span+span {
     float: right;
     padding-left: 0.33em;
     padding-right: 20px;
@@ -255,16 +255,11 @@ ul.leaders span+span {
     text-align: center;
 }
 
-
-
-
-
-
 button.btn-run-exercise {
     display: inline-block;
     color: #fff;
     background-color: var(--green-mid);
-    padding: 16px 24px;
+    padding: 16px 22px;
     border-radius: 4px;
     transition: 200ms ease;
     font-weight: 600;
@@ -292,10 +287,20 @@ div.exercise-control #msg-container {
     vertical-align: middle;
 }
 
-div.exercise-control #error-msg {
+div.exercise-control #error-msg,
+div.exercise-control #success-msg {
     margin: auto;
     padding: 0;
     color: var(--danger);
     font-size: 90%;
     line-height: 1.2em;
+    transition: all 400ms;
+}
+
+div.exercise-control #success-msg {
+    color: var(--danger);
+}
+
+div.exercise-control #success-msg {
+    color: var(--green-mid);
 }
