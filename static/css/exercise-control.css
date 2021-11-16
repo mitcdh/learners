@@ -283,7 +283,6 @@ div.exercise-control button.btn-run-exercise svg.bi {
 }
 
 #error-msg {    
-    background: purple;
     display: inline-block;
     width: auto;
     text-align: right;
