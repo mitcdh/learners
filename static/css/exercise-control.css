@@ -304,3 +304,25 @@ div.exercise-control #success-msg {
 div.exercise-control #success-msg {
     color: var(--green-mid);
 }
+
+
+div.exercise-control #history table {
+    width: 100%;
+    border: 0;
+}
+
+div.exercise-control #history table tr,
+div.exercise-control #history table tr td,
+div.exercise-control #history table tr th {
+    border: 0;
+}
+
+div.exercise-control #history table tr td:first-child,
+div.exercise-control #history table tr th:first-child {
+    max-width: 25%;
+}
+
+div.exercise-control #history table tr td:last-child,
+div.exercise-control #history table tr th:last-child {
+    text-align: right;
+}
