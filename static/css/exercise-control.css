@@ -297,11 +297,13 @@ div.exercise-control #success-msg {
     transition: all 400ms;
 }
 
-div.exercise-control #success-msg {
+div.exercise-control #error-msg,
+div.exercise-control .failed {
     color: var(--danger);
 }
 
-div.exercise-control #success-msg {
+div.exercise-control #success-msg,
+div.exercise-control .success {
     color: var(--green-mid);
 }
 
