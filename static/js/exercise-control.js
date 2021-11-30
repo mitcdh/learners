@@ -1,3 +1,5 @@
+
+// switch indicator to loading
 function showLoading(id) {
     $(id).stop(true, true)
         .removeClass('failed')
@@ -6,6 +8,8 @@ function showLoading(id) {
         .show();
 }
 
+
+// switch indicator to check
 function showSuccess(id) {
     $(id).stop(true, true)
         .removeClass('loading')
@@ -14,6 +18,8 @@ function showSuccess(id) {
         .show();
 }
 
+
+// switch indicator to fail
 function showError(id) {
     $(id).stop(true, true)
         .removeClass('loading')
@@ -22,159 +28,210 @@ function showError(id) {
         .show();
 }
 
+
+// Read current completion state from CPM 
 function getCurrentState() {
+
     $.ajax({
         type: "GET",
-        url: url_getCurrentState,
+        url: url_getCurrentState,                           // use uuid-dependand URL 
         crossDomain: true,
-        headers: { "Authorization": "Bearer " + token },
+        headers: { "Authorization": "Bearer " + token },    // append JWT token
+
+        // execute if the request was successful
         success: function (data) {
-            console.log(data)
+            
+            // display execution state
             if (data.script_executed) {
                 showSuccess(indicator_id_executed)
             } else {
                 showError(indicator_id_executed)
             }
+            
+            // display completion state
             if (data.completed) {
                 showSuccess(indicator_id_completed)
             } else {
                 showError(indicator_id_completed)
             }
 
+            // print last 10 tries
             printHistory(data.history)
 
         },
+
+        // execute if request failed
         error: function (jqXHR, textStatus, errorThrown) {
+
+            // display errors
             showError(indicator_id_executed)
             showError(indicator_id_completed)
+
         }
     });
+
 }
 
+
+// display execution table
 function printHistory(history) {
 
-    var tbl_body = "<table id='history-table'>"
-    console.log(tbl_body)
-    var header = "<tr> <th>Exercise started</th> <th>Response received</th> <th>Completed</th> </tr>"
-    console.log(tbl_body)
-    tbl_body += header
-    console.log(tbl_body)
-    
-    $.each(history, function() {
-        var tbl_row = "";
-        $.each(this, function(key , value) {
-            if (key == "completed") {
-                if (Boolean(value)) {
-                    value = "succeded";
-                } else {
-                    value = "failed";
-                }
-            }
-            if (value == null) {
-                value = "no response"
-            }
-            tbl_row = "<td>" + value + "</td>" + tbl_row;
-        });
-        tbl_body += "<tr>" + tbl_row + "</tr>";
-        console.log(tbl_body)
-    });
-    
-    tbl_body += "</table>"
-    console.log(tbl_body)
+    if (history) {
+        
+        // starting block of html (table header)
+        var tbl_body = `
+            <table id='history-table'>
+                <tr> 
+                    <th>Exercise started</th> 
+                    <th>Response received</th> 
+                    <th>Completed</th> 
+                </tr>
+            `;
+        
+        // construct each row
+        $.each(history, function () {
+            var tbl_row = "";
 
-    $("#history").html(tbl_body);
-    
+            // construct each column per row
+            $.each(this, function (key, value) {
+                if (key == "completed") {
+                    if (Boolean(value)) {
+                        value = `
+                            <span class='success'>
+                                succeded
+                            </span>
+                            `;
+                    } else {
+                        value = `
+                            <span class='failed'>
+                                failed
+                            </span>
+                            `;
+                    }
+                }
+                if (value == null) {
+                    value = "no response"
+                }
+                tbl_row = "<td>" + value + "</td>" + tbl_row;
+            });
+
+            // append row to body
+            tbl_body += "<tr>" + tbl_row + "</tr>";
+        
+        });
+
+        // close html-tag
+        tbl_body += "</table>"
+
+        // create DOM
+        $("#history").html(tbl_body);
+        
+        // slide down effect
+        $("#history").slideDown();
+    }
 }
 
-function sendAjax(type, url, token, indicator) {
+
+// ajax request function
+function sendAjax(type, url, token) {
+    
     let promise = new Promise((resolve, reject) => {
         $.ajax({
             type: type,
             url: url,
             crossDomain: true,
-            headers: { "Authorization": "Bearer " + token },
+            headers: { "Authorization": "Bearer " + token },    // append JWT token
+            
+            // execute if the request was successful
             success: function (data) {
-                console.log(data)
                 resolve(data)
             },
+
+            // execute if request failed
             error: function (jqXHR, textStatus, errorThrown) {
                 reject(jqXHR, textStatus, errorThrown)
             }
         })
     })
+
     return promise
 }
 
-function executeAndCheck(token, url_executeExercise, indicator_id_executed, url_checkCompleted, indicator_id_completed) {
+
+// execute when button is clicked
+function executeAndCheck(btn, token, url_executeExercise, indicator_id_executed, url_checkCompleted, indicator_id_completed) {
+
+    // prevent multiple executions
+    $(btn).prop('disabled', true);
 
     let execution = false;
-    let completed = false;
     let connection = true;
-    let uuid = "";
     let url_checkCompleted_uuid = "";
 
-    $.when(sendAjax("POST", url_executeExercise, token, indicator_id_executed))
+    $.when(sendAjax("POST", url_executeExercise, token))
+
+        // execute if the execution-request was successful
         .then(function (data, textStatus, jqXHR) {
+
             if (data.executed == true) {
-                // connection: ok
-                // executed: ok
-                console.log(data);
                 showSuccess(indicator_id_executed);
                 execution = true
             } else {
-                // connection: ok
-                // executed: fail
-                console.log(data);
                 showError(indicator_id_executed);
                 showError(indicator_id_completed);
                 $('#error-msg').html("Execution failed.<br>")
             }
-            uuid = data.uuid
-            url_checkCompleted_uuid = url_checkCompleted + uuid
+
+            // concatenate CPM-check base URL with UUID 
+            url_checkCompleted_uuid = url_checkCompleted + data.uuid
         })
+
+        // execute if execution-request failed
         .catch(function (resp) {
-            // connection: failed
-            connection = false;
-            console.log(resp.status);
-            console.log(resp.statusText);
-            console.log(resp.responseJSON);
             showError(indicator_id_executed);
             showError(indicator_id_completed);
             $('#error-msg').html("Connection failed.<br>")
         })
+
         .then(function () {
-            console.log("url_checkCompleted_uuid: " + url_checkCompleted_uuid)
-            $.when(sendAjax("GET", url_checkCompleted_uuid, token, indicator_id_completed))
-                .then(function (data, textStatus, jqXHR) {
-                    if (data.completed == true) {
-                        // connection: ok
-                        // completed: ok
-                        console.log(data);
-                        if (execution) {
-                            completed = true;
+
+            // only check on completion if the execution was successful
+            if (execution) {
+
+                $.when(sendAjax("GET", url_checkCompleted_uuid, token))
+
+                    // execute if the response was received
+                    .then(function (data, textStatus, jqXHR) {
+
+                        if (data.completed == true) {
                             showSuccess(indicator_id_completed);
                             $('#success-msg').html("Execution completed.<br>")
-                        }
-                    } else {
-                        // connection: ok
-                        // completed: fail
-                        console.log(data);
-                        showError(indicator_id_completed);
-                        if (connection) {
+                        } else {
+                            showError(indicator_id_completed);
                             $('#error-msg').append("Not completed.<br>")
                         }
-                    }
-                    getCurrentState();
-                })
-                .catch(function (resp) {
-                    // connection: failed
-                    connection = false;
-                    console.log(resp.status);
-                    console.log(resp.statusText);
-                    console.log(resp.responseJSON);
-                    showError(indicator_id_completed);
-                    $('#error-msg').append("Connection failed.<br>")
-                });
+
+                        // update history
+                        getCurrentState();
+                        
+                        // enable button for further executions
+                        $(btn).prop('disabled', false);
+
+                    })
+
+                    // execute if completion-request failed
+                    .catch(function (resp) {
+                        showError(indicator_id_completed);
+                        $('#error-msg').append("Connection failed.<br>")
+
+                        // enable button for further executions
+                        $(btn).prop('disabled', false);
+                    });
+
+            } else {
+                // enable button for further executions
+                $(btn).prop('disabled', false);
+            }
         })
 }
 
