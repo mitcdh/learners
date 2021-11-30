@@ -106,6 +106,27 @@ select[multiple=multiple]:focus {
     box-shadow: none;
 }
 
+button:disabled,
+button[disabled],
+button:disabled:hover,
+button[disabled]:hover{
+  background-color: var(--light-1);
+  color: var(--light-2);
+}
+
+button:disabled svg.bi,
+button[disabled] svg.bi,
+button:disabled:hover svg.bi,
+button[disabled]:hover svg.bi{
+  fill: var(--light-2) !important;
+}
+
+a.highlight::after {
+    border: none;
+    outline: none;
+    display: none !important;
+}
+
 h1,
 h2,
 h3,
