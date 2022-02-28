@@ -1,19 +1,23 @@
-{{ $exercise_title := .Get "title" }} 
-{{ $exercise_id := substr (replace $exercise_title " " "_") 0 }}
-{{ $exercise_script := .Get "script" | default $exercise_id }}
+{{ $form_id := .Get "name" }} {{ $form_mail := .Get "mail" }}
 
-<script src="/js/learners_exercise-script.js"></script>
+<script src="/js/learners_exercise-form.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
-<div id="{{ $exercise_id }}" class="exercise-control">
-  <h5>Exercise Control</h5>
-  <h4>{{ $exercise_title }}</h4>
-  
+<form
+  id="{{ $form_id }}"
+  class="form exercise-control {{ if $form_mail }}mail{{ end }}"
+>
   {{ .Inner }}
+
+<div class="exercise-control">
+  
+  <h5>Exercise Control</h5>
+  <h4>{{ $form_id }}</h4>
 
   <section class="stats_display">
     <ul class="stats-list">
       <li>
-        <span>Script executed</span>
+        <span>Form submitted</span>
         <span class="stat_indicator_container">
           <div
             id="exercise_executed"
@@ -69,18 +73,16 @@
     </ul>
   </section>
 
-  <button id="submitExercise" type="button" class="btn-run-exercise" value="{{ $exercise_script }}">
-    <svg class="bi" width="22" height="22" role="img">
+  <button id="submitExercise" type="submit" class="btn-submit-form" value="">
+    <svg class="bi" width="22" height="22">
       <use xlink:href="#play"></use>
     </svg>
-    execute / check status
+    submit
   </button>
 
   <div id="msg-container">
     <div id="success-msg"></div>
     <div id="error-msg"></div>
   </div>
-
-  <div id="history" style="display: none"></div>
-
 </div>
+</form>

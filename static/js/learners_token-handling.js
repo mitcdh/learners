@@ -21,7 +21,3 @@ function getCookie(cname) {
     }
     return "";
 }
-
-function test() {
-    alert("test")
-}

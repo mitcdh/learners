@@ -1,0 +1,8 @@
+{{ $input_label := .Get "label" }} 
+{{ $input_name := substr (replace $input_label " " "_") 0 }}
+{{ $input_required := .Get "required" | default false }}
+
+<div class="input-row">
+<label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
+<textarea id="{{ $input_name }}" name="{{ $input_name }}" rows="4" cols="50" class="{{ if $input_required }}required{{ end }}"></textarea>
+</div>
