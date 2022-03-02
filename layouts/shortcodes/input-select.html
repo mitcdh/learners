@@ -2,9 +2,9 @@
 {{ $input_name := substr (replace $input_label " " "_") 0 }}
 {{ $input_options := split (.Get "options" ) ","}} 
 {{ $input_required := .Get "required" | default false }}
+{{ $input_wide := .Get "wide" | default false }}
 
-
-<div class="input-row">
+<div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
   <select name="{{ $input_name }}" id="{{ $input_name }}" class="{{ if $input_required }}required{{ end }}">
     {{ range $input_options }}<option value="{{ . }}">{{ . }}</option>{{ end }}

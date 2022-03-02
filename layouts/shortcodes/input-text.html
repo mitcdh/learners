@@ -2,8 +2,9 @@
 {{ $input_name := substr (replace $input_label " " "_") 0 }}
 {{ $input_type := .Get "type" | default "text" }}
 {{ $input_required := .Get "required" | default false }}
+{{ $input_wide := .Get "wide" | default false }}
 
-<div class="input-row">
+<div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
   <input type="{{ $input_type }}" id="{{ $input_name }}" name="{{ $input_name }}" class="{{ if $input_required }}required{{ end }}">
 </div>
