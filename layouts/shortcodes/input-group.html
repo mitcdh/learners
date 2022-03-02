@@ -1,0 +1,27 @@
+{{ $group_title := .Get "title" | default false }}
+{{ $group_extendable := .Get "extendable" | default false }}
+
+<fieldset>
+<div id="{{ if $group_extendable }}inputgroup_{{ else }}inputgroup{{end}}" class="input-group">
+  
+{{ if $group_title }}
+<h4>{{ $group_title }}</h4>
+{{ end }}
+
+{{ .Inner }}
+
+</div>
+
+{{ if $group_extendable }}
+<div id="additionalInput"></div>
+
+
+<button type="button" class="add-input-row" value="">
+  
+  <svg class="bi" width="50%" height="50%">
+    <use xlink:href="#add"></use>
+  </svg>
+  add row
+</button>
+{{ end }}
+</fieldset>

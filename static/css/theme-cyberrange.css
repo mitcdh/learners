@@ -1,41 +1,44 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap");
 
 :root {
+    
+    --background-gray: #f6f6f6;
+    --cyberrange-red: #d34a5d;
 
     --MAIN-TEXT-color: #323232;
     /* Color of text by default */
     --MAIN-TITLES-TEXT-color: #5e5e5e;
     /* Color of titles h2-h3-h4-h5 */
-    --MAIN-LINK-color: #d34a5d;
+    --MAIN-LINK-color: var(--cyberrange-red);
     /* Color of links */
-    --MAIN-LINK-HOVER-color: #d34a5d;
+    --MAIN-LINK-HOVER-color: var(--cyberrange-red);
     /* Color of hovered links */
-    --MAIN-ANCHOR-color: #d34a5d;
+    --MAIN-ANCHOR-color: var(--cyberrange-red);
     /* color of anchors on titles */
-
-    --MENU-HEADER-BG-color: #f6f6f6;
+    
+    --MENU-HEADER-BG-color: var(--background-gray);
     /* Background color of menu header */
-    --MENU-HEADER-BORDER-color: #f6f6f6;
+    --MENU-HEADER-BORDER-color: var(--background-gray);
     /*Color of menu header border */
 
-    --MENU-SEARCH-BG-color: #f6f6f6;
+    --MENU-SEARCH-BG-color: var(--background-gray);
     /* Search field background color (by default borders + icons) */
     --MENU-SEARCH-BOX-color: #191b23;
     /* Override search field border color */
     --MENU-SEARCH-BOX-ICONS-color: #191b23;
     /* Override search field icons color */
 
-    --MENU-SECTIONS-ACTIVE-BG-color: #f6f6f6;
+    --MENU-SECTIONS-ACTIVE-BG-color: var(--background-gray);
     /* Background color of the active section and its childs */
-    --MENU-SECTIONS-BG-color: #f6f6f6;
+    --MENU-SECTIONS-BG-color: var(--background-gray);
     /* Background color of other sections */
     --MENU-SECTIONS-LINK-color: #3c3e49;
     /* Color of links in menu */
-    --MENU-SECTIONS-LINK-HOVER-color: #d34a5d;
+    --MENU-SECTIONS-LINK-HOVER-color: var(--cyberrange-red);
     /* Color of links in menu, when hovered */
     --MENU-SECTION-ACTIVE-CATEGORY-color: #0f1017;
     /* Color of active category text */
-    --MENU-SECTION-ACTIVE-CATEGORY-BG-color: #f6f6f6;
+    --MENU-SECTION-ACTIVE-CATEGORY-BG-color: var(--background-gray);
     /* Color of background for the active category (only) */
 
     --MENU-VISITED-color: #6cbd8e;
@@ -59,9 +62,9 @@
     --info: #619dc7;
     --blue-light: #619dc7;
 
-    --primary: #d34a5d;
-    --danger: #d34a5d;
-    --red-light: #d34a5d;
+    --primary: var(--cyberrange-red);
+    --danger: var(--cyberrange-red);
+    --red-light: var(--cyberrange-red);
     --red-mid: #da1e55;
 
     --success-light: #6cbd8e;
@@ -232,24 +235,24 @@ a:hover {
 }
 
 #sidebar {
-    background-color: var(--MENU-SECTIONS-BG-color);
+    background-color: var(--background-gray);
 }
 
 #sidebar #header-wrapper {
     background: none;
-    background: var(--MENU-HEADER-BG-color);
+    background: var(--background-gray);
     color: var(--MENU-SEARCH-BOX-color);
-    border-color: var(--MENU-HEADER-BORDER-color);
+    border-color: var(--background-gray);
 }
 
 #sidebar .searchbox {
     border-color: var(--MENU-SEARCH-BOX-color);
-    background: var(--MENU-SEARCH-BG-color);
+    background: var(--background-gray);
 }
 
 #sidebar ul.topics>li.parent,
 #sidebar ul.topics>li.active {
-    background: var(--MENU-SECTIONS-ACTIVE-BG-color);
+    background: var(--background-gray);
 }
 
 #sidebar .searchbox * {
@@ -265,7 +268,7 @@ a:hover {
 }
 
 #sidebar ul li.active>a {
-    background: var(--MENU-SECTION-ACTIVE-CATEGORY-BG-color);
+    background: var(--background-gray);
     color: var(--MENU-SECTION-ACTIVE-CATEGORY-color) !important;
     font-weight: 600;
 }
@@ -320,4 +323,30 @@ a:hover {
 
 .anchor {
     display: none !important;
+}
+
+.copy-to-clipboard {
+    background-color: var(--cyberrange-red);
+    -webkit-mask: url(icon.svg) no-repeat 50% 50%;
+    mask: url(../images/copy-to-clipboard.svg) no-repeat 50% 50%;
+    background-image: none;
+    transition: all 200ms;
+}
+
+.copy-to-clipboard:hover {
+    background-color: #af3141;
+    mask: url(../images/copy-to-clipboard.svg) no-repeat 70% 50%;
+}
+
+code {
+    padding: 3px 10px;
+    display: inline-block;
+    border: 0;
+    background: var(--background-gray);
+    margin: 4px 0px auto;
+}
+
+code + .copy-to-clipboard {
+    height: 20px;
+    top: -2px;
 }
