@@ -83,7 +83,7 @@ function initAdditionalInput(exercise) {
 function getHistory(exercise) {
   getExecutionHistory(
     (id = exercise.id),
-    (url = `${learners_url}/form/${exercise.id}`),
+    (url = `/form/${exercise.id}`),
     (token = getCookie("auth"))
   ).then(function (response) {
     if (response.completed) {
@@ -141,8 +141,8 @@ function submitForm(form, exercise) {
     (id = exercise.id),
     (type = "form"),
     (token = getCookie("auth")),
-    (url_execute = `${learners_url}/form/${exercise.id}`),
-    (url_check = `${learners_url}/form/${exercise.id}`),
+    (url_execute = `/form/${exercise.id}`),
+    (url_check = `/form/${exercise.id}`),
     (payload_data = formData),
     (additional_headers = { Method: method }),
     (disable_on_success = true)
