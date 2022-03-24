@@ -134,7 +134,7 @@ button.add-input-row:hover svg {
   fill: var(--MAIN-TITLES-TEXT-color);
 }
 
-button.btn-submit-form {
+button.btn-submit-form, button.gpdf {
   display: inline-block;
   color: #fff;
   background-color: var(--green-mid);
@@ -145,11 +145,11 @@ button.btn-submit-form {
   margin: 10px 0;
 }
 
-button.btn-submit-form:hover {
+button.btn-submit-form:hover, button.gpdf:hover {
   background-color:  var(--green-light);
 }
 
-button.btn-submit-form svg.bi {
+button.btn-submit-form svg.bi, button.gpdf svg.bi {
   vertical-align: middle;
   display: inline-block;
   fill: #fff;

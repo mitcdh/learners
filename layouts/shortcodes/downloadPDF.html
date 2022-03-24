@@ -1,0 +1,8 @@
+{{ $btn_label := .Get "label" | default "Download as PDF" }} 
+
+<button class="gpdf">
+    <svg class="bi" width="22" height="22">
+      <use xlink:href="#pdf"></use>
+    </svg>
+    {{ $btn_label }}
+  </button>

@@ -1,9 +1,10 @@
 {{ $form_name := .Get "name" }} 
 {{ $form_id := substr (replace $form_name " " "_") 0 }}
 {{ $form_mail := .Get "mail" }}
+{{ $exerciseWeight := $.Page.Weight }}
+{{ $parentWeight := $.Page.Parent.Weight }}
 
-<script src="/js/learners_exercise-form.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "type":"form", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
 
 <form
   id="{{ $form_id }}"
@@ -14,7 +15,7 @@
 <div class="exercise-control">
   
   <h5>Exercise Control</h5>
-  <h4>{{ $form_id }}</h4>
+  <h4>{{ $form_name }}</h4>
 
   <section class="stats_display">
     <ul class="stats-list">

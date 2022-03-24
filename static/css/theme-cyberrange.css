@@ -277,6 +277,10 @@ a:hover {
     border-color: var(--MENU-SECTION-HR-color);
 }
 
+#sidebar ul li > a {
+    padding: 0 0;
+  }
+
 
 #logo {
     width: 50%;

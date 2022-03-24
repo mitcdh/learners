@@ -1,8 +1,10 @@
 {{ $exercise_title := .Get "title" }} 
 {{ $exercise_id := substr (replace $exercise_title " " "_") 0 }}
 {{ $exercise_script := .Get "script" | default $exercise_id }}
+{{ $exerciseWeight := $.Page.Weight }}
+{{ $parentWeight := $.Page.Parent.Weight }}
 
-<script src="/js/learners_exercise-script.js"></script>
+<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $exercise_id }}", "type":"script", "script":"{{ $exercise_script }}", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
 
 <div id="{{ $exercise_id }}" class="exercise-control">
   <h5>Exercise Control</h5>

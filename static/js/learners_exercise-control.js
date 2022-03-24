@@ -1,5 +1,5 @@
-const id_executed = "exercise_executed";
-const id_completed = "exercise_completed";
+var id_executed = "exercise_executed";
+var id_completed = "exercise_completed";
 
 /*
 The following short functions 'showLoading', 'showSuccess', 'showError' serve 
@@ -13,7 +13,7 @@ params:
 
 function showLoading(id) {
   // switch indicator to loading
-  $("#" + id)
+  $(id)
     .stop(true, true)
     .removeClass("failed")
     .removeClass("success")
@@ -23,7 +23,7 @@ function showLoading(id) {
 
 function showSuccess(id, delay = 200) {
   // switch indicator to check
-  $("#" + id)
+  $(id)
     .stop(true, true)
     .delay(delay)
     .queue(function (next) {
@@ -38,7 +38,7 @@ function showSuccess(id, delay = 200) {
 
 function showError(id, delay = 200) {
   // switch indicator to fail
-  $("#" + id)
+  $(id)
     .stop(true, true)
     .delay(delay)
     .queue(function (next) {
@@ -52,6 +52,7 @@ function showError(id, delay = 200) {
 }
 
 function visualFeedback(
+  parentID = "",
   data = "",
   disable_on_success = false,
   msg = {
@@ -61,11 +62,16 @@ function visualFeedback(
     completion_failed: "Exercise not completed.",
   }
 ) {
+  var id_executed = `#${parentID} #exercise_executed`;
+  var id_completed = `#${parentID} #exercise_completed`;
+  var error_container = $(`#${parentID} #error-msg`);
+  var success_container = $(`#${parentID} #success-msg`);
+  var submit_btn = $(`#${parentID} #submitExercise`);
 
   if (data == "" || data == undefined) {
     showError(id_executed);
     showError(id_completed);
-    $("#error-msg").html("Server error.");
+    $(parentID + " #error-msg").html("Server error.");
     return false;
   }
 
@@ -73,14 +79,18 @@ function visualFeedback(
   if (data.executed != undefined) {
     if (data.executed) {
       showSuccess(id_executed);
-      $("#error-msg").html("");
-      $("#success-msg").html("");
+      error_container.html("");
+      success_container.html("");
     } else {
       showError(id_executed);
       showError(id_completed);
-      $("#success-msg").html("");
-      if (data.msg) $("#error-msg").html(data.msg);
-      else $("#error-msg").html(msg.execution_failed);
+      submit_btn.prop("disabled", false);
+      success_container.html("");
+      if (data.msg) {
+        error_container.html(data.msg);
+      } else {
+        error_container.html(msg.execution_failed);
+      }
       return false;
     }
   }
@@ -89,25 +99,30 @@ function visualFeedback(
   if (data.completed != undefined) {
     if (data.completed) {
       showSuccess(id_completed);
-      $("#error-msg").html("");
-      $("#success-msg").html(msg.completed);
-      if (!disable_on_success) $("#submitExercise").prop("disabled", false);
+      error_container.html("");
+      success_container.html(msg.completed);
+      if (!disable_on_success) submit_btn.prop("disabled", false);
       return true;
     } else {
       showError(id_completed);
-      $("#success-msg").html("");
-      if (data.msg) $("#error-msg").html(data.msg);
-      else $("#error-msg").html(msg.completion_failed);
-      $("#submitExercise").prop("disabled", false);
+      success_container.html("");
+      if (data.msg) {
+        error_container.html(data.msg);
+      } else {
+        error_container.html(msg.completion_failed);
+      }
+      submit_btn.prop("disabled", false);
       return false;
     }
+  } else {
+    submit_btn.prop("disabled", false);
   }
 
   if (data.never_executed) {
     showError(id_executed);
     showError(id_completed);
-    $("#success-msg").html("");
-    $("#error-msg").html("No exercises executed.");
+    success_container.html("");
+    error_container.html("No exercises executed.");
     return false;
   }
 }
@@ -128,7 +143,7 @@ function sendAjax(type, payload, token) {
       crossDomain: true,
       headers: Object.assign(
         {},
-        { Authorization: "Bearer " + token },
+        { Authorization: `Bearer ${token}` },
         payload.additional_headers
       ),
       data: payload.data,
@@ -159,20 +174,23 @@ params:
     history: Whether or not to display the execution history (default = true)
 */
 
-function getExecutionHistory(url, token) {
+function getExecutionHistory(parentID, url, token) {
   var defer = $.Deferred();
+
+  var id_executed = `#${parentID} #exercise_executed`;
+  var id_completed = `#${parentID} #exercise_completed`;
 
   showLoading(id_executed);
   showLoading(id_completed);
 
   sendAjax("GET", (payload = { url: url }), token)
     .then(function (data, textStatus, jqXHR) {
-      visualFeedback(data);
-      printHistory(data.history);
+      visualFeedback(parentID, data);
+      printHistory(parentID, data.history);
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(jqXHR);
+      visualFeedback(parentID, jqXHR);
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 
@@ -186,7 +204,9 @@ params:
     history: A json-object comprising: 'start_time', 'response_time', 'completed'
 */
 
-function printHistory(history) {
+function printHistory(parentID, history) {
+  var history_container = $(`#${parentID} #history`);
+
   if (history) {
     // starting block of html (table header)
     var tbl_body = `
@@ -206,37 +226,29 @@ function printHistory(history) {
       $.each(this, function (key, value) {
         if (key == "completed") {
           if (Boolean(value)) {
-            value = `
-                            <span class='success'>
-                                succeded
-                            </span>
-                            `;
+            value = `<span class='success'>succeded</span>`;
           } else {
-            value = `
-                            <span class='failed'>
-                                failed
-                            </span>
-                            `;
+            value = `<span class='failed'>failed</span>`;
           }
         }
         if (value == null) {
           value = "no response";
         }
-        tbl_row = "<td>" + value + "</td>" + tbl_row;
+        tbl_row = `<td> ${value} </td> ${tbl_row}`;
       });
 
       // append row to body
-      tbl_body += "<tr>" + tbl_row + "</tr>";
+      tbl_body += `<tr> ${tbl_row} </tr>`;
     });
 
     tbl_body += "</table>";
 
     // create DOM
-    $("#history").html(tbl_body);
+    history_container.html(tbl_body);
 
     // Slide down effect
-    if ($("#history tr").length > 2) {
-      $("#history tr")
+    if (history_container.find("tr").length > 2) {
+      history_container.find("tr")
         .eq(1)
         .find("td")
         .wrapInner('<div style="display: none;" />')
@@ -246,15 +258,16 @@ function printHistory(history) {
           var $set = $(this);
           $set.replaceWith($set.contents());
         });
-      $("#history").slideDown();
+      history_container.slideDown();
     } else {
-      $("#history").slideDown();
+      history_container.slideDown();
     }
   }
 }
 
 // execute when button is clicked
 function executeAndCheck(
+  id,
   type,
   token,
   url_execute,
@@ -265,8 +278,12 @@ function executeAndCheck(
 ) {
   var defer = $.Deferred();
 
+  var id_executed = `#${id} #exercise_executed`;
+  var id_completed = `#${id} #exercise_completed`;
+  var submit_btn = $(`#${id} #submitExercise`);
+
   // prevent multiple executions
-  $("#submitExercise").prop("disabled", true);
+  submit_btn.prop("disabled", true);
 
   showLoading(id_executed);
   showLoading(id_completed);
@@ -282,7 +299,8 @@ function executeAndCheck(
   )
     .then(function (data, textStatus, jqXHR) {
       url_check += data.uuid || "";
-      visualFeedback(data, disable_on_success);
+      visualFeedback(id, data, disable_on_success);
+      printHistory(id, data.history);
 
       sendAjax(
         "GET",
@@ -292,19 +310,19 @@ function executeAndCheck(
         token
       )
         .then(function (data, textStatus, jqXHR) {
-          visualFeedback(data, disable_on_success);
-          printHistory(data.history);
+          visualFeedback(id, data, disable_on_success);
+          printHistory(id, data.history);
           defer.resolve(data);
         })
         .catch(function (jqXHR, textStatus, errorThrown) {
-          visualFeedback(jqXHR, disable_on_success);
+          visualFeedback(id, jqXHR, disable_on_success);
           defer.reject(jqXHR, textStatus, errorThrown);
         });
 
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(jqXHR, disable_on_success);
+      visualFeedback(id, jqXHR, disable_on_success);
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 
