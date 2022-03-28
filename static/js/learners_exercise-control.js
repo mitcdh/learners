@@ -1,6 +1,3 @@
-var id_executed = "exercise_executed";
-var id_completed = "exercise_completed";
-
 /*
 The following short functions 'showLoading', 'showSuccess', 'showError' serve 
 to give the user a visual feedback on the exercise progress. Basically they 
@@ -60,6 +57,7 @@ function visualFeedback(
     execution_failed: "Connection failed.",
     completed: "Exercise completed",
     completion_failed: "Exercise not completed.",
+    never_executed: "Exercise not executed yet.",
   }
 ) {
   var id_executed = `#${parentID} #exercise_executed`;
@@ -88,8 +86,10 @@ function visualFeedback(
       success_container.html("");
       if (data.msg) {
         error_container.html(data.msg);
-      } else {
+      } else if (data.connection_failed) {
         error_container.html(msg.execution_failed);
+      } else {
+        error_container.html(msg.never_executed);
       }
       return false;
     }
@@ -137,16 +137,17 @@ params:
 
 function sendAjax(type, payload, token) {
   let promise = new Promise((resolve, reject) => {
+
     $.ajax({
       type: type,
       url: payload.url,
-      crossDomain: true,
       headers: Object.assign(
-        {},
+        { "Content-type": "application/json" },
         { Authorization: `Bearer ${token}` },
         payload.additional_headers
       ),
       data: payload.data,
+
 
       // execute if the request was successful
       success: function (data) {
@@ -161,40 +162,6 @@ function sendAjax(type, payload, token) {
   });
 
   return promise;
-}
-
-/*
-This function queries 'Learners' for the current status of the corresponding 
-exercise. The exercise must be passed as URL (in default case as URL of 
-learners + "/check_completion/" + uuid of the execute-request).
-
-params:
-    url: Learners Endpoint 
-    token: JWT Token
-    history: Whether or not to display the execution history (default = true)
-*/
-
-function getExecutionHistory(parentID, url, token) {
-  var defer = $.Deferred();
-
-  var id_executed = `#${parentID} #exercise_executed`;
-  var id_completed = `#${parentID} #exercise_completed`;
-
-  showLoading(id_executed);
-  showLoading(id_completed);
-
-  sendAjax("GET", (payload = { url: url }), token)
-    .then(function (data, textStatus, jqXHR) {
-      visualFeedback(parentID, data);
-      printHistory(parentID, data.history);
-      defer.resolve(data);
-    })
-    .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(parentID, jqXHR);
-      defer.reject(jqXHR, textStatus, errorThrown);
-    });
-
-  return defer.promise();
 }
 
 /*
@@ -214,6 +181,7 @@ function printHistory(parentID, history) {
                 <tr> 
                     <th>Exercise started</th> 
                     <th>Response received</th> 
+                    <th>Message</th> 
                     <th>Completed</th> 
                 </tr>
             `;
@@ -231,7 +199,9 @@ function printHistory(parentID, history) {
             value = `<span class='failed'>failed</span>`;
           }
         }
-        if (value == null) {
+        if (value == null && key == "msg") {
+          value = "-";
+        } else if (value == null) {
           value = "no response";
         }
         tbl_row = `<td> ${value} </td> ${tbl_row}`;
@@ -265,22 +235,14 @@ function printHistory(parentID, history) {
   }
 }
 
-// execute when button is clicked
-function executeAndCheck(
-  id,
-  type,
-  token,
-  url_execute,
-  url_check,
-  payload_data,
-  additional_headers,
-  disable_on_success = true
-) {
+
+function executeAndCheck(exercise) {
   var defer = $.Deferred();
 
-  var id_executed = `#${id} #exercise_executed`;
-  var id_completed = `#${id} #exercise_completed`;
-  var submit_btn = $(`#${id} #submitExercise`);
+  var id_executed = `#${exercise.id} #exercise_executed`;
+  var id_completed = `#${exercise.id} #exercise_completed`;
+  var submit_btn = $(`#${exercise.id} #submitExercise`);
+  var disable_on_success = false;
 
   // prevent multiple executions
   submit_btn.prop("disabled", true);
@@ -288,41 +250,79 @@ function executeAndCheck(
   showLoading(id_executed);
   showLoading(id_completed);
 
+
+  let data = {
+    "name": exercise.id,
+  }
+
+  if (exercise.type == "script") {
+    data["script"] = exercise.script
+  } else {
+    data["form"] = exercise.formData
+  }
+
+  data = JSON.stringify(data)
+
   sendAjax(
-    "POST",
-    (payload = {
-      url: url_execute,
-      data: payload_data,
-      additional_headers: additional_headers,
-    }),
-    token
-  )
+    (type = "POST"),
+    (payload = { url: `/execution/${exercise.type}`, data: data }),
+    (token = getCookie("auth"))
+  ).then(function (data, textStatus, jqXHR) {
+    visualFeedback(exercise.id, data, disable_on_success);
+    printHistory(exercise.id, data.history);
+    sendAjax(
+      (type = "GET"),
+      (payload = { url: `/execution/${exercise.id}` }),
+      (token = getCookie("auth"))
+    ).then(function (data, textStatus, jqXHR) {
+      visualFeedback(exercise.id, data, disable_on_success);
+      printHistory(exercise.id, data.history);
+      defer.resolve(data);
+    })
+      .catch(function (jqXHR, textStatus, errorThrown) {
+        visualFeedback(exercise.id, jqXHR, disable_on_success);
+        defer.reject(jqXHR, textStatus, errorThrown);
+      });
+
+    defer.resolve(data);
+  })
+    .catch(function (jqXHR, textStatus, errorThrown) {
+      visualFeedback(exercise.id, jqXHR, disable_on_success);
+      defer.reject(jqXHR, textStatus, errorThrown);
+    });
+
+  return defer.promise();
+}
+
+
+/*
+This function queries 'Learners' for the current status of the corresponding 
+exercise. The exercise must be passed as URL (in default case as URL of 
+learners + "/check_completion/" + uuid of the execute-request).
+
+params:
+    url: Learners Endpoint 
+    token: JWT Token
+    history: Whether or not to display the execution history (default = true)
+*/
+
+function getExecutionHistory(exercise) {
+  var defer = $.Deferred();
+
+  var id_executed = `#${exercise.id} #exercise_executed`;
+  var id_completed = `#${exercise.id} #exercise_completed`;
+
+  showLoading(id_executed);
+  showLoading(id_completed);
+
+  sendAjax("GET", (payload = { url: `/execution/${exercise.id}` }), (token = getCookie("auth")))
     .then(function (data, textStatus, jqXHR) {
-      url_check += data.uuid || "";
-      visualFeedback(id, data, disable_on_success);
-      printHistory(id, data.history);
-
-      sendAjax(
-        "GET",
-        (payload = {
-          url: url_check,
-        }),
-        token
-      )
-        .then(function (data, textStatus, jqXHR) {
-          visualFeedback(id, data, disable_on_success);
-          printHistory(id, data.history);
-          defer.resolve(data);
-        })
-        .catch(function (jqXHR, textStatus, errorThrown) {
-          visualFeedback(id, jqXHR, disable_on_success);
-          defer.reject(jqXHR, textStatus, errorThrown);
-        });
-
+      visualFeedback(exercise.id, data);
+      printHistory(exercise.id, data.history);
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(id, jqXHR, disable_on_success);
+      visualFeedback(exercise.id, jqXHR);
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 

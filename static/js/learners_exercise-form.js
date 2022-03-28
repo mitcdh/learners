@@ -81,15 +81,12 @@ function initAdditionalInput(exercise) {
 
 
 function getHistory(exercise) {
-  getExecutionHistory(
-    (id = exercise.id),
-    (url = `/form/${exercise.id}`),
-    (token = getCookie("auth"))
-  ).then(function (response) {
-    if (response.completed) {
-      disableForm(exercise.id);
-    }
-  });
+  getExecutionHistory(exercise)
+    .then(function (response) {
+      if (response.completed) {
+        disableForm(exercise.id);
+      }
+    });
 }
 
 function disableForm(id) {
@@ -134,19 +131,9 @@ function getValidationRules() {
 
 function submitForm(form, exercise) {
 
-  var formData = getFormData($(form));
+  exercise["formData"] = getFormData($(form));
   var method = $(`#${exercise.id}`).hasClass("mail") ? "mail" : "";
-
-  executeAndCheck(
-    (id = exercise.id),
-    (type = "form"),
-    (token = getCookie("auth")),
-    (url_execute = `/form/${exercise.id}`),
-    (url_check = `/form/${exercise.id}`),
-    (payload_data = formData),
-    (additional_headers = { Method: method }),
-    (disable_on_success = true)
-  );
+  executeAndCheck(exercise)
 }
 
 function getFormData($form) {
