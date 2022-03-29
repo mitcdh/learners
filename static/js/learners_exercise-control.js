@@ -266,17 +266,18 @@ function executeAndCheck(exercise) {
   sendAjax(
     (type = "POST"),
     (payload = { url: `/execution/${exercise.type}`, data: data }),
-    (token = getCookie("auth"))
+    (token = getCookie("access_token_cookie"))
   ).then(function (data, textStatus, jqXHR) {
     visualFeedback(exercise.id, data, disable_on_success);
     printHistory(exercise.id, data.history);
     sendAjax(
       (type = "GET"),
       (payload = { url: `/execution/${exercise.id}` }),
-      (token = getCookie("auth"))
+      (token = getCookie("access_token_cookie"))
     ).then(function (data, textStatus, jqXHR) {
       visualFeedback(exercise.id, data, disable_on_success);
       printHistory(exercise.id, data.history);
+      getState();
       defer.resolve(data);
     })
       .catch(function (jqXHR, textStatus, errorThrown) {
@@ -315,7 +316,7 @@ function getExecutionHistory(exercise) {
   showLoading(id_executed);
   showLoading(id_completed);
 
-  sendAjax("GET", (payload = { url: `/execution/${exercise.id}` }), (token = getCookie("auth")))
+  sendAjax("GET", (payload = { url: `/execution/${exercise.id}` }), (token = getCookie("access_token_cookie")))
     .then(function (data, textStatus, jqXHR) {
       visualFeedback(exercise.id, data);
       printHistory(exercise.id, data.history);
@@ -327,4 +328,58 @@ function getExecutionHistory(exercise) {
     });
 
   return defer.promise();
+}
+
+function getState() {
+  var defer = $.Deferred();
+  sendAjax("GET", (payload = { url: `/execution-state` }), (token = getCookie("access_token_cookie")))
+    .then(function (data, textStatus, jqXHR) {
+
+      $(`.topics`).find("i").remove()
+
+      $.each(data.success_list, function (i, result) {
+
+        let liElement = $(`.topics li[title='${result.title}']`).find("a").first()
+        update_counter(liElement, result.done, result.total)
+
+        let parentElement = liElement.parent().closest("ul").not(".topics").parent().find("a").first()
+        if (parentElement.length) {
+          currentParent = get_done_total(parentElement);
+          currentChild = get_done_total(liElement);
+          let new_parent_done = currentParent.done + currentChild.done;
+          let new_parent_total = currentParent.total + currentChild.total;
+          update_counter(parentElement, new_parent_done, new_parent_total)
+        }
+      }
+      );
+      defer.resolve(data);
+    })
+    .catch(function (jqXHR, textStatus, errorThrown) {
+      defer.reject(jqXHR, textStatus, errorThrown);
+    });
+
+  return defer.promise();
+}
+
+
+function get_done_total(element) {
+  var regex_done = element.html().match(/\((\d)\//)
+  var regex_total = element.html().match(/(\d)\)/)
+  var done = ((regex_done) ? parseInt(regex_done[1]) : 0)
+  var total = ((regex_total) ? parseInt(regex_total[1]) : 0)
+  return { done, total }
+}
+
+function update_counter(element, done, total) {
+  if (element.html().match(/\(\d\/\d\)/)) {
+    element.html(element.html().replace(/\(\d\/\d\)/, `(${done}/${total})`));
+  } else {
+    element.append(`<i class='fas counter'> (${done}/${total})</i>`)
+  }
+
+  if (done == total) {
+    element.find("i").addClass("fa-check done")
+  } else {
+    element.find("i").removeClass("fa-check done")
+  }
 }

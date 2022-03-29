@@ -1,5 +1,7 @@
 $(function () {
 
+    getState();
+
     exercises = [];
     $(".exercise-info[name=info]").each(function () {
         exercises.push(JSON.parse($(this).attr('value')));

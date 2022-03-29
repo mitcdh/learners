@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap");
 
 :root {
-    
+
     --background-gray: #f6f6f6;
     --cyberrange-red: #d34a5d;
 
@@ -15,7 +15,7 @@
     /* Color of hovered links */
     --MAIN-ANCHOR-color: var(--cyberrange-red);
     /* color of anchors on titles */
-    
+
     --MENU-HEADER-BG-color: var(--background-gray);
     /* Background color of menu header */
     --MENU-HEADER-BORDER-color: var(--background-gray);
@@ -112,16 +112,16 @@ select[multiple=multiple]:focus {
 button:disabled,
 button[disabled],
 button:disabled:hover,
-button[disabled]:hover{
-  background-color: #cecece;
-  color: #fff;
+button[disabled]:hover {
+    background-color: #cecece;
+    color: #fff;
 }
 
 button:disabled svg.bi,
 button[disabled] svg.bi,
 button:disabled:hover svg.bi,
-button[disabled]:hover svg.bi{
-  fill: #fff !important;
+button[disabled]:hover svg.bi {
+    fill: #fff !important;
 }
 
 a.highlight::after {
@@ -277,9 +277,9 @@ a:hover {
     border-color: var(--MENU-SECTION-HR-color);
 }
 
-#sidebar ul li > a {
+#sidebar ul li>a {
     padding: 0 0;
-  }
+}
 
 
 #logo {
@@ -350,7 +350,33 @@ code {
     margin: 4px 0px auto;
 }
 
-code + .copy-to-clipboard {
+code+.copy-to-clipboard {
     height: 20px;
     top: -2px;
+}
+
+i.counter {
+    float: right;
+    font-size: 13px;
+    min-width: 16px;
+    margin: 9px 0 0 0;
+    text-align: right;
+    font-weight: 300;
+    font-family: "Rubik", sans-serif !important;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1.1;
+    box-sizing: border-box;
+}
+
+i.counter::before {
+    color: var(--MENU-VISITED-color);
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 13px;
+}
+
+i.counter.done {
+    color: var(--MENU-VISITED-color);
 }
