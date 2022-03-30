@@ -337,19 +337,15 @@ function getState() {
 
       $(`.topics`).find("i").remove()
 
-      $.each(data.success_list, function (i, result) {
+      $.each(data.success_list, function (parentTitle, parentExercise) {
 
-        let liElement = $(`.topics li[title='${result.title}']`).find("a").first()
-        update_counter(liElement, result.done, result.total)
+        let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
+        update_counter(menuItem, parentExercise.done, parentExercise.total)
 
-        let parentElement = liElement.parent().closest("ul").not(".topics").parent().find("a").first()
-        if (parentElement.length) {
-          currentParent = get_done_total(parentElement);
-          currentChild = get_done_total(liElement);
-          let new_parent_done = currentParent.done + currentChild.done;
-          let new_parent_total = currentParent.total + currentChild.total;
-          update_counter(parentElement, new_parent_done, new_parent_total)
-        }
+        $.each(parentExercise.exercises, function (i, subExercise) {
+          let subMenuItem = $(`.topics li[title='${subExercise.title}']`).find("a").first()
+          update_counter(subMenuItem, subExercise.done, subExercise.total)
+        })
       }
       );
       defer.resolve(data);
@@ -359,15 +355,6 @@ function getState() {
     });
 
   return defer.promise();
-}
-
-
-function get_done_total(element) {
-  var regex_done = element.html().match(/\((\d)\//)
-  var regex_total = element.html().match(/(\d)\)/)
-  var done = ((regex_done) ? parseInt(regex_done[1]) : 0)
-  var total = ((regex_total) ? parseInt(regex_total[1]) : 0)
-  return { done, total }
 }
 
 function update_counter(element, done, total) {
