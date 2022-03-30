@@ -368,15 +368,30 @@ i.counter {
     text-rendering: auto;
     line-height: 1.1;
     box-sizing: border-box;
+    display: block !important;
 }
 
-i.counter::before {
+.fa-check::before {
+    display: none !important;
+}
+
+.fa-check::after {
+    content: "\f00c";
     color: var(--MENU-VISITED-color);
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     font-size: 13px;
+    margin-left: 5px;
 }
 
-i.counter.done {
+#sidebar ul.topics>li>a i.read-icon.counter.done,
+#sidebar ul li.visited>a i.read-icon.counter.done,
+#sidebar ul li.visited>a i.read-icon::after,
+#sidebar ul li.visited>a i.read-icon.counter.done::after {
     color: var(--MENU-VISITED-color);
+}
+
+#sidebar ul.topics>li>a i.read-icon,
+#sidebar ul li.visited>a i.read-icon {
+    color: var(--MAIN-TEXT-color);
 }

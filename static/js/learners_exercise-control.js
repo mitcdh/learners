@@ -335,8 +335,6 @@ function getState() {
   sendAjax("GET", (payload = { url: `/execution-state` }), (token = getCookie("access_token_cookie")))
     .then(function (data, textStatus, jqXHR) {
 
-      $(`.topics`).find("i").remove()
-
       $.each(data.success_list, function (parentTitle, parentExercise) {
 
         let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
@@ -358,10 +356,14 @@ function getState() {
 }
 
 function update_counter(element, done, total) {
+  let icon = element.find("i").first();
+  icon.addClass("counter");
   if (element.html().match(/\(\d\/\d\)/)) {
     element.html(element.html().replace(/\(\d\/\d\)/, `(${done}/${total})`));
+  } else if (icon) {
+    icon.append(`(${done}/${total})`)
   } else {
-    element.append(`<i class='fas counter'> (${done}/${total})</i>`)
+    element.append(`<i class='fas read-icon counter'> (${done}/${total})</i>`)
   }
 
   if (done == total) {
