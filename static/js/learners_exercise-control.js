@@ -360,7 +360,7 @@ function update_counter(element, done, total) {
   icon.addClass("counter");
   if (element.html().match(/\(\d\/\d\)/)) {
     element.html(element.html().replace(/\(\d\/\d\)/, `(${done}/${total})`));
-  } else if (icon) {
+  } else if (icon.length) {
     icon.append(`(${done}/${total})`)
   } else {
     element.append(`<i class='fas read-icon counter'> (${done}/${total})</i>`)
