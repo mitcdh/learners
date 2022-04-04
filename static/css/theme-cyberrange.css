@@ -317,6 +317,15 @@ a:hover {
     width: 100%;
 }
 
+#prefooter ul li a {
+    line-height: 1.4em;
+    font-size: 0.8em;
+}
+
+hr {
+    margin: 1.0rem 0;
+}
+
 #footer {
     display: none;
 }
@@ -394,4 +403,34 @@ i.counter {
 #sidebar ul.topics>li>a i.read-icon,
 #sidebar ul li.visited>a i.read-icon {
     color: var(--MAIN-TEXT-color);
+}
+
+#sidebar ul.topics {
+    margin: 0 1rem;
+    top: 258px;
+    bottom: 90px;
+    display: block;
+    position: fixed;
+    padding-right: 20px;
+    width: 275px;
+}
+
+#sidebar ul.topics>li>a {
+    line-height: 1.8em;
+    font-size: 1.0em;
+}
+
+@media only all and (max-width: 59.938em) {
+#sidebar ul.topics {
+    width: 205px;
+}
+}
+
+#sidebar-toggle-span {
+    border-right: none !important;
+    padding-right: 0.5rem !important;
+    left: 10px;
+    margin: 15px 15px 15px 15px;
+    position: fixed;
+    z-index: 9000;
 }

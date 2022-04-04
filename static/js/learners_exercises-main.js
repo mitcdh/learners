@@ -25,4 +25,6 @@ $(function () {
         }
     })
 
+    $(".topics").animate({ scrollTop: $(".topics .active").offset().top }, "slow");
+
 });
