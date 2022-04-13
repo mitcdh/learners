@@ -1,12 +1,16 @@
 {{ $group_title := .Get "title" | default false }}
 {{ $group_extendable := .Get "extendable" | default false }}
+{{ $group_minInputs := .Get "min" | default 0 }}
 
 <fieldset>
 <div id="{{ if $group_extendable }}inputgroup_{{ else }}inputgroup{{end}}" class="input-group">
+<input type="hidden" name="minInputs" value="{{ $group_minInputs }}">
   
 {{ if $group_title }}
 <h4>{{ $group_title }}</h4>
 {{ end }}
+
+<div id="fieldset-error"></div>
 
 {{ .Inner }}
 

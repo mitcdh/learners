@@ -25,6 +25,10 @@ $(function () {
         }
     })
 
-    $(".topics").animate({ scrollTop: $(".topics .active").offset().top }, "slow");
+    let active_menuItem = $(".topics .active")
+
+    if (active_menuItem.length > 0) {
+        $(".topics").animate({ scrollTop: $(".topics .active").offset().top }, "slow");
+    }
 
 });

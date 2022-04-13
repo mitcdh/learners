@@ -4,7 +4,12 @@
 {{ $exerciseWeight := $.Page.Weight }}
 {{ $parentWeight := $.Page.Parent.Weight }}
 
-<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "type":"form", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
+{{ $.Page.Scratch.Add "exid" 1 }}
+{{ $pageid := (md5 $.Page.File.Path) }}
+{{ $exid := ($.Page.Scratch.Get "exid") | string }}
+{{ $form_id := $exid | printf "%s%s" $pageid }}
+
+<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "title":"{{ $form_name }}", "pageTitle":"{{ $.Page.Title }}", "parent":"{{ $.Page.Parent.Title }}", "type":"form", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
 
 <form
   id="{{ $form_id }}"
@@ -84,8 +89,13 @@
   </button>
 
   <div id="msg-container">
-    <div id="success-msg"></div>
-    <div id="error-msg"></div>
+    <div id="msg"></div>
   </div>
+
+  <div id="msg-detail">
+  </div>
+
+  <div id="history" style="display: none"></div>
+
 </div>
 </form>

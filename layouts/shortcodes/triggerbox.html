@@ -1,10 +1,14 @@
 {{ $exercise_title := .Get "title" }} 
-{{ $exercise_id := substr (replace $exercise_title " " "_") 0 }}
-{{ $exercise_script := .Get "script" | default $exercise_id }}
+{{ $exercise_script := .Get "script" }}
 {{ $exerciseWeight := $.Page.Weight }}
 {{ $parentWeight := $.Page.Parent.Weight }}
 
-<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $exercise_id }}", "type":"script", "script":"{{ $exercise_script }}", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
+{{ $.Page.Scratch.Add "exid" 1 }}
+{{ $pageid := (md5 $.Page.File.Path) }}
+{{ $exid := ($.Page.Scratch.Get "exid") | string }}
+{{ $exercise_id := $exid | printf "%s%s" $pageid }}
+
+<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $exercise_id }}", "title":"{{ $exercise_title }}", "pageTitle":"{{ $.Page.Title }}", "parent":"{{ $.Page.Parent.Title }}", "type":"script", "script":"{{ $exercise_script }}", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
 
 <div id="{{ $exercise_id }}" class="exercise-control">
   <h5>Exercise Control</h5>
@@ -79,8 +83,10 @@
   </button>
 
   <div id="msg-container">
-    <div id="success-msg"></div>
-    <div id="error-msg"></div>
+    <div id="msg"></div>
+  </div>
+
+  <div id="msg-detail">
   </div>
 
   <div id="history" style="display: none"></div>

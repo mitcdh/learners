@@ -19,7 +19,9 @@ function formExercise(exercise) {
     event.preventDefault();
   });
 
-  loadPersist(exercise);
+  loadForm(exercise);
+  initForm(exercise);
+
   getHistory(exercise);
 };
 
@@ -34,51 +36,59 @@ function initAdditionalInput(exercise) {
       .parent()
       .find(".add-input-row")
       .attr("value", `inputgroup_${new_index}`);
-
-    replace_identifiers($(this), new_index);
   });
 
   $(".add-input-row").click(function () {
-    let current_id = $(this).attr("value");
-    let next_index = parseInt(current_id.match(/\d+/)[0], 10) + 1;
-    let additional_container = $(`#${current_id}`)
-      .parent()
-      .find("#additionalInput");
-
-    let last_item = additional_container.find(".input-group").last();
-    if (last_item.length != 0) {
-      next_index = parseInt(last_item.attr("id").match(/\d+/)[0], 10) + 1;
-    }
-
-    let new_html_object = $(`#${current_id}`).clone();
-    replace_identifiers(new_html_object, next_index);
-
-    let html =
-      `<div id="inputgroup_${next_index}" style="display: none" class="input-group">`;
-    html +=
-      '<div class="closer"><svg class="bi" width="50%" height="50%"><use xlink:href="#close"></use></svg></div>';
-    html += new_html_object.html();
-    html += '</div>';
-
-    additional_container.append(html);
-    additional_container
-      .find("h4")
-      .html("Additional " + $(`#${current_id} h4`).html());
-
-    $(`#inputgroup_${next_index}`).slideDown();
-    loadPersist(exercise);
-
-    $(document).on("click", ".closer", function () {
-      $(this)
-        .parent()
-        .slideUp("normal", function () {
-          $(this).remove();
-        });
-    });
+    addFieldset($(this), exercise);
   });
 
 }
 
+function addFieldset(element, exercise) {
+  let current_id = element.attr("value");
+  let next_index = parseInt(current_id.match(/\d+/)[0], 10) + 1;
+  let additional_container = element.parent().find(`#${current_id}`)
+    .parent()
+    .find("#additionalInput");
+
+  let last_item = additional_container.find(".input-group").last();
+  if (last_item.length != 0) {
+    next_index = parseInt(last_item.attr("id").match(/\d+/)[0], 10) + 1;
+  }
+
+  let current_reference = element.parent().find(`#${current_id}`)
+  let new_html_object = current_reference.clone();
+  new_html_object.find("#fieldset-error").remove();
+  new_html_object.find("input").attr("value", "");
+
+  let html =
+    `<div id="inputgroup_${next_index}" style="display: none" class="input-group">`;
+  html +=
+    '<div class="closer"><svg class="bi" width="50%" height="50%"><use xlink:href="#close"></use></svg></div>';
+  html += new_html_object.html();
+  html += '</div>';
+
+  additional_container.append(html);
+  additional_container
+    .find("h4")
+    .html(`Additional ${current_reference.find("h4").html()}`);
+
+  $(`#inputgroup_${next_index}`).slideDown();
+
+  $(document).on("click", ".closer", function () {
+    $(this)
+      .parent()
+      .slideUp("normal", function () {
+        $(this).remove();
+      });
+
+      setTimeout(function() {
+        persistForm(exercise);
+     }, 500);
+  });
+
+  initForm(exercise);
+}
 
 function getHistory(exercise) {
   getExecutionHistory(exercise)
@@ -101,25 +111,6 @@ function disableForm(id) {
   });
 }
 
-function replace_identifiers(obj, next_index) {
-  let input_types = ["input", "textarea", "select"];
-  var regex = /[^a-zA-Z]/g;
-
-  $.each(input_types, function () {
-    $.each(obj.find(String(this)), function () {
-      let base = $(this).attr("id").replace(regex, "");
-      $(this).attr("id", `${base}_${next_index}`);
-      base = $(this).attr("name").replace(regex, "");
-      $(this).attr("name", `${base}_${next_index}`);
-    });
-  });
-
-  $.each(obj.find("label"), function () {
-    let base = $(this).attr("for").replace(regex, "");
-    $(this).attr("for", `${base}_${next_index}`);
-  });
-}
-
 function getValidationRules() {
   var rule_dict = {};
   $.each($(".form .required"), function () {
@@ -129,36 +120,156 @@ function getValidationRules() {
   return rule_dict;
 }
 
+function getFormData(exercise) {
+
+  let form_data = {};
+  let section = 0;
+
+  $.each($(`#${exercise.id}`).find(".input-group"), function () {
+    section++;
+    let section_obj = {};
+    let section_name = $(this).find("h4").text() || `Section ${section}`;
+
+    $.each($(this).find("input, textarea, select").not("[name='minInputs']"), function () {
+      let input_name = $(this).attr("name");
+      let input_value = $(this).val();
+      section_obj[input_name] = input_value;
+    });
+
+    form_data[section_name] = section_obj;
+  });
+
+  return form_data;
+}
+
+function minimumElements(form) {
+  var valid = true;
+  let fieldsets = $(form).find("fieldset");
+  $.each(fieldsets, function () {
+    let hidden_inputs = $(this).find("[name='minInputs']")
+    if (hidden_inputs.length > 0) {
+      var minInputs = hidden_inputs[0].value;
+    }
+    var additionalInputs = $(this).find("#additionalInput .input-group").length;
+    if ((additionalInputs + 1) < minInputs) {
+      valid = false;
+      $(this).addClass("error")
+      $(this).find("#fieldset-error").html(
+        `A minimum of ${minInputs} items are required. Only ${(additionalInputs + 1)} were given.`
+      )
+    } else {
+      $(this).removeClass("error")
+      $(this).find("#fieldset-error").html("")
+    }
+    let error = $("fieldset.error")
+    if (error.length > 0) {
+      $('html, body').animate({
+        scrollTop: $("fieldset.error").offset().top
+      }, 400);
+    }
+  });
+  return valid
+}
+
 function submitForm(form, exercise) {
-
-  exercise["formData"] = getFormData($(form));
-  var method = $(`#${exercise.id}`).hasClass("mail") ? "mail" : "";
-  executeAndCheck(exercise)
+  if (minimumElements(form)) {
+    exercise["formData"] = getFormData(exercise);
+    var method = $(`#${exercise.id}`).hasClass("mail") ? "mail" : "";
+    executeAndCheck(exercise)
+  }
 }
 
-function getFormData($form) {
-  var unindexed_array = $form.serializeArray();
-  var indexed_array = {};
-
-  $.map(unindexed_array, function (n, i) {
-    indexed_array[n["name"]] = n["value"];
-  });
-
-  return indexed_array;
+function expandAdditionalInputs(storedForm, exercise) {
+  if (Object.keys(storedForm).length != 0) {
+    let index = 0;
+    $.each($(`#${exercise.id}`).find("fieldset"), function () {
+      index++;
+      let group = storedForm[index]
+      let subgroup_length = Object.keys(group).length
+      if ((subgroup_length > 1) && (Object.values(group)[0] instanceof Object)) {
+        let btn = $(this).find(".add-input-row");
+        for (let i = 0; i < (subgroup_length - 1); i++) {
+          addFieldset(btn, exercise);
+        }
+      }
+    });
+  }
 }
 
-function loadPersist(exercise) {
-  $.each($(`#${exercise.id} input`), function () {
-    $(this).attr("value", localStorage.getItem($(this).attr("name")));
+function initForm(exercise) {
+  $.each($(`#${exercise.id} input, #${exercise.id} textarea, #${exercise.id} select`).not("[name='minInputs']"), function () {
     $(this).on("change", (e) => {
-      localStorage.setItem(e.target.name, e.target.value);
+      persistForm(exercise);
     });
+  });
+}
+
+function loadForm(exercise) {
+
+  var storedForm = JSON.parse(localStorage.getItem(exercise.id)) || {};
+
+  if (Object.keys(storedForm).length != 0) {
+    expandAdditionalInputs(storedForm, exercise);
+
+    let index = 0;
+    let subindex = 0;
+
+    $.each($(`#${exercise.id}`).find(".input-group"), function () {
+      let expandable = $(this).closest("fieldset").find("#additionalInput").length
+
+      if (expandable) {
+        subindex++;
+        if (subindex < 2) index++;
+        let section = storedForm[index]
+        setSectionValues(this, section[subindex]);
+      } else {
+        subindex = 0;
+        index++;
+        let section = storedForm[index]
+        setSectionValues(this, section);
+      }
+    });
+  };
+}
+
+function persistForm(exercise) {
+
+  let index = 0;
+  let subindex = 0;
+  let form_data = {}
+
+  $.each($(`#${exercise.id}`).find(".input-group"), function () {
+    let expandable = $(this).closest("fieldset").find("#additionalInput").length
+    if (expandable) {
+      subindex++;
+      if (subindex < 2) index++;
+      let subgroup = form_data[index] || {};
+      subgroup[subindex] = getSectionValues(this);
+      form_data[index] = subgroup;
+    } else {
+      subindex = 0;
+      index++;
+      form_data[index] = getSectionValues(this);
+    }
   });
 
-  $.each($(`#${exercise.id} textarea, #${exercise.id} select`), function () {
-    $(this).val(localStorage.getItem($(this).attr("name")));
-    $(this).on("change", (e) => {
-      localStorage.setItem(e.target.name, e.target.value);
+  localStorage.setItem(exercise.id, JSON.stringify(form_data));
+}
+
+function setSectionValues(element, section) {
+  if (section) {
+    $.each($(element).find("input, textarea, select").not("[name='minInputs']"), function () {
+      $(this).val(section[$(this).attr("name")])
     });
+  }
+}
+
+function getSectionValues(element) {
+  let input_group_obj = {}
+  $.each($(element).find("input, textarea, select").not("[name='minInputs']"), function () {
+    let input_name = $(this).attr("name");
+    let input_value = $(this).val();
+    input_group_obj[input_name] = input_value;
   });
+  return input_group_obj;
 }
