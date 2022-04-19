@@ -1,52 +1,37 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap");
 
 :root {
 
-    --background-gray: #f6f6f6;
-    --cyberrange-red: #d34a5d;
+    --AIT-red: #d34a5d;
+    --IAEA-blue: #0072bc;
 
-    --MAIN-TEXT-color: #323232;
-    /* Color of text by default */
+    --background-gray-color: #f6f6f6;
+    --primary-color: var(--IAEA-blue);
+    --text-color: #323232;
+    --success-color: #6cbd8e;
+
+    --MAIN-TEXT-color: var(--text-color);
     --MAIN-TITLES-TEXT-color: #5e5e5e;
-    /* Color of titles h2-h3-h4-h5 */
-    --MAIN-LINK-color: var(--cyberrange-red);
-    /* Color of links */
-    --MAIN-LINK-HOVER-color: var(--cyberrange-red);
-    /* Color of hovered links */
-    --MAIN-ANCHOR-color: var(--cyberrange-red);
-    /* color of anchors on titles */
+    --MAIN-LINK-color: var(--primary-color);
+    --MAIN-LINK-HOVER-color: var(--primary-color);
+    --MAIN-ANCHOR-color: var(--primary-color);
+    --MENU-HEADER-BG-color: var(--background-gray-color);
+    --MENU-HEADER-BORDER-color: var(--background-gray-color);
+    --MENU-SEARCH-BG-color: var(--background-gray-color);
+    --MENU-SEARCH-BOX-color: var(--text-color);
+    --MENU-SEARCH-BOX-ICONS-color: var(--text-color);
 
-    --MENU-HEADER-BG-color: var(--background-gray);
-    /* Background color of menu header */
-    --MENU-HEADER-BORDER-color: var(--background-gray);
-    /*Color of menu header border */
-
-    --MENU-SEARCH-BG-color: var(--background-gray);
-    /* Search field background color (by default borders + icons) */
-    --MENU-SEARCH-BOX-color: #191b23;
-    /* Override search field border color */
-    --MENU-SEARCH-BOX-ICONS-color: #191b23;
-    /* Override search field icons color */
-
-    --MENU-SECTIONS-ACTIVE-BG-color: var(--background-gray);
-    /* Background color of the active section and its childs */
-    --MENU-SECTIONS-BG-color: var(--background-gray);
-    /* Background color of other sections */
+    --MENU-SECTIONS-ACTIVE-BG-color: var(--background-gray-color);
+    --MENU-SECTIONS-BG-color: var(--background-gray-color);
     --MENU-SECTIONS-LINK-color: #3c3e49;
-    /* Color of links in menu */
-    --MENU-SECTIONS-LINK-HOVER-color: var(--cyberrange-red);
-    /* Color of links in menu, when hovered */
-    --MENU-SECTION-ACTIVE-CATEGORY-color: #0f1017;
-    /* Color of active category text */
-    --MENU-SECTION-ACTIVE-CATEGORY-BG-color: var(--background-gray);
-    /* Color of background for the active category (only) */
+    --MENU-SECTIONS-LINK-HOVER-color: var(--primary-color);
+    --MENU-SECTION-ACTIVE-CATEGORY-color: var(--primary-color);
+    --MENU-SECTION-ACTIVE-CATEGORY-BG-color: var(--background-gray-color);
 
-    --MENU-VISITED-color: #6cbd8e;
-    /* Color of 'page visited' icons in menu */
-    --MENU-SECTION-HR-color: #18211c;
-    /* Color of <hr> separator in menu */
-
-    --STAT-green: #6cbd8e;
+    --MENU-VISITED-color: var(--success-color);
+    --MENU-SECTION-HR-color: var(--text-color);
+ 
 
     --light: #dedfe4;
     --light-1: #dedfe4;
@@ -62,9 +47,8 @@
     --info: #619dc7;
     --blue-light: #619dc7;
 
-    --primary: var(--cyberrange-red);
-    --danger: var(--cyberrange-red);
-    --red-light: var(--cyberrange-red);
+    --danger: #d34a5d;;
+    --red-light: #d34a5d;;
     --red-mid: #da1e55;
 
     --success-light: #6cbd8e;
@@ -210,6 +194,10 @@ a {
     transition: all 200ms;
 }
 
+#body a.highlight:hover {
+    text-decoration: underline;
+}
+
 .anchor {
     color: var(--MAIN-ANCHOR-color);
 }
@@ -235,24 +223,32 @@ a:hover {
 }
 
 #sidebar {
-    background-color: var(--background-gray);
+    background-color: var(--background-gray-color);
+    flex-direction: column !important;
+    display: flex;
 }
+
 
 #sidebar #header-wrapper {
     background: none;
-    background: var(--background-gray);
+    background: var(--background-gray-color);
     color: var(--MENU-SEARCH-BOX-color);
-    border-color: var(--background-gray);
+    border-color: var(--background-gray-color);
+}
+
+
+#sidebar #header {
+    display: none;
 }
 
 #sidebar .searchbox {
     border-color: var(--MENU-SEARCH-BOX-color);
-    background: var(--background-gray);
+    background: var(--background-gray-color);
 }
 
 #sidebar ul.topics>li.parent,
 #sidebar ul.topics>li.active {
-    background: var(--background-gray);
+    background: var(--background-gray-color);
 }
 
 #sidebar .searchbox * {
@@ -268,7 +264,7 @@ a:hover {
 }
 
 #sidebar ul li.active>a {
-    background: var(--background-gray);
+    background: var(--background-gray-color);
     color: var(--MENU-SECTION-ACTIVE-CATEGORY-color) !important;
     font-weight: 600;
 }
@@ -311,10 +307,11 @@ a:hover {
 }
 
 #prefooter {
-    display: block;
+    display: flex;
     position: absolute;
-    bottom: 260px;
+    bottom: 14px;
     width: 100%;
+    flex-direction: column;
 }
 
 #prefooter ul li a {
@@ -332,6 +329,15 @@ hr {
 
 #sidebar .highlightable {
     height: 100% !important;
+    flex-direction: column;
+    display: flex;
+}
+
+#sidebar ul.topics {
+    margin: 0 1rem;
+    padding-right: 0px;
+    width: 275px;
+    height: calc(100% - 60px);
 }
 
 .anchor {
@@ -339,7 +345,7 @@ hr {
 }
 
 .copy-to-clipboard {
-    background-color: var(--cyberrange-red);
+    background-color: var(--primary-color);
     -webkit-mask: url(icon.svg) no-repeat 50% 50%;
     mask: url(../images/copy-to-clipboard.svg) no-repeat 50% 50%;
     background-image: none;
@@ -355,7 +361,7 @@ code {
     padding: 3px 10px;
     display: inline-block;
     border: 0;
-    background: var(--background-gray);
+    background: var(--background-gray-color);
     margin: 4px 0px auto;
 }
 
@@ -405,25 +411,23 @@ i.counter {
     color: var(--MAIN-TEXT-color);
 }
 
-#sidebar ul.topics {
-    margin: 0 1rem;
-    top: 258px;
-    bottom: 90px;
-    display: block;
-    position: fixed;
-    padding-right: 20px;
-    width: 275px;
-}
-
 #sidebar ul.topics>li>a {
     line-height: 1.8em;
     font-size: 1.0em;
 }
 
-@media only all and (max-width: 59.938em) {
-#sidebar ul.topics {
-    width: 205px;
+#sidebar ul li .read-icon {
+    margin: 4px 19px 0 0;
 }
+
+#sidebar ul li .read-icon.fa-check {
+    margin: 4px 0 0 0;
+}
+
+@media only all and (max-width: 59.938em) {
+    #sidebar ul.topics {
+        width: 205px;
+    }
 }
 
 #sidebar-toggle-span {
@@ -433,4 +437,8 @@ i.counter {
     margin: 15px 15px 15px 15px;
     position: fixed;
     z-index: 9000;
+}
+
+#sidebar-toggle {
+    color: #5e5e5e;
 }
