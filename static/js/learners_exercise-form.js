@@ -93,9 +93,9 @@ function addFieldset(element, exercise) {
 function getHistory(exercise) {
   getExecutionHistory(exercise)
     .then(function (response) {
-      if (response.completed) {
-        disableForm(exercise.id);
-      }
+      // if (response.completed) {
+      //   disableForm(exercise.id);
+      // }
     });
 }
 
