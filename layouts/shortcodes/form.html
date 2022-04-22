@@ -11,6 +11,11 @@
 
 <input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "title":"{{ $form_name }}", "pageTitle":"{{ $.Page.Title }}", "parent":"{{ $.Page.Parent.Title }}", "type":"form", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
 
+<form 
+  id="upload_form"
+  class="form exercise-control "
+></form>
+
 <form
   id="{{ $form_id }}"
   class="form exercise-control {{ if $form_mail }}mail{{ end }}"

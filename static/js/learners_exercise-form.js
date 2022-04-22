@@ -19,6 +19,15 @@ function formExercise(exercise) {
     event.preventDefault();
   });
 
+  $("#upload_form").submit(function (event) {
+    let status = $(this).validate({ rules: getValidationRules() });
+    if (!Object.keys(status.invalid).length) {
+      uploadFile();
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  });
+
   loadForm(exercise);
   initForm(exercise);
 
@@ -26,6 +35,29 @@ function formExercise(exercise) {
 };
 
 // ------------------------------------------------------------------------------------------------------------
+
+function uploadFile() {
+
+  var file_data = $("#upload-container").find("#file").prop('files')[0]
+  var form_data = new FormData();                  
+  form_data.append('file', file_data);
+  $.ajax({
+      url: '/upload',
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: form_data,                         
+      type: 'post',
+      headers: { Authorization: `Bearer ${getCookie("access_token_cookie")}` },
+      success: function(data){
+        showMsg("upload-container", data);
+        if (data) {
+          $("#upload-container").find("#attachment").attr("value", data.file);
+        }
+      }
+   });
+}
+
 
 function initAdditionalInput(exercise) {
   $.each($(`#${exercise.id} #inputgroup_`), function (index) {
@@ -130,7 +162,7 @@ function getFormData(exercise) {
     let section_obj = {};
     let section_name = $(this).find("h4").text() || `Section ${section}`;
 
-    $.each($(this).find("input, textarea, select").not("[name='minInputs']"), function () {
+    $.each($(this).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
       let input_name = $(this).attr("name");
       let input_value = $(this).val();
       section_obj[input_name] = input_value;
@@ -258,7 +290,7 @@ function persistForm(exercise) {
 
 function setSectionValues(element, section) {
   if (section) {
-    $.each($(element).find("input, textarea, select").not("[name='minInputs']"), function () {
+    $.each($(element).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
       $(this).val(section[$(this).attr("name")])
     });
   }
@@ -266,7 +298,7 @@ function setSectionValues(element, section) {
 
 function getSectionValues(element) {
   let input_group_obj = {}
-  $.each($(element).find("input, textarea, select").not("[name='minInputs']"), function () {
+  $.each($(element).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
     let input_name = $(this).attr("name");
     let input_value = $(this).val();
     input_group_obj[input_name] = input_value;

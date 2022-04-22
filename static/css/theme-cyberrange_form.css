@@ -155,3 +155,8 @@ button.btn-submit-form svg.bi, button.gpdf svg.bi {
   fill: #fff;
   margin-top: -2px;
 }
+
+#upload-submit {
+  margin: 0px 0px 14px 10px;
+  background-color: var(--primary-color);
+}
