@@ -309,14 +309,16 @@ function executeAndCheck(exercise) {
           defer.resolve(data);
         })
         .catch(function (jqXHR, textStatus, errorThrown) {
-          visualFeedback(exercise.id, jqXHR, disable_on_success);
+          $(`#${exercise.id} #submitExercise`).prop("disabled", false);
+          visualFeedback(exercise.id, "", disable_on_success);
           defer.reject(jqXHR, textStatus, errorThrown);
         });
 
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(exercise.id, jqXHR, disable_on_success);
+      $(`#${exercise.id} #submitExercise`).prop("disabled", false);
+      visualFeedback(exercise.id, "", disable_on_success);
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 
@@ -339,7 +341,7 @@ function getExecutionHistory(exercise) {
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(exercise.id, jqXHR);
+      visualFeedback(exercise.id, "");
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 

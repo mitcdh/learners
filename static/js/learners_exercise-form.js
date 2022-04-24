@@ -8,17 +8,29 @@ function formExercise(exercise) {
     initAdditionalInput(exercise);
   }
 
-  $(`#${exercise.id}`).validate({ rules: getValidationRules() });
-
+  $(`#${exercise.id}`).validate({ignore: [],  rules: getValidationRules() });
+  
   $(`#${exercise.id}`).submit(function (event) {
-    let status = $(this).validate({ rules: getValidationRules() });
-    if (!Object.keys(status.invalid).length) {
+    
+    let status = $(`#${exercise.id}`).validate({ignore: [], rules: getValidationRules() });
+    
+    if (($("#upload-container").length > 0) && (!$("#upload-container").find("#attachment").val())) {
+      uploadFile()
+      .then(function () {
+        setTimeout(function() {
+          if ($("#upload-container").find("#attachment").val()) {
+            submitForm(this, exercise);
+            getHistory(exercise);
+          }
+        }, 500);
+      });
+    } else if (!Object.keys(status.invalid).length) {
       submitForm(this, exercise);
       getHistory(exercise);
     }
     event.preventDefault();
   });
-
+  
   $("#upload_form").submit(function (event) {
     let status = $(this).validate({ rules: getValidationRules() });
     if (!Object.keys(status.invalid).length) {
@@ -27,16 +39,19 @@ function formExercise(exercise) {
     event.preventDefault();
     event.stopImmediatePropagation();
   });
-
+  
   loadForm(exercise);
   initForm(exercise);
-
+  
   getHistory(exercise);
+
 };
 
 // ------------------------------------------------------------------------------------------------------------
 
 function uploadFile() {
+
+  var defer = $.Deferred();
 
   var file_data = $("#upload-container").find("#file").prop('files')[0]
   var form_data = new FormData();                  
@@ -54,8 +69,11 @@ function uploadFile() {
         if (data) {
           $("#upload-container").find("#attachment").attr("value", data.file);
         }
+        defer.resolve(data);
       }
    });
+
+  return defer.promise();
 }
 
 
@@ -120,6 +138,7 @@ function addFieldset(element, exercise) {
   });
 
   initForm(exercise);
+  $(`#${exercise.id}`).validate({ignore: [],  rules: getValidationRules() });
 }
 
 function getHistory(exercise) {
