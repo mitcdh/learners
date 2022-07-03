@@ -1,0 +1,55 @@
+{{ $file := .Get "file" }} 
+
+<div id="temp" style="resize: vertical; overflow: hidden;">
+  <object data="{{ $file }}#view=fit" type="application/pdf" style="width: 100%; height: 100%">
+    <iframe src="{{ $file }}#view=fitW" style="border: none; width: 100%; height: 100%">
+      This browser does not support PDFs. Please download the PDF to view it: 
+      <a href="{{ $file }}">Download PDF</a>
+    </iframe>
+  </object>
+</div>
+
+<script>
+  let pdfDoc = null,
+  numPages = 0
+  const contentWidth = 940
+  let ratio = 1
+
+  pdfjsLib.getDocument("{{ $file }}").promise.then(pdfDoc_ => {
+    pdfDoc = pdfDoc_;
+    // console.log(pdfDoc)
+    numPages = pdfDoc.numPages;
+    // console.log(numPages)
+
+    pdfDoc.getPage(1).then(page => {
+      const viewport = page.getViewport( {scale: 1.5})
+      console.log(viewport)
+
+      ratio = Math.floor((viewport.height * numPages) / viewport.width * 10) / 10
+      console.log(ratio)
+
+      resizePDF()
+      
+      // 600 : 700 = 1 : x
+      // 600 x : 700 = 1
+      // x = 700/600
+      // x = height * pages/width
+
+
+    })    
+
+  })
+
+  function resizePDF() {
+    const currWidth = $("#temp").width()
+    $("#temp").css({
+      height : currWidth * ratio +'px',
+    });
+  }
+
+  $(window).on('resize', function(){
+    console.log(ratio)
+    resizePDF()
+  })
+
+</script>
