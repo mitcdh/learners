@@ -263,10 +263,12 @@ function initForm(exercise) {
 
 function updateRiskValue() {
     $.each($(".input-group"), function (element) {
-      let likelihood_value = $(this).find("#Likelihood")[0].value
-      let impact_value = $(this).find("#Impact")[0].value
-      $(this).find("#Risk")[0].value = 
-        parseInt(likelihood_value.slice(0,1)) * parseInt(impact_value.slice(0,1));
+      let computedRiskField = $(this).find("#Risk")[0]
+      if (computedRiskField) {
+        let likelihood_value = $(this).find("#Likelihood")[0].value
+        let impact_value = $(this).find("#Impact")[0].value
+        computedRiskField.value = parseInt(likelihood_value.slice(0,1)) * parseInt(impact_value.slice(0,1));
+      }
   })
 };
 
