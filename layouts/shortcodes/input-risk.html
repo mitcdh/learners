@@ -8,21 +8,6 @@
 
 <div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
-  <input type="text" id="{{ $input_name }}" name="{{ $input_name }}" class="{{ if $input_required }}required{{ end }}" readonly>
+  <input type="text" id="Risk" name="{{ $input_name }}" class="{{ if $input_required }}required{{ end }}" readonly>
 </div>
-<script>
-    function update_risks(){
-      var input_groups = document.getElementsByClassName("input-group");
-      Array.prototype.forEach.call(input_groups, function(el) {
-        console.log("THIS FUCKING WORKS??? >>>", el.querySelector('#Likelihood').value);
-        var likelihood = el.querySelector('#Likelihood').value;
-        var impact = el.querySelector('#Impact').value;
-        var li_int =  parseInt(likelihood.slice(0,1));
-        var im_int =  parseInt(impact.slice(0,1));
-        var risk = li_int * im_int;
-        el.querySelector('#Risk_(L_x_I)').value = risk;
-        el.querySelector('#Likelihood').addEventListener('change', update_risks());
-        el.querySelector('#Impact').addEventListener('change', update_risks());
-      });
-    }
-  </script>
+

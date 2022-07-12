@@ -42,8 +42,10 @@ function formExercise(exercise) {
   
   loadForm(exercise);
   initForm(exercise);
+  updateRiskValue();
   
   getHistory(exercise);
+
 
 };
 
@@ -253,7 +255,20 @@ function initForm(exercise) {
       persistForm(exercise);
     });
   });
+
+  $(".input-group #Likelihood, .input-group #Impact").on("change", (event) => {
+    updateRiskValue()
+  });  
 }
+
+function updateRiskValue() {
+    $.each($(".input-group"), function (element) {
+      let likelihood_value = $(this).find("#Likelihood")[0].value
+      let impact_value = $(this).find("#Impact")[0].value
+      $(this).find("#Risk")[0].value = 
+        parseInt(likelihood_value.slice(0,1)) * parseInt(impact_value.slice(0,1));
+  })
+};
 
 function loadForm(exercise) {
 
