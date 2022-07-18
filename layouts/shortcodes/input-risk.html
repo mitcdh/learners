@@ -1,0 +1,13 @@
+{{ $input_label := .Get "label" }} 
+{{ $input_name := substr (replace $input_label " " "_") 0 }}
+{{ $input_required := .Get "required" | default false }}
+{{ $input_default := .Get "default" }}
+{{ $input_wide := .Get "wide" | default false }}
+{{ $input_likelihood := .Get "likelihood" }}
+{{ $input_impact := .Get "impact" }}
+
+<div class="input-row {{ if $input_wide }}wide{{ end }}">
+  <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
+  <input type="text" id="Risk" name="{{ $input_name }}" class="{{ if $input_required }}required{{ end }}" readonly>
+</div>
+
