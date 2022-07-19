@@ -1,55 +1,36 @@
-{{ $file := .Get "file" }} 
+{{ $file := .Get "file" }}
+{{ $show_all_pages := .Get "show_all_pages" | default false }}
 
-<div id="temp" style="resize: vertical; overflow: hidden;">
-  <object data="{{ $file }}#view=fit" type="application/pdf" style="width: 100%; height: 100%">
-    <iframe src="{{ $file }}#view=fitW" style="border: none; width: 100%; height: 100%">
-      This browser does not support PDFs. Please download the PDF to view it: 
+{{ $.Page.Scratch.Add "pdfid" 1 }}
+{{ $pdfid := ($.Page.Scratch.Get "pdfid") | string }}
+{{ $pdf_container_id := (md5 $pdfid) }}
+
+
+<div id="{{ $pdf_container_id }}" 
+  class="pdf-container" 
+  show_all_pages="{{ if $show_all_pages }}true{{ end }}"
+  num_pages="0"
+  style="resize: vertical; overflow: hidden; border: 2px solid #e3e3e3;"
+  >
+  <object
+    data="{{ $file }}#view=fit"
+    type="application/pdf"
+    style="width: 100%; height: 100%"
+  >
+    <iframe
+      src="{{ $file }}#view=fitW"
+      style="border: none; width: 100%; height: 100%"
+    >
+      This browser does not support PDFs. Please download the PDF to view it:
       <a href="{{ $file }}">Download PDF</a>
     </iframe>
   </object>
 </div>
 
 <script>
-  let pdfDoc = null,
-  numPages = 0
-  const contentWidth = 940
-  let ratio = 1
+  $(window).on("resize", function () {
+    resizePDF("{{ $pdf_container_id }}");
+  });
 
-  pdfjsLib.getDocument("{{ $file }}").promise.then(pdfDoc_ => {
-    pdfDoc = pdfDoc_;
-    // console.log(pdfDoc)
-    numPages = pdfDoc.numPages;
-    // console.log(numPages)
-
-    pdfDoc.getPage(1).then(page => {
-      const viewport = page.getViewport( {scale: 1.5})
-      console.log(viewport)
-
-      ratio = Math.floor((viewport.height * numPages) / viewport.width * 10) / 10
-      console.log(ratio)
-
-      resizePDF()
-      
-      // 600 : 700 = 1 : x
-      // 600 x : 700 = 1
-      // x = 700/600
-      // x = height * pages/width
-
-
-    })    
-
-  })
-
-  function resizePDF() {
-    const currWidth = $("#temp").width()
-    $("#temp").css({
-      height : currWidth * ratio +'px',
-    });
-  }
-
-  $(window).on('resize', function(){
-    console.log(ratio)
-    resizePDF()
-  })
-
+  renderPDF("{{ $pdf_container_id }}", "{{ $file }}")
 </script>
