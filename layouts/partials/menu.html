@@ -29,23 +29,27 @@
       .simplebar-content-wrapper {
         overflow: auto;
         overflow-x: hidden;
+        min-height: 400px;
       }
     </style>
   </noscript>
 
     <div class="highlightable">
-    <ul class="topics" data-simplebar>
+      <section class="menu-links" data-simplebar>
+        <ul class="topics">
 
-        {{if eq .Site.Params.ordersectionsby "title"}}
-          {{range .Site.Home.Sections.ByTitle}}
-          {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
-          {{end}}
-        {{else}}
-          {{range .Site.Home.Sections.ByWeight}}
-          {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
-          {{end}}
-        {{end}}
-    </ul>
+            {{if eq .Site.Params.ordersectionsby "title"}}
+              {{range .Site.Home.Sections.ByTitle}}
+              {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
+              {{end}}
+            {{else}}
+              {{range .Site.Home.Sections.ByWeight}}
+              {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
+              {{end}}
+            {{end}}
+        </ul>
+        
+      </section>
 
     {{ $disableShortcutsTitle := .Site.Params.DisableShortcutsTitle}}
     {{with .Site.Menus.shortcuts}}
@@ -62,7 +66,7 @@
     {{end}}
 
     {{ if or .Site.IsMultiLingual $showvisitedlinks }}
-    <section id="prefooter">
+    <section id="prefooter" class="prefooter">
       <hr/>
       <ul>
       {{ if and .Site.IsMultiLingual (not .Site.Params.DisableLanguageSwitchingButton)}}

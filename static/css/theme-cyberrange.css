@@ -310,11 +310,8 @@ a:hover {
 }
 
 #prefooter {
-    display: flex;
-    position: absolute;
-    bottom: 14px;
+    position: inherit !important;
     width: 100%;
-    flex-direction: column;
 }
 
 #prefooter ul li a {
@@ -332,9 +329,20 @@ hr {
 
 #sidebar .highlightable {
     height: 100% !important;
-    flex-direction: column;
     display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
 }
+
+#sidebar .highlightable>section.menu-links {
+    flex-shrink:1;
+    flex-grow:1;
+ }
+ #sidebar .highlightable>section.prefooter {
+   max-height: 100px;
+   flex-shrink:0;
+   flex-grow:0;
+ }
 
 #sidebar ul.topics {
     margin: 0 1rem;
