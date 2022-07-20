@@ -119,13 +119,13 @@ function showNoExecution(parentID) {
 
 function showMsg(parentID, data) {
   var msg_detail = $(`#${parentID} #msg-detail`);
-  msg_detail.removeClass("sucess error partial")
+  msg_detail.removeClass("success error partial")
   if (data.partial)
     msg_detail.addClass("partial")
   else if (!data.completed || data.never_executed || !data.executed)
     msg_detail.addClass("error")
   else
-    msg_detail.addClass("sucess")
+    msg_detail.addClass("success")
 
   if (data.msg) {
     msg_detail.html(data.msg);
@@ -391,4 +391,30 @@ function update_counter(element, done, total) {
   } else {
     element.find("i").removeClass("fa-check done")
   }
+}
+
+
+function postComment(exercise, comment) {
+  var defer = $.Deferred();
+  let data = {
+    "exercise_name": exercise.id,
+    "comment": comment,
+  }
+  data = JSON.stringify(data)
+
+  var msg_container = $(`#status-${exercise.id}`);
+
+  sendAjax("POST", { url: `/comment`, data: data })
+    .then(function (data, textStatus, jqXHR) {
+      msg_container.html("Thank you for your feedback.").addClass("success");
+      var submit_btn = $(`#submitComment`);
+      submit_btn.prop("disabled", true);
+      defer.resolve(data);
+    })
+    .catch(function (jqXHR, textStatus, errorThrown) {
+      msg_container.html("Something went wrong.").addClass("error");
+      defer.reject(jqXHR, textStatus, errorThrown);
+    });
+
+  return defer.promise();
 }

@@ -39,6 +39,13 @@ function formExercise(exercise) {
     event.preventDefault();
     event.stopImmediatePropagation();
   });
+
+  $("#comment-form").submit(function (event) {
+    let comment = $(this).find("textarea").val()
+    postComment(exercise, comment)
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  });
   
   loadForm(exercise);
   initForm(exercise);
