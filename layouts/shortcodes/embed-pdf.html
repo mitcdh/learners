@@ -2,9 +2,7 @@
 {{ $show_all_pages := .Get "show_all_pages" | default false }}
 
 {{ $.Page.Scratch.Add "pdfid" 1 }}
-{{ $pdfid := ($.Page.Scratch.Get "pdfid") | string }}
-{{ $pdf_container_id := (md5 $pdfid) }}
-
+{{ $pdf_container_id := printf "pdfid_%s" (md5 ($.Page.Scratch.Get "pdfid") | string) }}
 
 <div id="{{ $pdf_container_id }}" 
   class="pdf-container" 
@@ -28,9 +26,13 @@
 </div>
 
 <script>
+
+  // Add event listener
   $(window).on("resize", function () {
     resizePDF("{{ $pdf_container_id }}");
   });
 
+  // init pdf rendering
   renderPDF("{{ $pdf_container_id }}", "{{ $file }}")
+  
 </script>
