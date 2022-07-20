@@ -1,0 +1,34 @@
+{{ $form_name := "comment" }}
+{{ $exerciseWeight := $.Page.Weight }}
+{{ $parentWeight := $.Page.Parent.Weight }}
+
+{{ $pageid := (md5 $.Page.File.Path) }}
+{{ $exid := ($.Page.Scratch.Get "exid") | string }}
+{{ $form_id := $exid | printf "%s%s" $pageid }}
+
+<form
+  id="comment-form"
+  class="form"
+>
+
+<div id="comment-section">
+  <div class="input-row">
+    <h2>Feedback</h2>
+    <p>Thank you for your participation in this course. We would appreciate it if you could give us a short feedback on this exercise.</p>
+    <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+  </div>
+
+<button id="submitComment" type="submit" class="btn-submit-form" value="">
+  <svg class="bi" width="22" height="22" style="margin-right: 7px;">
+    <use xlink:href="#chat"></use>
+  </svg>
+  send feedback
+</button>
+
+<div id="msg-container">
+  <div id="status-{{ $form_id }}"></div>
+</div>
+
+</div>
+
+</form>
