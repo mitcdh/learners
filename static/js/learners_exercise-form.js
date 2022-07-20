@@ -42,7 +42,6 @@ function formExercise(exercise) {
   
   loadForm(exercise);
   initForm(exercise);
-  updateRiskValue();
   
   getHistory(exercise);
 
@@ -124,6 +123,25 @@ function addFieldset(element, exercise) {
   additional_container
     .find("h4")
     .html(`Additional ${current_reference.find("h4").html()}`);
+
+  // Update risk IDs
+  let risk_fields = current_reference.find(".riskfield")
+
+  if (risk_fields.length) {
+    let original_risk_id = current_reference.find(".riskfield")[0].id.split("_")[1]
+    let new_risk_id = `${original_risk_id}${next_index}`
+
+    $.each(current_reference.find(".riskfield"), function (index, riskfield) {
+      let prefix = riskfield.id.split("_")[0]
+      $(riskfield).attr("id", `${prefix}_${new_risk_id}`)
+      $(riskfield).attr("name", `${prefix}_${new_risk_id}`)
+    })
+
+    $.each(current_reference.find(".riskfieldlabel"), function (index, riskfield) {
+      let prefix = $(riskfield).attr("for").split("_")[0]
+      $(riskfield).attr("for", `${prefix}_${new_risk_id}`)
+    })
+  }
 
   $(`#inputgroup_${next_index}`).slideDown();
 
@@ -255,22 +273,7 @@ function initForm(exercise) {
       persistForm(exercise);
     });
   });
-
-  $(".input-group #Likelihood, .input-group #Impact").on("change", (event) => {
-    updateRiskValue()
-  });  
 }
-
-function updateRiskValue() {
-    $.each($(".input-group"), function (element) {
-      let computedRiskField = $(this).find("#Risk")[0]
-      if (computedRiskField) {
-        let likelihood_value = $(this).find("#Likelihood")[0].value
-        let impact_value = $(this).find("#Impact")[0].value
-        computedRiskField.value = parseInt(likelihood_value.slice(0,1)) * parseInt(impact_value.slice(0,1));
-      }
-  })
-};
 
 function loadForm(exercise) {
 
