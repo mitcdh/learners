@@ -468,9 +468,9 @@ td {
 }
 
 #pdfcontainer {
-  position: absolute;
-  top: -9999px;
-  /* top: 0; */
+  /* position: relative; */
+  /* top: -9999px; */
+  /* margin-top: 100vh; */
   background-color: white;
 }
 
@@ -493,18 +493,18 @@ td {
   max-width: 90%;
 }
 
-.image-container.pdf {
+/* .image-container.pdf {
   max-width: 400px !important;
   padding: 20px 0px !important;
 }
 .image-container.pdf p {
   text-align: left !important;
   margin: 0 !important;
-}
+}*/
 .image-container.pdf img {
-  text-align: left !important;
+  /* text-align: left !important; */
   margin: 20px 0 5px 0 !important;
-}
+} 
 
 .pdf-download-wrapper {
   display: block;
@@ -555,12 +555,20 @@ td {
 
 .pdf {
   line-height: 1.4;
-  max-width: 460px;
+  max-width: 700px !important;
+  font-family: Helvetica, sans-serif !important;
+  letter-spacing: normal !important;
+  /* font-size: 12px !important; */
+  /* font-size: 80% !important; */
+}
+
+h1.pdf {
+  font-size: 42px !important;
 }
 
 h1.pdf, h2.pdf, h3.pdf, h4.pdf, h5.pdf {
   margin-bottom: 5px;
-  line-height: 1.2;
+  line-height: 1.2 !important;
 }
 
 p.pdf {
@@ -578,6 +586,7 @@ li.pdf {
   margin: 0 10px 0 10px;
 }
 .image-container.pdf {
+  padding-bottom: 10px;
   margin-bottom: 20px;
 }
 
@@ -586,8 +595,13 @@ li.pdf {
   border: 1px solid black;
 } */
 
+table.pdf.answer {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
 table.pdf, table.pdf tr, table.pdf tr td, tbody.pdf, tbody.pdf tr td {
-  max-width: 460px;
-  font-size: 10px;
+  max-width: 700px;
+  /* font-size: 12px; */
 }
 

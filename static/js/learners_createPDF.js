@@ -1,9 +1,4 @@
-const MARGINS = {
-  top: 80,
-  bottom: 60,
-  left: 80,
-  width: 430,
-};
+window.jsPDF = window.jspdf.jsPDF
 
 async function downloadPDF() {
     console.log("starting")
@@ -16,7 +11,7 @@ async function downloadPDF() {
 
 function generatePDF() {
     return new Promise(resolve => {
-        var pdf = new jsPDF("p", "pt", "a4", true);
+        var pdf = new jsPDF("portrait", "px", "a4", true);
         let $source = $("#body-inner").clone();
 
         var pdf_container = document.createElement("div");
@@ -28,52 +23,51 @@ function generatePDF() {
 
         source = $("#pdfcontainer")[0];
 
-        pdf.fromHTML(
-            source, // HTML string or DOM elem ref.
-            MARGINS.left, // x coord
-            MARGINS.top, // y coord
-            {
-              unit: "pt",
-              jsPDF: document,
-              autoPaging: "text",
-              width: MARGINS.width, // max width of content on PDF
-            },
-            
-              function (dispose) {
-                pdf.setFontSize(7);
-                pdf.setTextColor("#9a9a9a");
-                pdf.setFont("helvetica");
+        // let test = $("#body-inner")[0]
 
-                var pageTitle = $(source).find("h1:first").text().trim();
+        pdf.html(source, {
+          callback: function (doc) {
+            doc.setFontSize(7);
+            doc.setTextColor("#9a9a9a");
+            doc.setFont("helvetica");
 
-                const pageCount = pdf.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    pdf.setPage(i);
-                    const pageSize = pdf.internal.pageSize;
-                    const pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
-                    const pageHeight = pageSize.height
-                    ? pageSize.height
-                    : pageSize.getHeight();
-                    const header = "Report: " + pageTitle;
-                    const footer = `Page ${i} of ${pageCount}`;
+            var pageTitle = $(source).find("h1:first").text().trim();
 
-                    console.log("width: ", pageWidth);
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                const pageSize = doc.internal.pageSize;
+                const pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
+                const pageHeight = pageSize.height
+                ? pageSize.height
+                : pageSize.getHeight();
+                const header = "Report: " + pageTitle;
+                const footer = `Page ${i} of ${pageCount}`;
 
-                    // Header
-                    pdf.text(header, 60, 30, { baseline: "top" });
+                console.log("width: ", pageWidth);
 
-                    // Footer
-                    pdf.text(footer, 60, pageHeight - 30, { baseline: "bottom" });
-                }
-                resolve('resolved');
-                pdf.save("Report_" + pageTitle + ".pdf");
-                $("#pdfcontainer").remove();
-                },
-                MARGINS
-              
-            // MARGINS.left, // x coord
-            // MARGINS.top, // y coord
-        );
+                // Header
+                doc.text(header, 40, 20, { baseline: "top" });
+
+                // Footer
+                doc.text(footer, 40, pageHeight - 20, { baseline: "bottom" });
+            }
+            resolve('resolved');
+            doc.save("Report_" + pageTitle + ".pdf");
+            $("#pdfcontainer").remove();
+        },
+        x: 0,
+        y: 0,
+        margin: 40,
+        autoPaging: "text",
+        filename: "test.pdf",
+        html2canvas: {
+          scale: 0.5
+        },
+        // image: {},
+        // jsPDF: {},
+        // width: 460
+      })
     });
 }
 
@@ -83,9 +77,9 @@ function cleanHTML(source) {
     let element = $(this)[0];
     let tagName = $(element).prop("tagName");
     var k = parseInt($(tagName).css("font-size"));
-    var redSize = (k * 80) / 100;
-    $(element).not(exception_list).css({ "font-size": redSize });
-    $(element).not(exception_list).css({ padding: 0 });
+    // var redSize = (k * 80) / 100;
+    // $(element).not(exception_list).css({ "font-size": redSize });
+    // $(element).not(exception_list).css({ padding: 0 });
     $(element).addClass("pdf");
   });
 
@@ -100,15 +94,19 @@ function cleanHTML(source) {
     $(this).replaceWith(this.innerHTML);
   });
 
-  // $.each($(source).find("em"), function () {
-  //   $(this).replaceWith(this.innerHTML);
-  // });
-  // $.each($(source).find("b"), function () {
-  //   $(this).replaceWith(this.innerHTML);
-  // });
-  // $.each($(source).find("strong"), function () {
-  //   $(this).replaceWith(this.innerHTML);
-  // });
+  $.each($(source).find("em"), function () {
+    $(this).replaceWith(this.innerHTML);
+  });
+  $.each($(source).find("b"), function () {
+    $(this).replaceWith(this.innerHTML);
+  });
+  $.each($(source).find("strong"), function () {
+    $(this).replaceWith(this.innerHTML);
+  });
+  $.each($(source).find("font"), function () {
+    $(this).replaceWith(this.innerHTML);
+    // TODO: Keep color
+  });
 
   // Replace labels
   $.each($(source).find("label"), function () {
@@ -180,7 +178,7 @@ function toDataURL(url, callback) {
 function adjustImgSize(img) {
   let orignial_width = $(img).prop("naturalWidth");
   let orignial_height = $(img).prop("naturalHeight");
-  let max_value = MARGINS.width;
+  let max_value = 540;
 
   if (orignial_width > max_value) {
     $(img).width(max_value);
