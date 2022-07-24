@@ -66,14 +66,21 @@
     <script src='{{"js/learners_exercise-control.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercise-script.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercise-form.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
-    <script src='{{"js/jspdf.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+
+    <!--
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" integrity="sha512-SgWewGM3r8xXm8LNXt4ZHqKVKu/7eKrJ1aBCbMaX44xXXaCcIvCAvD2kj9qnC1lhyjAu04mcPiTzcc/CaACnUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    -->
+    
     <script src='{{"js/learners_createPDF.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercises-main.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_embedPDF.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_special-functions.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
-
-    <script src='{{"js/jspdf.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
-    <script src='{{"js/learners_createPDF.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{

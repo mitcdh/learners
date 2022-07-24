@@ -1,7 +1,7 @@
 .input-group {
   display: block;
   background-color: var(--background-gray);
-  padding: 15px 25px;
+  padding: 15px 0px;
   margin: 15px 0 auto;
   border-radius: 4px;
 }
@@ -68,9 +68,9 @@
   background-color: var(--background-gray);
 }
 
-.input-group h4 {
-  margin: 0.75rem 0 1.5rem 0;
-}
+/* .input-group h4 {
+  margin: 1.0em 0 0 0;
+} */
 
 input.error, textarea.error, select.error {
   border: 1px solid var(--red-mid) !important;

@@ -1,0 +1,14 @@
+{{ $caption := .Get "caption" }} 
+{{ $src := .Get "src" }}
+{{ $.Page.Scratch.Add "imgcount" 1 }}
+{{ $count := ($.Page.Scratch.Get "imgcount") | string }}
+
+<div class="image-container">
+
+  <img src="{{ $src }}" width="" height="" alt="{{ $caption }}" />
+  <p>
+    <span><b>Figure {{ $count }}:</b> </span>
+    <span>{{ $caption }}</span>
+  </p>
+
+</div>

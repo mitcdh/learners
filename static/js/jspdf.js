@@ -5477,7 +5477,20 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
                 }
 
                 // get final column width
-                columnWidths[header] = jsPDFAPI.arrayMax(columnMinWidths);
+                let fin_width = jsPDFAPI.arrayMax(columnMinWidths)
+                let max_width = this.internal.pageSize.width - 1.5 * this.margins.left
+                if (fin_width < max_width) {
+                    columnWidths[header] = fin_width;
+                } else {
+                    columnWidths[header] = max_width;
+                }
+                // columnWidths[header] = jsPDFAPI.arrayMax(columnMinWidths);
+                console.log(this.internal)
+                console.log(this.margins)
+                console.log("width: ", max_width)
+                console.log(columnWidths[header])
+                console.log(columnMinWidths)
+                console.log(jsPDFAPI.arrayMax(columnMinWidths))
 
                 let lastHeader = headerNames[headerNames.length - 1]
                 let currentWidth = columnWidths[lastHeader]
