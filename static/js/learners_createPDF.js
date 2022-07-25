@@ -176,9 +176,23 @@ function toDataURL(url, callback) {
 }
 
 function adjustImgSize(img) {
+  
+  const width_constraints = [
+    parseInt($(img).width()),
+    parseInt(img.style.maxWidth)
+  ]
+  
+  let max_value = 540;
+
+  const max_width = Math.min.apply(Math, width_constraints.filter(Boolean))
+  if (max_width) {
+    const body_width = $("#body-inner").width()
+    const ratio = body_width / max_width
+    max_value = max_value / ratio
+  }
+  
   let orignial_width = $(img).prop("naturalWidth");
   let orignial_height = $(img).prop("naturalHeight");
-  let max_value = 540;
 
   if (orignial_width > max_value) {
     $(img).width(max_value);
