@@ -1,11 +1,11 @@
 window.jsPDF = window.jspdf.jsPDF
 
-async function downloadPDF() {
-    console.log("starting")
+async function downloadPDF(btn) {
+    $(btn).addClass("active")
     $(".pdf-loading-indicator").show()
     generatePDF().then(()=> {
-        $(".pdf-loading-indicator").hide()
-        console.log("finished")
+      $(".pdf-loading-indicator").hide()
+      $(btn).removeClass("active")
     })
 }
 
@@ -14,10 +14,14 @@ function generatePDF() {
         var pdf = new jsPDF("portrait", "px", "a4", true);
         let $source = $("#body-inner").clone();
 
+        var pdf_spacer = document.createElement("div");
+        pdf_spacer.id = "pdf-viewpoint-spacer";
+        $("#body-inner").append(pdf_spacer);
+
         var pdf_container = document.createElement("div");
         pdf_container.id = "pdfcontainer";
         $("#body-inner").append(pdf_container);
-
+        
         $("#pdfcontainer").append($source);
         cleanHTML($("#pdfcontainer"));
 
@@ -55,6 +59,7 @@ function generatePDF() {
             resolve('resolved');
             doc.save("Report_" + pageTitle + ".pdf");
             $("#pdfcontainer").remove();
+            $("#pdf-viewpoint-spacer").remove();
         },
         x: 0,
         y: 0,
@@ -81,6 +86,11 @@ function cleanHTML(source) {
     // $(element).not(exception_list).css({ "font-size": redSize });
     // $(element).not(exception_list).css({ padding: 0 });
     $(element).addClass("pdf");
+  });
+
+  // Adjust Image Sizes
+  $.each($(source).find(".input-row"), function () {
+    $(this).addClass("wide");
   });
 
   // Adjust Image Sizes
@@ -139,6 +149,7 @@ function cleanHTML(source) {
     "button",
     "aside",
     ".copy-to-clipboard",
+    "#comment-section"
   ];
   $.each(objects_to_remove, function (i) {
     $(source).find(objects_to_remove[i]).remove();

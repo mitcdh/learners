@@ -47,6 +47,26 @@
   width: 100%;
 }
 
+.input-group .input-row.uploader-element.wide {
+  display: table;
+}
+.input-group .input-row.uploader-element.wide #upload-submit {
+  margin: 7px 0px 14px 0px;
+}
+.input-group .input-row.uploader-element.wide #file {
+  align-items: left;
+  width: auto;
+  margin-right: 10px;
+}
+.input-group .input-row.uploader-element.wide #attachment-error {
+  display: none !important;
+}
+/* .input-group .input-row.wide button {
+  display: grid;
+  align-items: left;
+  width: 40%;
+} */
+
 .input-group .wide label {
   display: inline-block;
   width: 100%;
@@ -134,7 +154,7 @@ button.add-input-row:hover svg {
   fill: var(--MAIN-TITLES-TEXT-color);
 }
 
-button.btn-submit-form, button.gpdf {
+button.btn-submit-form {
   display: inline-block;
   color: #fff;
   background-color: var(--green-mid);
@@ -145,11 +165,40 @@ button.btn-submit-form, button.gpdf {
   margin: 10px 0;
 }
 
-button.btn-submit-form:hover, button.gpdf:hover {
+button.btn-submit-form:hover {
   background-color:  var(--green-light);
 }
 
-button.btn-submit-form svg.bi, button.gpdf svg.bi {
+
+button.gpdf {
+  display: inline-block;
+  color: #7e7e85;
+  padding: 16px 22px;
+  border-radius: 4px;
+  transition: 200ms ease;
+  font-weight: 600;
+  width: 100%;
+  background-color: #e9e9ed;
+  margin: 50px 0px;
+}
+button.gpdf svg.bi {
+  fill: #7e7e85;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: -2px;
+  transition: 200ms ease;
+}
+
+button.gpdf:hover, button.gpdf.active {
+  color: white;
+  background-color:  var(--primary-color);
+}
+
+button.gpdf:hover svg.bi, button.gpdf.active svg.bi {
+  fill: white;
+}
+
+button.btn-submit-form svg.bi {
   vertical-align: middle;
   display: inline-block;
   fill: #fff;

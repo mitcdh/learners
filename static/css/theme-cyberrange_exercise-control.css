@@ -383,12 +383,14 @@ div.exercise-control #history table tr th:last-child {
 }
 
 #comment-section {
-    margin: 100px 0 50px 0; 
+    margin: 50px 0 50px 0; 
     border: 1px solid #7e7e85;
     padding: 0px 30px 20px 30px;
     border-radius: 5px;
+    display: inline-block;
 }
 #comment-section h2 {
+  padding: 0;
     color: var(--primary-color);
 }
 #comment-section .btn-submit-form {
