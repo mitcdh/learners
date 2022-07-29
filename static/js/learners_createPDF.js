@@ -193,7 +193,7 @@ function adjustImgSize(img) {
     parseInt(img.style.maxWidth)
   ]
   
-  let max_value = 540;
+  let max_value = 860;
 
   const max_width = Math.min.apply(Math, width_constraints.filter(Boolean))
   if (max_width) {

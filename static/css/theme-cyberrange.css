@@ -510,7 +510,10 @@ td {
 }*/
 .image-container.pdf img {
   /* text-align: left !important; */
+  text-align: center !important;
   margin: 20px 0 5px 0 !important;
+  box-shadow: 4px 3px 4px #9d9d9d;
+  max-width: 90%;
 } 
 
 .pdf-download-wrapper {
