@@ -14,6 +14,12 @@ function generatePDF() {
         var pdf = new jsPDF("portrait", "px", "a4", true);
         let $source = $("#body-inner").clone();
 
+        var selects = $("#body-inner").find("select");
+        $(selects).each(function(i) {
+            var select = this;
+            $source.find("select").eq(i).val($(select).val());
+        });
+
         var pdf_spacer = document.createElement("div");
         pdf_spacer.id = "pdf-viewpoint-spacer";
         $("#body-inner").append(pdf_spacer);
@@ -126,7 +132,7 @@ function cleanHTML(source) {
 
   // Replace input fields with value
   $.each($(source).find("input[type=text]"), function () {
-    let value = $(this).attr("value");
+    let value = $(this).val();
     replaceInputField(value, $(this));
   });
 
@@ -193,7 +199,7 @@ function adjustImgSize(img) {
     parseInt(img.style.maxWidth)
   ]
   
-  let max_value = 860;
+  let max_value = 540;
 
   const max_width = Math.min.apply(Math, width_constraints.filter(Boolean))
   if (max_width) {
