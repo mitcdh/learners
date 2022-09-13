@@ -1,36 +1,32 @@
 function formExercise(exercise) {
 
   $.extend(jQuery.validator.messages, {
-    required: "*",
+    required: "",
   });
 
-  if ($(`#${exercise.id}`).find("#additionalInput").length) {
-    initAdditionalInput(exercise);
-  }
+  $(`#${exercise.global_exercise_id}`).validate({ ignore: [], rules: getValidationRules() });
 
-  $(`#${exercise.id}`).validate({ignore: [],  rules: getValidationRules() });
-  
-  $(`#${exercise.id}`).submit(function (event) {
-    
-    let status = $(`#${exercise.id}`).validate({ignore: [], rules: getValidationRules() });
-    
+  $(`#${exercise.global_exercise_id}`).submit(function (event) {
+
+    let status = $(`#${exercise.global_exercise_id}`).validate({ ignore: [], rules: getValidationRules() });
+
     if (($("#upload-container").length > 0) && (!$("#upload-container").find("#attachment").val())) {
       uploadFile()
-      .then(function () {
-        setTimeout(function() {
-          if ($("#upload-container").find("#attachment").val()) {
-            submitForm(this, exercise);
-            getHistory(exercise);
-          }
-        }, 500);
-      });
+        .then(function () {
+          setTimeout(function () {
+            if ($("#upload-container").find("#attachment").val()) {
+              submitForm(this, exercise);
+              getHistory(exercise);
+            }
+          }, 500);
+        });
     } else if (!Object.keys(status.invalid).length) {
       submitForm(this, exercise);
       getHistory(exercise);
     }
     event.preventDefault();
   });
-  
+
   $("#upload_form").submit(function (event) {
     let status = $(this).validate({ rules: getValidationRules() });
     if (!Object.keys(status.invalid).length) {
@@ -46,12 +42,11 @@ function formExercise(exercise) {
     event.preventDefault();
     event.stopImmediatePropagation();
   });
-  
+
   loadForm(exercise);
   initForm(exercise);
-  
-  getHistory(exercise);
 
+  getHistory(exercise);
 
 };
 
@@ -62,117 +57,64 @@ function uploadFile() {
   var defer = $.Deferred();
 
   var file_data = $("#upload-container").find("#file").prop('files')[0]
-  var form_data = new FormData();                  
+  var form_data = new FormData();
   form_data.append('file', file_data);
   $.ajax({
-      url: '/upload',
-      cache: false,
-      contentType: false,
-      processData: false,
-      data: form_data,                         
-      type: 'post',
-      headers: { Authorization: `Bearer ${getCookie("access_token_cookie")}` },
-      success: function(data){
-        showMsg("upload-container", data);
-        if (data) {
-          $("#upload-container").find("#attachment").attr("value", data.file);
-        }
-        defer.resolve(data);
+    url: '/upload',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    headers: { Authorization: `Bearer ${getCookie("access_token_cookie")}` },
+    success: function (data) {
+      showMsg("upload-container", data);
+      if (data) {
+        $("#upload-container").find("#attachment").attr("value", data.file);
       }
-   });
+      defer.resolve(data);
+    }
+  });
 
   return defer.promise();
 }
 
+function appendNewInputRow(this_fieldset, amount=1) {
+  let base = $(this_fieldset).find(".default-inputs")
+  let container = $(this_fieldset).find("#additionalInput")[0]
+  let current_count = $(container).find(".input-group").length
 
-function initAdditionalInput(exercise) {
-  $.each($(`#${exercise.id} #inputgroup_`), function (index) {
+  for (let i = 0; i < amount; i++) {
+    let new_input_row = base.clone();
+    let new_index = current_count + i + 1
 
-    let new_index = index + 1;
-    $(this).attr("id", `inputgroup_${new_index}`);
-    $(this)
-      .parent()
-      .find(".add-input-row")
-      .attr("value", `inputgroup_${new_index}`);
-  });
-
-  $(".add-input-row").click(function () {
-    addFieldset($(this), exercise);
-  });
-
-}
-
-function addFieldset(element, exercise) {
-  let current_id = element.attr("value");
-  let next_index = parseInt(current_id.match(/\d+/)[0], 10) + 1;
-  let additional_container = element.parent().find(`#${current_id}`)
-    .parent()
-    .find("#additionalInput");
-
-  let last_item = additional_container.find(".input-group").last();
-  if (last_item.length != 0) {
-    next_index = parseInt(last_item.attr("id").match(/\d+/)[0], 10) + 1;
-  }
-
-  let current_reference = element.parent().find(`#${current_id}`)
-  let new_html_object = current_reference.clone();
-  new_html_object.find("#fieldset-error").remove();
-  new_html_object.find("input").attr("value", "");
-
-  let html =
-    `<div id="inputgroup_${next_index}" style="display: none" class="input-group">`;
-  html +=
-    '<div class="closer"><svg class="bi" width="50%" height="50%"><use xlink:href="#close"></use></svg></div>';
-  html += new_html_object.html();
-  html += '</div>';
-
-  additional_container.append(html);
-  additional_container
-    .find("h4")
-    .html(`Additional ${current_reference.find("h4").html()}`);
-
-  // Update risk IDs
-  let risk_fields = current_reference.find(".riskfield")
-
-  if (risk_fields.length) {
-    let original_risk_id = current_reference.find(".riskfield")[0].id.split("_")[1]
-    let new_risk_id = `${original_risk_id}${next_index}`
-
-    $.each(current_reference.find(".riskfield"), function (index, riskfield) {
-      let prefix = riskfield.id.split("_")[0]
-      $(riskfield).attr("id", `${prefix}_${new_risk_id}`)
-      $(riskfield).attr("name", `${prefix}_${new_risk_id}`)
+    // Update Titel of new input row:
+    $(new_input_row).find("h4")[0].append(` (Additional ${new_index})`)
+    
+    // Update input names and labels
+    $.each($(new_input_row).find(".input"), function (index, input_object) {
+      let current_input_name = $(input_object).attr("name")
+      let new_input_name = `${current_input_name} (Additional ${new_index})`
+      $(new_input_row).find(`label[for=${current_input_name}]`).attr("for", new_input_name)
+      $(input_object).attr("name", new_input_name)
     })
 
-    $.each(current_reference.find(".riskfieldlabel"), function (index, riskfield) {
-      let prefix = $(riskfield).attr("for").split("_")[0]
-      $(riskfield).attr("for", `${prefix}_${new_risk_id}`)
-    })
-  }
+    $(new_input_row).removeClass("default-inputs")
+    $(new_input_row).css("display", "none")
+    
+    let closer = $('<div class="closer"><svg class="bi" width="50%" height="50%"><use xlink:href="#close"></use></svg></div>')
+    $(new_input_row).prepend(closer)
 
-  $(`#inputgroup_${next_index}`).slideDown();
-
-  $(document).on("click", ".closer", function () {
-    $(this)
-      .parent()
-      .slideUp("normal", function () {
-        $(this).remove();
-      });
-
-      setTimeout(function() {
-        persistForm(exercise);
-     }, 500);
-  });
-
-  initForm(exercise);
-  $(`#${exercise.id}`).validate({ignore: [],  rules: getValidationRules() });
+    $(container).append(new_input_row);
+    $(new_input_row).slideDown();
+  } 
 }
 
 function getHistory(exercise) {
   getExecutionHistory(exercise)
     .then(function (response) {
       // if (response.completed) {
-      //   disableForm(exercise.id);
+      //   disableForm(exercise.global_exercise_id);
       // }
     });
 }
@@ -203,12 +145,12 @@ function getFormData(exercise) {
   let form_data = {};
   let section = 0;
 
-  $.each($(`#${exercise.id}`).find(".input-group"), function () {
+  $.each($(`#${exercise.global_exercise_id}`).find("fieldset"), function () {
     section++;
     let section_obj = {};
-    let section_name = $(this).find("h4").text() || `Section ${section}`;
+    let section_name = $(this).find("h4").first().text() || `Section ${section}`;
 
-    $.each($(this).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
+    $.each($(this).find(".input").not("[name='minInputs']").not(".uploader-element"), function () {
       let input_name = $(this).attr("name");
       let input_value = $(this).val();
       section_obj[input_name] = input_value;
@@ -252,86 +194,87 @@ function minimumElements(form) {
 function submitForm(form, exercise) {
   if (minimumElements(form)) {
     exercise["formData"] = getFormData(exercise);
-    var method = $(`#${exercise.id}`).hasClass("mail") ? "mail" : "";
+    var method = $(`#${exercise.global_exercise_id}`).hasClass("mail") ? "mail" : "";
     executeAndCheck(exercise)
   }
 }
 
-function expandAdditionalInputs(storedForm, exercise) {
-  if (Object.keys(storedForm).length != 0) {
-    let index = 0;
-    $.each($(`#${exercise.id}`).find("fieldset"), function () {
-      index++;
-      let group = storedForm[index]
-      let subgroup_length = Object.keys(group).length
-      if ((subgroup_length > 1) && (Object.values(group)[0] instanceof Object)) {
-        let btn = $(this).find(".add-input-row");
-        for (let i = 0; i < (subgroup_length - 1); i++) {
-          addFieldset(btn, exercise);
-        }
-      }
-    });
-  }
-}
-
 function initForm(exercise) {
-  $.each($(`#${exercise.id} input, #${exercise.id} textarea, #${exercise.id} select`).not("[name='minInputs']"), function () {
-    $(this).on("change", (e) => {
-      persistForm(exercise);
-    });
+  
+  $(`#${exercise.global_exercise_id}`).find(".add-input-row").click(function () {
+    appendNewInputRow($(this).closest("fieldset"), amount=1);
+  });
+  
+  $(document).on("click", ".closer", function () {
+    $(this).parent().slideUp("normal", function () {
+        $(this).remove();
+      });
+    setTimeout(function () {
+      persistForm(exercise.global_exercise_id);
+    }, 500);
+  });
+
+  $(document).on("change", ".input", function () {
+    persistForm(exercise.global_exercise_id);
   });
 }
 
 function loadForm(exercise) {
+  var storedForm = JSON.parse(localStorage.getItem(exercise.global_exercise_id)) || {};
 
-  var storedForm = JSON.parse(localStorage.getItem(exercise.id)) || {};
-
+  // if stored form is not empty
   if (Object.keys(storedForm).length != 0) {
-    expandAdditionalInputs(storedForm, exercise);
+    let field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset")
 
-    let index = 0;
-    let subindex = 0;
+    let inputdata = []
 
-    $.each($(`#${exercise.id}`).find(".input-group"), function () {
-      let expandable = $(this).closest("fieldset").find("#additionalInput").length
+    const keys = Object.keys(storedForm);
 
-      if (expandable) {
-        subindex++;
-        if (subindex < 2) index++;
-        let section = storedForm[index]
-        setSectionValues(this, section[subindex]);
-      } else {
-        subindex = 0;
-        index++;
-        let section = storedForm[index]
-        setSectionValues(this, section);
+    keys.forEach((key, fieldset_index) => {
+
+      // Expand if needed
+      let additional_count = storedForm[key]["additional"]
+      appendNewInputRow(field_sets[fieldset_index], amount=additional_count)
+
+      // Extract input data
+      for (const subkey in storedForm[key]) {
+        if (subkey != "additional") inputdata.push(storedForm[key][subkey])
       }
     });
+
+    // Set data
+    let input_fields = $(`#${exercise.global_exercise_id}`).find(".input")
+    $.each($(input_fields), function (index, input_field) {
+      $(input_field).val(inputdata[index])
+    });
+
   };
 }
 
-function persistForm(exercise) {
+function persistForm(global_exercise_id) {
 
-  let index = 0;
-  let subindex = 0;
-  let form_data = {}
+  let form_data_to_store = {}
+  let parent = null
 
-  $.each($(`#${exercise.id}`).find(".input-group"), function () {
-    let expandable = $(this).closest("fieldset").find("#additionalInput").length
-    if (expandable) {
-      subindex++;
-      if (subindex < 2) index++;
-      let subgroup = form_data[index] || {};
-      subgroup[subindex] = getSectionValues(this);
-      form_data[index] = subgroup;
-    } else {
-      subindex = 0;
-      index++;
-      form_data[index] = getSectionValues(this);
+  $.each($(`#${global_exercise_id}`).find(".input"), function (index, input_field) {
+
+    // get current fieldset
+    let current_parent = $(input_field).closest("fieldset")[0]
+
+    // init parent fieldset
+    if (parent != current_parent) {
+      parent = current_parent
+      parentindex = index
+    }
+
+    // if in the same fieldset
+    if (parent == current_parent) {
+      form_data_to_store[parentindex] = form_data_to_store[parentindex] || {}
+      form_data_to_store[parentindex][index] = $(input_field).val()
+      form_data_to_store[parentindex]["additional"] = $(parent).find(".closer").length
     }
   });
-
-  localStorage.setItem(exercise.id, JSON.stringify(form_data));
+  localStorage.setItem(global_exercise_id, JSON.stringify(form_data_to_store));
 }
 
 function setSectionValues(element, section) {

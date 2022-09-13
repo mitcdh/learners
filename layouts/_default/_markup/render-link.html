@@ -1,0 +1,5 @@
+{{ $src := .Destination | safeURL }}
+{{ $destination := index (first 1 (split $src "?target=")) 0 }}
+{{ $target := index (first 1 (after 1 (split $src "?target="))) 0 }}
+
+<a href="{{ $destination }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if $target }} target="{{ $target }}"{{ end }}>{{ .Text }}</a>

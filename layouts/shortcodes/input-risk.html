@@ -35,7 +35,7 @@
 <!-- Likelihood -->
 <div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="likelihood_{{ $risk_id }}" class="riskfieldlabel">{{ $likelihood_label }} *</label>
-  <select id="likelihood_{{ $risk_id }}" name="likelihood_{{ $risk_id }}" class="required riskfield" onchange="calcRiskValue(this)">
+  <select id="likelihood_{{ $risk_id }}" name="likelihood_{{ $risk_id }}" class="input required riskfield" onchange="calcRiskValue(this)">
     {{ range $index, $element := $likelihood_options }}<option value="{{ . }}" {{ if eq $index 0 }}selected{{ end }}>{{ . }}</option>{{ end }}
   </select>
 </div>
@@ -43,7 +43,7 @@
 <!-- Impact -->
 <div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="impact_{{ $risk_id }}" class="riskfieldlabel">{{ $impact_label }} *</label>
-  <select id="impact_{{ $risk_id }}" name="impact_{{ $risk_id }}" class="required riskfield" onchange="calcRiskValue(this)">
+  <select id="impact_{{ $risk_id }}" name="impact_{{ $risk_id }}" class="input required riskfield" onchange="calcRiskValue(this)">
     {{ range $index, $element := $impact_options }}<option value="{{ . }}" {{ if eq $index 0 }}selected{{ end }}>{{ . }}</option>{{ end }}
   </select>  
 </div>
@@ -51,7 +51,7 @@
 <!-- Risk -->
 <div class="input-row {{ if $input_wide }}wide{{ end }}">  
   <label for="risk_{{ $risk_id }}" class="riskfieldlabel">{{ $risk_label }}</label>
-  <input type="text" id="risk_{{ $risk_id }}" name="risk_{{ $risk_id }}" readonly class="riskfield" onclick="calcRiskValue(this)">
+  <input type="text" id="risk_{{ $risk_id }}" name="risk_{{ $risk_id }}" readonly class="input riskfield" onclick="calcRiskValue(this)">
 </div>
 
 <script>

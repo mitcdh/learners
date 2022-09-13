@@ -64,13 +64,11 @@
     <script src="{{"js/highlight.pack.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <script src="{{"js/modernizr.custom-3.6.0.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
+    <script src="{{"js/hugo-learn.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
     <script src="{{"js/learn.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
     {{ if (or (and (ne .Params.disableMermaid nil) (not .Params.disableMermaid)) (not .Site.Params.disableMermaid)) }}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.14.0/mermaid.min.js"
-        integrity="sha512-vLumCjg7NKEQKGM+xAgBYTvQ90DVu6Eo7vS1T/iPf2feNLcrpGxvumuUUmE3CPiCUPgviyKbtpWGDbhnVnmJxg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-        </script>
+    <script src='{{"js-libs/mermaid-8.14.0.min.js"| relURL}}'></script>
 
         <script>
             mermaid.initialize({ startOnLoad: true });

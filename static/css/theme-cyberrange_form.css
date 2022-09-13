@@ -29,7 +29,7 @@
   color: var(--dark);
   text-transform: none;
   font-weight: 300;
-  background: #ededed;
+  background-color: var(--background-gray-color);
   text-align: left;
   border: 1px solid #d5d5d5;
   width: auto;
@@ -208,4 +208,9 @@ button.btn-submit-form svg.bi {
 #upload-submit {
   margin: 0px 0px 14px 10px;
   background-color: var(--primary-color);
+}
+
+.required_marker {
+  font-weight: 300;
+  font-size: 75%;
 }

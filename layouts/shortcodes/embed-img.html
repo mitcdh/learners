@@ -1,14 +1,4 @@
-{{ $caption := .Get "caption" }} 
-{{ $src := .Get "src" }}
-{{ $.Page.Scratch.Add "imgcount" 1 }}
-{{ $count := ($.Page.Scratch.Get "imgcount") | string }}
+{{ $caption := .Get "caption" | default "" }} 
+{{ $file := .Get "file" }}
 
-<div class="image-container">
-
-  <img src="{{ $src }}" width="" height="" alt="{{ $caption }}" />
-  <p>
-    <span><b>Figure {{ $count }}:</b> </span>
-    <span>{{ $caption }}</span>
-  </p>
-
-</div>
+<img src="{{ .Page.Site.BaseURL }}/res/{{ $.Page.File.Dir }}{{ $file }}" width="" height="" alt="{{ $caption }}" />

@@ -2,8 +2,8 @@
 {{ $group_extendable := .Get "extendable" | default false }}
 {{ $group_minInputs := .Get "min" | default 0 }}
 
-<fieldset>
-<div id="{{ if $group_extendable }}inputgroup_{{ else }}inputgroup{{end}}" class="input-group">
+<fieldset extendable="{{ $group_extendable }}" title="{{ $group_title | htmlEscape }}">
+<div id="{{ if $group_extendable }}inputgroup_{{ else }}inputgroup{{end}}" class="input-group default-inputs">
 <input type="hidden" name="minInputs" value="{{ $group_minInputs }}">
   
 {{ if $group_title }}
@@ -11,17 +11,13 @@
 {{ end }}
 
 <div id="fieldset-error"></div>
-
 {{ .Inner }}
-
 </div>
 
 {{ if $group_extendable }}
 <div id="additionalInput"></div>
 
-
-<button type="button" class="add-input-row" value="">
-  
+<button type="button" class="add-input-row" value="">  
   <svg class="bi" width="50%" height="50%">
     <use xlink:href="#add"></use>
   </svg>

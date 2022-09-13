@@ -6,8 +6,8 @@
 <div id="upload-container">
 
 <div class="input-row {{ if $input_wide }}wide{{ end }} uploader-element">
-  <label class=" uploader-element">{{ $input_label }}{{ if $input_required }} *{{ end }}</label>
-  <input type="file" id="file" name="file" style="cursor: pointer;" class="{{ if $input_required }}required{{ end }} uploader-element" form="upload_form">
+  <label class=" uploader-element">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
+  <input type="file" id="file" name="file" style="cursor: pointer;" class="input {{ if $input_required }}required{{ end }} uploader-element" form="upload_form">
   <input type="hidden" name="attachment" id="attachment" value="" class="{{ if $input_required }}required{{ end }}">
   
   <button id="upload-submit" type="submit" class="btn-submit-form btn-submit-upload uploader-element" value=""  form="upload_form">
