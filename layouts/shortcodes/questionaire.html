@@ -1,0 +1,97 @@
+{{ $form_name := $.Page.Params.menuTitle }}
+{{ $form_id := substr (replace $form_name " " "_") 0 }}
+{{ $questionaireWeight := $.Page.Weight }}
+{{ $parentWeight := $.Page.Parent.Weight }}
+{{ $title := .Get "title" | default "Questionaire"}}
+
+<input class="questionaire-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "title":"{{ $form_name }}", "type":"questionaire", "questionaireWeight":"{{ $questionaireWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
+
+<form
+  id="{{ $form_id }}"
+  class="form questionaire-form"
+>
+<h3>{{ $title }}</h3>
+
+  {{ .Inner }}
+
+<div class="exercise-control">
+  
+  <h4>Questionaire Submission</h4>
+
+  <section class="stats_display">
+    <ul class="stats-list">
+      <li>
+        <span>Questionaire submitted</span>
+        <span class="stat_indicator_container">
+          <div
+            id="exercise_executed"
+            class="stat_indicator loading"
+            style="display: none"
+          >
+            <svg
+              class="stat_icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 52 52"
+            >
+              <circle class="stat_circle" cx="26" cy="26" r="26" fill="none" />
+              <path
+                class="stat_check"
+                fill="none"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"
+              />
+              <g class="stat_cross">
+                <path d="m15.07675,36.98865l21.84649,-21.9773" fill="none" />
+                <path d="m36.98865,36.92324l-21.9773,-21.84649" fill="none" />
+              </g>
+            </svg>
+          </div>
+        </span>
+      </li>
+      <li>
+        <span>Questionaire completed</span>
+        <span class="stat_indicator_container">
+          <div
+            id="exercise_completed"
+            class="stat_indicator loading"
+            style="display: none"
+          >
+            <svg
+              class="stat_icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 52 52"
+            >
+              <circle class="stat_circle" cx="26" cy="26" r="26" fill="none" />
+              <path
+                class="stat_check"
+                fill="none"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"
+              />
+              <g class="stat_cross">
+                <path d="m15.07675,36.98865l21.84649,-21.9773" fill="none" />
+                <path d="m36.98865,36.92324l-21.9773,-21.84649" fill="none" />
+              </g>
+            </svg>
+          </div>
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <button id="submitExercise" type="submit" class="btn-submit-form" value="">
+    <svg class="bi" width="22" height="22" style="margin-right: 5px;">
+      <use xlink:href="#play"></use>
+    </svg>
+    submit
+  </button>
+
+  <div id="msg-container">
+    <div id="msg"></div>
+  </div>
+
+  <div id="msg-detail">
+  </div>
+
+  <div id="history" style="display: none"></div>
+
+</div>
+</form>

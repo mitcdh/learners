@@ -1,0 +1,25 @@
+{{ $src := .Destination }}
+{{ $alt := .PlainText | safeHTML }}
+{{ $tag := index (first 1 (after 1 (split $src "#"))) 0 }}
+{{ $caption := $alt }}
+
+{{- if eq $tag "figure" -}}
+   {{ $.Page.Scratch.Add "imgcount" 1 }}
+   {{ $count := ($.Page.Scratch.Get "imgcount") | string }}
+   <div class="image-container">
+       <img src="{{ .Page.Site.BaseURL }}/res/{{ $.Page.File.Dir }}{{ $src }}" width="" height="" alt="{{ $caption }}" />
+       <p>
+           <span><b>Figure {{ $count }}{{ if $caption }}:{{ end }}</b> </span>
+           <span>{{ $caption }}</span>
+       </p>
+   </div>
+{{- else if eq $tag "editable" -}}
+   <div class="image-container">
+       <img src="{{ .Page.Site.BaseURL }}/res/{{ $.Page.File.Dir }}{{ $src }}" width="" height="" alt="{{ $caption }}" />
+       <p>
+           <a onclick="parent.abc('http://localhost:5000/access#drawio');" href="http://localhost:5000/access#drawio">edit</a>
+       </p>
+   </div>
+{{- else -}}
+   <img src="{{ .Page.Site.BaseURL }}/res/{{ $.Page.File.Dir }}{{ $src }}" width="" height="" alt="{{ $alt }}" />
+{{- end -}}

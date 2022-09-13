@@ -121,26 +121,41 @@
 {{ $showvisitedlinks := .showvisitedlinks }}
 {{ $currentNode := .currentnode }}
 {{ $currentFileUniqueID := "" }}
+{{ $topLevelEntry := false }}
 {{ with $currentNode.File }}{{ $currentFileUniqueID = .UniqueID }}{{ end }}
  {{with .sect}}
   {{if and .IsSection (or (not .Params.hidden) $.showhidden)}}
     {{safeHTML .Params.head}}
+
+    {{ $currentPermalink := .Permalink }}
+    {{ range .Site.Sections }}
+      {{ if eq $currentPermalink .Permalink }}
+        {{ $topLevelEntry = true }}
+      {{ end }}
+    {{ end }}
+
+    {{ $activeMenuEntry := eq .File.UniqueID $currentFileUniqueID}}
     <li data-nav-id="{{.RelPermalink}}" title="{{.Title}}" class="dd-item
-        {{if .IsAncestor $currentNode }}parent{{end}}
-        {{if eq .File.UniqueID $currentFileUniqueID}}active{{end}}
-        {{if .Params.alwaysopen}}parent{{end}}
-        ">
+    {{if .IsAncestor $currentNode }}parent{{end}}
+    {{ if $activeMenuEntry }}active{{end}}
+    {{ if and $topLevelEntry (not .Site.Params.devStage) }}no-indent{{end}}
+    ">
+      {{ if or (not $topLevelEntry) (.Site.Params.devStage) }}
       <a href="{{.RelPermalink}}">
           {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
           {{ if $showvisitedlinks}}
             <i class="fas fa-check read-icon"></i>
           {{ end }}
       </a>
+      {{ end }}
       {{ $numberOfPages := (add (len ( where .Pages "Params.hidden" "ne" true )) (len ( where .Sections "Params.hidden" "ne" true ))) }}
       {{ if ne $numberOfPages 0 }}
+      
+      {{ if or ($activeMenuEntry) ($topLevelEntry) (.IsAncestor $currentNode)}}
+      
         <ul>
           {{ $currentNode.Scratch.Set "pages" .Pages }}
-          {{ if .Sections}}
+          {{ if .Sections }}
             {{ $currentNode.Scratch.Set "pages" (.Pages | union .Sections) }}
           {{end}}
           {{ $pages := ($currentNode.Scratch.Get "pages") }}
@@ -161,6 +176,9 @@
           {{ end }}
         {{end}}
         </ul>
+
+        {{ end }}
+
       {{ end }}
     </li>
   {{else}}

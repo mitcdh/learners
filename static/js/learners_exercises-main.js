@@ -9,13 +9,13 @@ $(function () {
 
     $.each(exercises, function (i, exercise_item) {
         var exercise = {
-            name: exercise_item.name,
-            id: exercise_item.id,
-            type: exercise_item.type,
+            exercise_name: exercise_item.exercise_name,
+            global_exercise_id: exercise_item.global_exercise_id,
+            exercise_type: exercise_item.exercise_type,
             script: exercise_item.script || null
         }
 
-        switch (exercise.type) {
+        switch (exercise.exercise_type) {
             case "form":
                 formExercise(exercise);
                 break;

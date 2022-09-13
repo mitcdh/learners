@@ -1,15 +1,39 @@
-{{ $form_name := .Get "name" }} 
-{{ $form_id := substr (replace $form_name " " "_") 0 }}
-{{ $form_mail := .Get "mail" }}
-{{ $exerciseWeight := $.Page.Weight }}
-{{ $parentWeight := $.Page.Parent.Weight }}
+{{ $exercise_name := .Get "name" }} 
+{{ if ($.Page.Scratch.Get $exercise_name | default false) }}
+  {{ $divider := "------------------------------------------------------------------------------------------------------------\n"}}
+  {{- errorf "\n\n%sDuplicate exercise name: '%s' already used on page '%s'.\nAll Exercise Names must be unique per page.\n%s" $divider $exercise_name $.Page.File $divider -}}
+{{ end }}
+{{ $.Page.Scratch.Set $exercise_name true }}
 
-{{ $.Page.Scratch.Add "exid" 1 }}
-{{ $pageid := (md5 $.Page.File.Path) }}
-{{ $exid := ($.Page.Scratch.Get "exid") | string }}
-{{ $form_id := $exid | printf "%s%s" $pageid }}
+{{ $pages := (where .Site.Pages "Section" $.Page.Section).ByWeight }}
+{{ $root_candidate := $.Page.CurrentSection }}
+{{ range $pages }}
+  {{ if in ($root_candidate.File.Dir | string ) (.File.Dir | string) }}
+    {{ if not (eq . $.Page.FirstSection)}}
+      {{ $root_candidate = .}}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $root_name := $root_candidate.Title }}
+{{ $root_weight := $root_candidate.Weight | int }}
+{{ $parent_weight := $.Page.Parent.Weight | int }}
+{{ $child_weight := $.Page.Weight | int }}
 
-<input class="exercise-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "title":"{{ $form_name }}", "pageTitle":"{{ $.Page.Title }}", "parent":"{{ $.Page.Parent.Title }}", "type":"form", "exerciseWeight":"{{ $exerciseWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
+{{ $root_dir := index (first 1 (after 1 (split $.Page.File.Dir "/"))) 0 }}
+
+{{ $.Page.Scratch.Add "local_exercise_id" 1 }}
+{{ $local_exercise_id := ($.Page.Scratch.Get "local_exercise_id") }}
+
+{{ $global_exercise_id := md5 (printf "%s%s" $.Page.File.Dir $exercise_name) }}
+
+{{ $__root_weight := mul $root_weight 1000 | int}}
+{{ $__parent_weight := mul $parent_weight 100 | int}}
+{{ $__child_weight := mul $child_weight 10 | int}}
+{{ $order_weight := add (add $__root_weight $__parent_weight) (add $__child_weight ($local_exercise_id | int)) | int}}
+
+{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_name) "exercise_type" "form" "child_weight" $child_weight "parent_weight" $parent_weight "root_weight" $root_weight)}}
+
+<input class="exercise-info" type="hidden" name="info" value='{"global_exercise_id":"{{ $global_exercise_id }}", "exercise_name":"{{ htmlEscape $exercise_name }}", "exercise_type":"form" }'> 
 
 <form 
   id="upload_form"
@@ -17,15 +41,15 @@
 ></form>
 
 <form
-  id="{{ $form_id }}"
-  class="form exercise-control {{ if $form_mail }}mail{{ end }}"
+  id="{{ $global_exercise_id }}"
+  class="form exercise-control"
 >
   {{ .Inner }}
 
 <div class="exercise-control">
   
   <h5>Exercise Control</h5>
-  <h4>{{ $form_name }}</h4>
+  <h4>{{ $exercise_name }}</h4>
 
   <section class="stats_display">
     <ul class="stats-list">

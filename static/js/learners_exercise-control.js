@@ -279,18 +279,18 @@ function executeAndCheck(exercise) {
   var defer = $.Deferred();
   var disable_on_success = false;
 
-  showLoading(`#${exercise.id} #exercise_executed`);
-  showLoading(`#${exercise.id} #exercise_completed`);
-  $(`#${exercise.id} #submitExercise`).prop("disabled", true);
-  $(`#${exercise.id} #error-msg`).html("");
-  $(`#${exercise.id} #success-msg`).html("");
-  $(`#${exercise.id} #notification-msg`).html("");
+  showLoading(`#${exercise.global_exercise_id} #exercise_executed`);
+  showLoading(`#${exercise.global_exercise_id} #exercise_completed`);
+  $(`#${exercise.global_exercise_id} #submitExercise`).prop("disabled", true);
+  $(`#${exercise.global_exercise_id} #error-msg`).html("");
+  $(`#${exercise.global_exercise_id} #success-msg`).html("");
+  $(`#${exercise.global_exercise_id} #notification-msg`).html("");
 
   let data = {
-    "name": exercise.id,
+    "name": exercise.global_exercise_id,
   }
 
-  if (exercise.type == "script") {
+  if (exercise.exercise_type == "script") {
     data["script"] = exercise.script
   } else {
     data["form"] = exercise.formData
@@ -298,27 +298,27 @@ function executeAndCheck(exercise) {
 
   data = JSON.stringify(data)
 
-  sendAjax("POST", { url: `/execution/${exercise.type}`, data: data })
+  sendAjax("POST", { url: `/execution/${exercise.exercise_type}`, data: data })
     .then(function (data, textStatus, jqXHR) {
-      showExecutionState(exercise.id, data);
-      sendAjax("GET", { url: `/execution/${exercise.id}` })
+      showExecutionState(exercise.global_exercise_id, data);
+      sendAjax("GET", { url: `/execution/${exercise.global_exercise_id}` })
         .then(function (data, textStatus, jqXHR) {
-          visualFeedback(exercise.id, data, disable_on_success);
-          printHistory(exercise.id, data.history);
+          visualFeedback(exercise.global_exercise_id, data, disable_on_success);
+          printHistory(exercise.global_exercise_id, data.history);
           getState();
           defer.resolve(data);
         })
         .catch(function (jqXHR, textStatus, errorThrown) {
-          $(`#${exercise.id} #submitExercise`).prop("disabled", false);
-          visualFeedback(exercise.id, "", disable_on_success);
+          $(`#${exercise.global_exercise_id} #submitExercise`).prop("disabled", false);
+          visualFeedback(exercise.global_exercise_id, "", disable_on_success);
           defer.reject(jqXHR, textStatus, errorThrown);
         });
 
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      $(`#${exercise.id} #submitExercise`).prop("disabled", false);
-      visualFeedback(exercise.id, "", disable_on_success);
+      $(`#${exercise.global_exercise_id} #submitExercise`).prop("disabled", false);
+      visualFeedback(exercise.global_exercise_id, "", disable_on_success);
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 
@@ -328,20 +328,20 @@ function executeAndCheck(exercise) {
 function getExecutionHistory(exercise) {
   var defer = $.Deferred();
 
-  var id_executed = `#${exercise.id} #exercise_executed`;
-  var id_completed = `#${exercise.id} #exercise_completed`;
+  var id_executed = `#${exercise.global_exercise_id} #exercise_executed`;
+  var id_completed = `#${exercise.global_exercise_id} #exercise_completed`;
 
   showLoading(id_executed);
   showLoading(id_completed);
 
-  sendAjax("GET", { url: `/execution/${exercise.id}` })
+  sendAjax("GET", { url: `/execution/${exercise.global_exercise_id}` })
     .then(function (data, textStatus, jqXHR) {
-      visualFeedback(exercise.id, data);
-      printHistory(exercise.id, data.history);
+      visualFeedback(exercise.global_exercise_id, data);
+      printHistory(exercise.global_exercise_id, data.history);
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
-      visualFeedback(exercise.id, "");
+      visualFeedback(exercise.global_exercise_id, "");
       defer.reject(jqXHR, textStatus, errorThrown);
     });
 
@@ -353,12 +353,15 @@ function getState() {
   sendAjax("GET", { url: `/execution-state` })
     .then(function (data, textStatus, jqXHR) {
 
+      console.log(data.success_list)
       $.each(data.success_list, function (parentTitle, parentExercise) {
 
         let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
+        console.log(parentTitle)
         update_counter(menuItem, parentExercise.done, parentExercise.total)
 
         $.each(parentExercise.exercises, function (i, subExercise) {
+          console.log(subExercise)
           let subMenuItem = $(`.topics li[title='${subExercise.title}']`).find("a").first()
           if (subMenuItem.length > 0) {
             update_counter(subMenuItem, subExercise.done, subExercise.total)
@@ -376,10 +379,11 @@ function getState() {
 }
 
 function update_counter(element, done, total) {
+  console.log(element)
   let icon = element.find("i").first();
   icon.addClass("counter");
-  if (element.html().match(/\(\d\/\d\)/)) {
-    element.html(element.html().replace(/\(\d\/\d\)/, `(${done}/${total})`));
+  if (element.html().match(/\(\d\/\d+\)/)) {
+    element.html(element.html().replace(/\(\d\/\d+\)/, `(${done}/${total})`));
   } else if (icon.length) {
     icon.append(`(${done}/${total})`)
   } else {
@@ -397,12 +401,12 @@ function update_counter(element, done, total) {
 function postComment(exercise, comment) {
   var defer = $.Deferred();
   let data = {
-    "exercise_name": exercise.id,
+    "exercise_name": exercise.global_exercise_id,
     "comment": comment,
   }
   data = JSON.stringify(data)
 
-  var msg_container = $(`#status-${exercise.id}`);
+  var msg_container = $(`#status-${exercise.global_exercise_id}`);
 
   sendAjax("POST", { url: `/comment`, data: data })
     .then(function (data, textStatus, jqXHR) {

@@ -1,0 +1,5 @@
+{{ $padding := .Get "padding" | default "10px" }} 
+{{ $ratio := .Get "ratio" | default "" }} 
+{{ $divider := .Get "divider" | default false }} 
+
+<div class="layout-table-marker" divider="{{ $divider }}" padding="{{ $padding }}" ratio="{{ $ratio }}"></div>

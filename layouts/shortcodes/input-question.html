@@ -1,0 +1,39 @@
+{{ $question := .Get "question" }} 
+{{ $.Page.Scratch.Add "question_index" 1 }}
+{{ $question_index := ($.Page.Scratch.Get "question_index") }}
+
+{{ $input_name := substr (replace $question " " "_") 0 }}
+
+{{ $options := split (.Get "options" ) ","}} 
+{{ $all := .Get "all" | default false }} 
+{{ $alphabet := split ("A,B,C,D,E,F,G") "," }}
+{{ $final_index := 0 }}
+
+<div class="input-row wide questionaire-options-container">
+    
+<h4>{{ $question_index }}. {{ $question }}</h4>
+
+<fieldset class="questionaire-option-container">
+{{- range $index, $label := $options -}}
+    <div class="questionaire-option">
+        <input type="radio" id="Q{{ $question_index }}-{{ $index }}" name="Q{{ $question_index }}" value="{{ index $alphabet $index }}">
+        <label for="Q{{ $question_index }}-{{ $index }}">
+            {{ index $alphabet $index }}. {{ $label }}
+        </label>
+    </div>
+    {{ $final_index = add $final_index 1 }}
+{{- end -}}
+
+{{- if $all -}}
+    <div class="questionaire-option questionaire-option-all">
+        <input type="radio" id="Q{{ $question_index }}-{{ $final_index }}" name="Q{{ $question_index }}" value="{{ index $alphabet $final_index }}">
+        <label for="Q{{ $question_index }}-{{ $final_index }}">
+            {{ index $alphabet $final_index }}. All of the above
+        </label>
+    </div>
+{{- end -}}
+
+</fieldset>
+</div>
+
+
