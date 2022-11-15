@@ -1,5 +1,5 @@
-{{ $input_label := .Get "label" }} 
-{{ $input_name := substr (replace $input_label " " "_") 0 }}
+{{ $input_label := .Get "label" | htmlEscape }} 
+{{ $input_name := $input_label | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}
 {{ $input_required := .Get "required" | default false }}
 {{ $input_wide := .Get "wide" | default false }}
 

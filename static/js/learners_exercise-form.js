@@ -279,7 +279,7 @@ function persistForm(global_exercise_id) {
 
 function setSectionValues(element, section) {
   if (section) {
-    $.each($(element).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
+    $.each($(element).find(".input").not("[name='minInputs']").not(".uploader-element"), function () {
       $(this).val(section[$(this).attr("name")])
     });
   }
@@ -287,10 +287,45 @@ function setSectionValues(element, section) {
 
 function getSectionValues(element) {
   let input_group_obj = {}
-  $.each($(element).find("input, textarea, select").not("[name='minInputs']").not(".uploader-element"), function () {
+  $.each($(element).find(".input").not("[name='minInputs']").not(".uploader-element"), function () {
     let input_name = $(this).attr("name");
     let input_value = $(this).val();
     input_group_obj[input_name] = input_value;
   });
   return input_group_obj;
 }
+
+function callSetDrawIO(event, parent, url_encoded_data, button_element) {
+
+  let container = $(button_element).closest(".image-container")
+  let current_input = $(container).find("textarea.drawio-input").val()
+  console.log(url_encoded_data)
+  if (current_input) url_encoded_data = current_input
+  console.log(url_encoded_data)
+
+  try {
+    parent.setDrawIO(url_encoded_data);
+  } catch (e) {
+    let newTab = window.open(`https://app.diagrams.net/${url_encoded_data}`, "_blank");
+    newTab.name = `drawio_tab`;
+  }
+  event.preventDefault(); 
+}
+
+function insertDrawIOhook(element) {
+  let current_value = $(element).val().split("#")
+  let title = (current_value[0]).split("title=")[1] || "unknown"
+  let url_encoded_data = current_value[1]
+  let new_value = ""
+  if (url_encoded_data) new_value = `?title=${title}#${url_encoded_data}`
+  $(element).val(new_value)
+  if (!new_value) {
+    $(element).attr("placeholder", "Please paste in the url-encoded diagram (menu - file - publish - link)")
+  }
+}
+
+$(function () {
+  $(".drawio-input").bind('input propertychange', function() {
+    insertDrawIOhook(this)
+  });
+})

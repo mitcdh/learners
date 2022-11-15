@@ -2,7 +2,7 @@
 {{ $group_extendable := .Get "extendable" | default false }}
 {{ $group_minInputs := .Get "min" | default 0 }}
 
-<fieldset extendable="{{ $group_extendable }}" title="{{ $group_title | htmlEscape }}">
+<fieldset extendable="{{ $group_extendable }}" title='{{ $group_title | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}'>
 <div id="{{ if $group_extendable }}inputgroup_{{ else }}inputgroup{{end}}" class="input-group default-inputs">
 <input type="hidden" name="minInputs" value="{{ $group_minInputs }}">
   

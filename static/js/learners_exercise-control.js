@@ -353,15 +353,12 @@ function getState() {
   sendAjax("GET", { url: `/execution-state` })
     .then(function (data, textStatus, jqXHR) {
 
-      console.log(data.success_list)
       $.each(data.success_list, function (parentTitle, parentExercise) {
 
         let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
-        console.log(parentTitle)
         update_counter(menuItem, parentExercise.done, parentExercise.total)
 
         $.each(parentExercise.exercises, function (i, subExercise) {
-          console.log(subExercise)
           let subMenuItem = $(`.topics li[title='${subExercise.title}']`).find("a").first()
           if (subMenuItem.length > 0) {
             update_counter(subMenuItem, subExercise.done, subExercise.total)
@@ -379,7 +376,6 @@ function getState() {
 }
 
 function update_counter(element, done, total) {
-  console.log(element)
   let icon = element.find("i").first();
   icon.addClass("counter");
   if (element.html().match(/\(\d\/\d+\)/)) {
@@ -401,7 +397,7 @@ function update_counter(element, done, total) {
 function postComment(exercise, comment) {
   var defer = $.Deferred();
   let data = {
-    "exercise_name": exercise.global_exercise_id,
+    "global_exercise_id": exercise.global_exercise_id,
     "comment": comment,
   }
   data = JSON.stringify(data)

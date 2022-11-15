@@ -54,8 +54,6 @@ function generatePDF() {
                 const header = "Report: " + pageTitle;
                 const footer = `Page ${i} of ${pageCount}`;
 
-                console.log("width: ", pageWidth);
-
                 // Header
                 doc.text(header, 40, 20, { baseline: "top" });
 

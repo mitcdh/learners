@@ -6,22 +6,22 @@
 {{ $risk_label := .Get "risk_label" | default "Risk as (L x I)" }}
 
 <!-- Likelihood defaults -->
-{{ $likelihood_options := (split (.Get "likelihood_options" ) ",")}}
+{{ $likelihood_options := (split (.Get "likelihood_options" ) ";")}}
 {{ with $likelihood_options }}
   {{ if gt (len .) 1 }}    
     {{ $likelihood_options = . }}
   {{ else }}
-    {{ $likelihood_options = (split "1 - Remote,2 - Unlikely,3 - Possible,4 - Likely,5 - Certain" ",")}}  
+    {{ $likelihood_options = (split "1 - Remote;2 - Unlikely;3 - Possible;4 - Likely;5 - Certain" ";")}}  
   {{ end }}
 {{ end }}
 
 <!-- Impact defaults -->
-{{ $impact_options := (split (.Get "impact_options" ) ",")}}
+{{ $impact_options := (split (.Get "impact_options" ) ";")}}
 {{ with $impact_options }}
   {{ if gt (len .) 1 }}    
     {{ $impact_options = . }}
   {{ else }}
-    {{ $impact_options = (split "1 - Trivial,2 - Minor,3 - Moderate,4 - Major,5 - Critical" ",")}}  
+    {{ $impact_options = (split "1 - Trivial;2 - Minor;3 - Moderate;4 - Major;5 - Critical" ";")}}  
   {{ end }}
 {{ end }}
 

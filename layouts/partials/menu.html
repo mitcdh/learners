@@ -7,12 +7,7 @@
 {{ $currentNode := . }}
 {{ $showvisitedlinks := .Site.Params.showVisitedLinks }}
   <div id="header-wrapper">
-    <div id="header">
-      {{ partial "logo.html" . }}
-    </div>
-    {{if not .Site.Params.disableSearch}}
-        {{ partial "search.html" . }}
-    {{end}}
+    <h3 style="text-transform: capitalize; margin: 0; padding-top: 10px;">{{ .Section }}</h3>
   </div>
   {{if not .Site.Params.disableLandingPageButton }}
     <section id="homelinks">
@@ -141,7 +136,7 @@
     {{ if and $topLevelEntry (not .Site.Params.devStage) }}no-indent{{end}}
     ">
       {{ if or (not $topLevelEntry) (.Site.Params.devStage) }}
-      <a href="{{.RelPermalink}}">
+      <a href="{{.RelPermalink}}" hideopts="{{.Params.hideopts}}" devstage="{{ .Site.Params.devStage }}" >
           {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
           {{ if $showvisitedlinks}}
             <i class="fas fa-check read-icon"></i>
@@ -184,7 +179,7 @@
   {{else}}
     {{ if not .Params.Hidden }}
       <li data-nav-id="{{.RelPermalink}}" title="{{.Title}}" class="dd-item {{if eq .File.UniqueID $currentFileUniqueID}}active{{end}}">
-        <a href="{{ .RelPermalink}}">
+        <a href="{{ .RelPermalink}}" hideopts="{{.Params.hideopts}}" devstage="{{ .Site.Params.devStage }}">
         {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
         {{ if $showvisitedlinks}}<i class="fas fa-check read-icon"></i>{{end}}
         </a>

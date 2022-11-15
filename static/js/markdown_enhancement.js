@@ -1,6 +1,23 @@
 $(function () {
 
     // ################################################
+    // Autofit Fontsize in Table
+    // ################################################
+    
+    let tables = $("table")
+    
+    $(tables).hide() // hide tables to allow resizing table by table
+    $(tables).each(function (index, table_object) {
+        $(table_object).show() // insert respective table
+        let max_width = $("#body-inner").width()
+        let fontSize = 100;
+        while ($(table_object).width() > max_width && fontSize > 0) {
+            fontSize -= 5;
+            $(table_object).css("font-size", fontSize + '%')
+        }
+    });
+
+    // ################################################
     // Table Cell Colors
     // ################################################
 
@@ -131,8 +148,8 @@ $(function () {
             return (`${ratio_element}%`)            
         })
         
-        console.log($(marker).attr("divider"))
-        if ($(marker).attr("divider")) $(table_object).addClass("divider")
+        if ($(marker).attr("divider") == "true") $(table_object).addClass("divider")
+        if ($(marker).attr("striped") == "true") $(table_object).addClass("striped")
 
         // Apply CSS
         $(table_object).find("tr td").each(function (index, td_object) {

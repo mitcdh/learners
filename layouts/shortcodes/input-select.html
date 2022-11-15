@@ -1,7 +1,7 @@
 {{ $input_label := .Get "label" }} 
-{{ $input_name := substr (replace $input_label " " "_") 0 }}
+{{ $input_name := $input_label | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}
 {{ $default_selection := .Get "default" | default "-- please select --" }} 
-{{ $input_options := split (.Get "options" ) ","}} 
+{{ $options := split (.Get "options" ) ";"}}
 {{ $input_required := .Get "required" | default false }}
 {{ $input_wide := .Get "wide" | default false }}
 {{ $input_instructor := .Get "instructor" | default "" }}
@@ -10,8 +10,6 @@
   <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
   <select name="{{ $input_name }}" id="{{ $input_name }}" class="input {{ if $input_required }}required{{ end }}">
     <option value="">{{ $default_selection }}</option>
-    {{ range $input_options }}<option value="{{ . }}" {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}style="background-color:yellow;" selected="selected"{{end}}>{{ . }}</option>{{ end }}
+    {{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
   </select>
 </div>
-
-

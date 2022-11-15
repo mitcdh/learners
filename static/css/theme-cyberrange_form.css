@@ -214,3 +214,33 @@ button.btn-submit-form svg.bi {
   font-weight: 300;
   font-size: 75%;
 }
+
+button.drawio-link {
+  margin: auto;
+  display: flex !important;
+  align-content: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 10px 24px;
+  border-radius: 4px;
+  background-color: #f19829;
+  color: white;
+  margin-bottom: 24px;
+  transition: all ease 400ms;
+  text-decoration: none;
+}
+button.drawio-link:hover {
+  text-decoration: none;
+  background-color: #ce8224;
+  color: white;
+}
+button.drawio-link span {
+  text-decoration: none;
+  margin: auto 10px;
+}
+button.drawio-link svg {
+  fill: white;
+  padding-right: 5px;
+  margin: auto 5px !important;
+  display: inline-block;
+}

@@ -696,6 +696,10 @@ table.pdf, table.pdf tr, table.pdf tr td, tbody.pdf, tbody.pdf tr td {
   /* font-size: 12px; */
 }
 
+#body table tr td img {
+  margin: auto auto;
+}
+
 table.layout-table,
 table.layout-table tr,
 table.layout-table tr td {
@@ -703,9 +707,11 @@ table.layout-table tr td {
   outline: 0;
 }
 table.layout-table.divider tr td {
-  border: 1px solid var(--light-2);
+  border: 4px solid #f0f2f4;
   border-left: 0px;
   border-right: 0px;
+  padding-top: 28px !important;
+  padding-bottom: 28px !important;
 }
 #body table.layout-table tr td img {
   margin: auto auto;
@@ -724,6 +730,10 @@ table.no-table-header thead {
 table.layout-table tr td li {
   padding-left: 0.2rem;
   margin-left: 1rem;
+}
+
+table.layout-table.striped tr:nth-child(odd) {
+  background-color: #f6f6f6;
 }
 
 #body-inner {
@@ -746,7 +756,7 @@ pre .copy-to-clipboard {
 .slides-container {
   width: 100%;
   height: 80vh;
-  box-shadow: 0px 15px 45px -42px #000;
+  border: 3px solid white;
 }
 
 .slides-margin {
@@ -816,4 +826,23 @@ ol ol {
 
 .dd-item.parent.no-indent {
   margin-left: -32px !important;
+}
+
+.dd-item a.inactive_menu_link {
+  color: #b3b3b3 !important;
+  font-weight: 300;
+}
+.dd-item a.inactive_menu_link:after {
+  content: "\f017";
+  font-family: "Font Awesome 5 Free";
+  margin-left: auto;
+  float: right;
+  color: #d1d1d1 !important;
+}
+
+.instructor-notes {
+  background-color: #fffd93 !important;
+  padding: 28px;
+  border: 2px solid #bfbd39 !important;
+  border-radius: 4px !important;
 }

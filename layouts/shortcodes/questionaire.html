@@ -1,17 +1,40 @@
-{{ $form_name := $.Page.Params.menuTitle }}
-{{ $form_id := substr (replace $form_name " " "_") 0 }}
-{{ $questionaireWeight := $.Page.Weight }}
-{{ $parentWeight := $.Page.Parent.Weight }}
-{{ $title := .Get "title" | default "Questionaire"}}
+{{ $questionaire_name := $.Page.Title | default $.Page.Params.MenuTitle }} 
+{{ if ($.Page.Scratch.Get $questionaire_name | default false) }}
+  {{ $divider := "------------------------------------------------------------------------------------------------------------\n"}}
+  {{- errorf "\n\n%sDuplicate questionaire name: '%s' already used on page '%s'.\nAll questionaire Names must be unique per page.\n%s" $divider $questionaire_name $.Page.File $divider -}}
+{{ end }}
+{{ $.Page.Scratch.Set $questionaire_name true }}
 
-<input class="questionaire-info" type="hidden" name="info" value='{"id":"{{ $form_id }}", "title":"{{ $form_name }}", "type":"questionaire", "questionaireWeight":"{{ $questionaireWeight }}", "parentWeight":"{{ $parentWeight }}" }'> 
+{{ $pages := (where .Site.Pages "Section" $.Page.Section).ByWeight }}
+{{ $root_candidate := $.Page.CurrentSection }}
+{{ range $pages }}
+  {{ if in ($root_candidate.File.Dir | string ) (.File.Dir | string) }}
+    {{ if not (eq . $.Page.FirstSection)}}
+      {{ $root_candidate = .}}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $root_name := $root_candidate.Title }}
+{{ $root_weight := $root_candidate.Weight | int }}
+{{ $parent_weight := $.Page.Parent.Weight | int }}
+{{ $child_weight := $.Page.Weight | int }}
+
+{{ $.Page.Scratch.Add "local_questionaire_id" 1 }}
+{{ $local_questionaire_id := ($.Page.Scratch.Get "local_questionaire_id") }}
+
+{{ $global_questionaire_id := md5 (printf "%s%s" $.Page.File.Dir $questionaire_name) }}
+
+{{ $order_weight := add (add (mul $root_weight 1000) (mul $parent_weight 100)) (add (mul $child_weight 10) ($local_questionaire_id | int)) | int}}
+
+{{ $.Page.Scratch.SetInMap "questionaire" $global_questionaire_id (dict "global_questionaire_id" $global_questionaire_id "order_weight" $order_weight "questionaire_name" (htmlEscape $questionaire_name) "local_questionaire_id" ($.Page.Scratch.Get "local_questionaire_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_name) "child_weight" $child_weight "parent_weight" $parent_weight "root_weight" $root_weight)}}
+
+<input class="exercise-info" type="hidden" name="info" value='{"global_questionaire_id":"{{ $global_questionaire_id }}", "questionaire_name":"{{ htmlEscape $questionaire_name }}", "exercise_type":"questionaire" }'> 
+
 
 <form
-  id="{{ $form_id }}"
-  class="form questionaire-form"
+  id="{{ $global_questionaire_id }}"
+  class="form questionaire-control"
 >
-<h3>{{ $title }}</h3>
-
   {{ .Inner }}
 
 <div class="exercise-control">
@@ -25,8 +48,7 @@
         <span class="stat_indicator_container">
           <div
             id="exercise_executed"
-            class="stat_indicator loading"
-            style="display: none"
+            class="stat_indicator none"
           >
             <svg
               class="stat_icon"
@@ -47,37 +69,10 @@
           </div>
         </span>
       </li>
-      <li>
-        <span>Questionaire completed</span>
-        <span class="stat_indicator_container">
-          <div
-            id="exercise_completed"
-            class="stat_indicator loading"
-            style="display: none"
-          >
-            <svg
-              class="stat_icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 52 52"
-            >
-              <circle class="stat_circle" cx="26" cy="26" r="26" fill="none" />
-              <path
-                class="stat_check"
-                fill="none"
-                d="M14.1 27.2l7.1 7.2 16.7-16.8"
-              />
-              <g class="stat_cross">
-                <path d="m15.07675,36.98865l21.84649,-21.9773" fill="none" />
-                <path d="m36.98865,36.92324l-21.9773,-21.84649" fill="none" />
-              </g>
-            </svg>
-          </div>
-        </span>
-      </li>
-    </ul>
+   </ul>
   </section>
 
-  <button id="submitExercise" type="submit" class="btn-submit-form" value="">
+  <button id="submitquestionaire" type="submit" class="btn-submit-form" value="">
     <svg class="bi" width="22" height="22" style="margin-right: 5px;">
       <use xlink:href="#play"></use>
     </svg>

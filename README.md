@@ -13,11 +13,11 @@ Risk is calculated as (Likelihood * Impact), therefore two text inputs (`input-s
 ```
 {{< input-select
     label="Likelihood"
-    options="1 - Remote,2 - Unlikely,3 - Possible,4 - Likely,5 - Certain"
+    options="1 - Remote; 2 - Unlikely; 3 - Possible; 4 - Likely; 5 - Certain"
     required=true >}}
 {{< input-select
     label="Impact"
-    options="1 - Trivial,2 - Minor,3 - Moderate,4 - Major,5 - Critical"
+    options="1 - Trivial; 2 - Minor; 3 - Moderate; 4 - Major; 5 - Critical"
     required=true >}}
 {{< input-risk
     label="Risk as LxI"

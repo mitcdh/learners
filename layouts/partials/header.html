@@ -56,6 +56,7 @@
     <script src='{{"js/learners_exercise-control.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercise-script.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercise-form.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
+    <script src='{{"js/learners_exercise-questionaire.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_createPDF.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_exercises-main.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
     <script src='{{"js/learners_embedPDF.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
@@ -75,20 +76,44 @@
     {{ partial "svglib.html" . }}
     {{ partial "menu.html" . }}
         <section id="body">
+        
+        {{ if .Params.redirect }}
+        
+          {{ $redirect_url := printf "%s%s%s" (.Page.Site.BaseURL | lower) (.RelPermalink | lower) (.Params.redirect | lower) }}
+          {{ if (not .Site.Params.devStage) }}
+            {{ $redirect_url = printf "%s%s" (.RelPermalink | lower) (.Params.redirect | lower) }}
+          {{ end }}
+          
+          <sub style="padding: 20px;">Redirecting to {{ $redirect_url }} ...</sub>
+          <script>
+            window.location = "{{ $redirect_url }}"
+          </script>
+        {{ end }}
+        
         <div id="overlay"></div>
         {{ if .Params.slides }}
+          {{ $pdf_src := .Params.slides }}
+
+          {{ if .Params.global_slides | default false }}
+            {{ $pdf_src = printf "%s%s%s" (.Page.Site.BaseURL) ("/_slides/") (.Params.slides) }}
+          {{ else }}
+            {{ if (not .Site.Params.devStage) }}
+              {{ $pdf_src = printf "%s%s%s%s" (.Page.Site.BaseURL) ("/res/") ($.Page.File.Dir) (.Params.slides) }}
+            {{ end }}
+          {{ end }}
+
         <div class="slides-container">
           <object
-            data="{{ .Params.slides }}#view=fit"
+            data="{{ $pdf_src }}#view=fit"
             type="application/pdf"
             style="width: 100%; height: 100%"
           >
             <iframe
-              src="{{ .Params.slides }}#view=fitW"
+              src="{{ $pdf_src }}#view=fitW"
               style="border: none; width: 100%; height: 100%"
             >
               This browser does not support PDFs. Please download the PDF to view it:
-              <a href="{{ .Params.slides }}">Download PDF</a>
+              <a href="{{ $pdf_src }}">Download PDF</a>
             </iframe>
           </object>          
         </div>
@@ -108,7 +133,9 @@
               {{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
                 {{.Data.Singular}} ::
               {{ end }}
-              {{.Title}}
+              {{ if not .Params.slides }}
+                {{.Title}}
+              {{ end }}
             </h1>
           {{end}}
 
