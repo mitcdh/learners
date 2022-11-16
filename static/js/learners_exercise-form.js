@@ -306,7 +306,7 @@ function callSetDrawIO(event, parent, url_encoded_data, button_element) {
   try {
     parent.setDrawIO(url_encoded_data);
   } catch (e) {
-    let newTab = window.open(`https://app.diagrams.net/${url_encoded_data}`, "_blank");
+    let newTab = window.open(`https://app.diagrams.net/${url_encoded_data.replace("https://app.diagrams.net/", "")}`, "_blank");
     newTab.name = `drawio_tab`;
   }
   event.preventDefault(); 
