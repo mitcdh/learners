@@ -1,7 +1,7 @@
 {
     "exercises": 
-    {{- $first := true -}}
-    [{{ range $index, $page := .Site.Pages }}
+    [{{- $first := true -}}
+    {{ range $index, $page := .Site.Pages }}
     {{- $exercises := $page.Scratch.Get "exercise" -}}
     {{- if ne $page.Type "json" -}}
     {{- $exercise_count := 0 -}}
@@ -10,7 +10,7 @@
     {{- end -}}
     {{- if gt $exercise_count 0 -}}
     {{- if and $index (gt $index 0) -}}
-    {{- if not $first -}},{{- end }}
+    ,
     {{- $first = false -}}
     {{- end }}
     {{- $exercises | jsonify -}}
