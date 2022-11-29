@@ -4,11 +4,15 @@
 {{ $caption := $alt }}
 {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
 
+{{ if (not .Page.Site.Params.devStage) }}
+{{ $src = .Page.Site.BaseURL "/res/" $pageDir $src }}
+{{ end }}
+
 {{- if eq $tag "figure" -}}
    {{ $.Page.Scratch.Add "imgcount" 1 }}
    {{ $count := ($.Page.Scratch.Get "imgcount") | string }}
    <div class="image-container">
-       <img src="{{ .Page.Site.BaseURL }}/res/{{ $pageDir }}{{ $src }}" width="" height="" alt="{{ $caption }}" />
+       <img src="{{ $src }}" width="" height="" alt="{{ $caption }}" />
        <p>
            <span><b>Figure {{ $count }}{{ if $caption }}:{{ end }}</b> </span>
            <span>{{ $caption }}</span>
@@ -26,7 +30,7 @@
    {{ $url_encoded_data := $alt }}
 
    <div class="image-container">
-       <img src="{{ .Page.Site.BaseURL }}/res/{{ $pageDir }}{{ $src }}" width="" height="" alt="{{ $caption }}" />
+       <img src="{{ $src }}" width="" height="" alt="{{ $caption }}" />
        <p>
           <span><b>Figure {{ $count }}{{ if $caption }}:{{ end }}</b> </span>
           <span>{{ $diagramtitle }}</span>
@@ -50,5 +54,5 @@
    </div>
 
 {{- else -}}
-   <img src="{{ .Page.Site.BaseURL }}/res/{{ $pageDir }}{{ $src }}" width="" height="" alt="{{ $alt }}" />
+   <img src="{{ $src }}" width="" height="" alt="{{ $alt }}" />
 {{- end -}}
