@@ -5,7 +5,7 @@
 {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
 
 {{ if (not .Page.Site.Params.devStage) }}
-{{ $src = .Page.Site.BaseURL "/res/" $pageDir $src }}
+{{ $src = printf "%sres/%s%s" .Page.Site.BaseURL $pageDir $src }}
 {{ end }}
 
 {{- if eq $tag "figure" -}}
