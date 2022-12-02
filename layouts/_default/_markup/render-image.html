@@ -35,7 +35,7 @@
           <span><b>Figure {{ $count }}{{ if $caption }}:{{ end }}</b> </span>
           <span>{{ $diagramtitle }}</span>
        </p>
-       <p>
+       <div class="btn_wrapper_horizontal">
            <button class="drawio-link" onclick="callSetDrawIO(event, parent, '{{ $url_encoded_data }}', this)" href="#">
                <svg class="bi" width="28" height="28" style="margin-left: 2px">
                    <use xlink:href="#icon_drawio"></use>
@@ -44,7 +44,13 @@
                     Edit in DrawIO
                 </span>
             </button>
-        </p>
+
+            <button class="drawio-link drawio-reset" onclick="resetDrawIO(event, this)" href="#">
+                 <span>
+                     Reset
+                 </span>
+             </button>
+            </div>
 
         <div class="input-row wide">
            <label for="drawio-input">Paste URL-encoded Diagram here:</label>

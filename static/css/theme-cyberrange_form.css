@@ -215,8 +215,14 @@ button.btn-submit-form svg.bi {
   font-size: 75%;
 }
 
+.btn_wrapper_horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 button.drawio-link {
-  margin: auto;
+  margin: 10px;
   display: flex !important;
   align-content: center;
   justify-content: center;
@@ -229,10 +235,16 @@ button.drawio-link {
   transition: all ease 400ms;
   text-decoration: none;
 }
+button.drawio-reset {
+  background-color: #9999a1 !important;
+}
 button.drawio-link:hover {
   text-decoration: none;
   background-color: #ce8224;
   color: white;
+}
+button.drawio-reset:hover {
+  background-color: #7e7e85 !important;
 }
 button.drawio-link span {
   text-decoration: none;

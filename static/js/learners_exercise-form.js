@@ -313,6 +313,13 @@ function callSetDrawIO(event, parent, url_encoded_data, button_element) {
   event.preventDefault(); 
 }
 
+function resetDrawIO(event, button_element) {
+
+  let container = $(button_element).closest(".image-container")
+  $(container).find("textarea.drawio-input").val("")
+  event.preventDefault(); 
+}
+
 function insertDrawIOhook(element) {
   let current_value = $(element).val().split("#")
   let title = (current_value[0]).split("title=")[1] || "unknown"
