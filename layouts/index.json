@@ -10,7 +10,7 @@
     {{- end -}}
     {{- if gt $exercise_count 0 -}}
     {{- if and $index (gt $index 0) -}}
-    ,
+    {{- if not $first -}},{{- end }}
     {{- $first = false -}}
     {{- end }}
     {{- $exercises | jsonify -}}
