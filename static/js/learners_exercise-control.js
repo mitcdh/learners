@@ -204,10 +204,11 @@ function sendAjax(type, payload) {
 
     $.ajax({
       type: type,
-      url: payload.url,
+      // TODO: REMOVE prefix
+      url: "http://localhost:5000" + payload.url,
       headers: Object.assign(
         { "Content-type": "application/json" },
-        { Authorization: `Bearer ${getCookie("access_token_cookie")}` },
+        { Authorization: `Bearer ${getCookie("jwt_cookie")}` },
         payload.additional_headers
       ),
       data: payload.data,
@@ -394,27 +395,31 @@ function update_counter(element, done, total) {
 }
 
 
-function postComment(exercise, comment) {
-  var defer = $.Deferred();
-  let data = {
-    "global_exercise_id": exercise.global_exercise_id,
-    "comment": comment,
-  }
-  data = JSON.stringify(data)
+// function postComment(exercise, comment) {
+// function postComment(page, comment) {
+//   console.log(page)
+//   console.log(comment)
 
-  var msg_container = $(`#status-${exercise.global_exercise_id}`);
+//   var defer = $.Deferred();
+//   let data = {
+//     "page": page,
+//     "comment": comment,
+//   }
+//   data = JSON.stringify(data)
 
-  sendAjax("POST", { url: `/comment`, data: data })
-    .then(function (data, textStatus, jqXHR) {
-      msg_container.html("Thank you for your feedback.").addClass("success");
-      var submit_btn = $(`#submitComment`);
-      submit_btn.prop("disabled", true);
-      defer.resolve(data);
-    })
-    .catch(function (jqXHR, textStatus, errorThrown) {
-      msg_container.html("Something went wrong.").addClass("error");
-      defer.reject(jqXHR, textStatus, errorThrown);
-    });
+//   var msg_container = $(`#status-${exercise.global_exercise_id}`);
 
-  return defer.promise();
-}
+//   sendAjax("POST", { url: `/comments`, data: data })
+//     .then(function (data, textStatus, jqXHR) {
+//       msg_container.html("Thank you for your feedback.").addClass("success");
+//       var submit_btn = $(`#submitComment`);
+//       submit_btn.prop("disabled", true);
+//       defer.resolve(data);
+//     })
+//     .catch(function (jqXHR, textStatus, errorThrown) {
+//       msg_container.html("Something went wrong.").addClass("error");
+//       defer.reject(jqXHR, textStatus, errorThrown);
+//     });
+
+//   return defer.promise();
+// }
