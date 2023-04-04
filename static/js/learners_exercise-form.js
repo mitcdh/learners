@@ -36,13 +36,6 @@ function formExercise(exercise) {
     event.stopImmediatePropagation();
   });
 
-  $("#comment-form").submit(function (event) {
-    let comment = $(this).find("textarea").val()
-    postComment(exercise, comment)
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  });
-
   loadForm(exercise);
   initForm(exercise);
 
@@ -66,7 +59,7 @@ function uploadFile() {
     processData: false,
     data: form_data,
     type: 'post',
-    headers: { Authorization: `Bearer ${getCookie("access_token_cookie")}` },
+    headers: { Authorization: `Bearer ${getCookie("jwt_cookie")}` },
     success: function (data) {
       showMsg("upload-container", data);
       if (data) {
@@ -97,6 +90,7 @@ function appendNewInputRow(this_fieldset, amount=1) {
       let new_input_name = `${current_input_name} (Additional ${new_index})`
       $(new_input_row).find(`label[for=${current_input_name}]`).attr("for", new_input_name)
       $(input_object).attr("name", new_input_name)
+      $(input_object).val("")
     })
 
     $(new_input_row).removeClass("default-inputs")
@@ -220,35 +214,44 @@ function initForm(exercise) {
 }
 
 function loadForm(exercise) {
-  var storedForm = JSON.parse(localStorage.getItem(exercise.global_exercise_id)) || {};
 
-  // if stored form is not empty
-  if (Object.keys(storedForm).length != 0) {
-    let field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset")
+  // Get cache from server
+  let storedForm = {};
 
-    let inputdata = []
+  sendAjax("GET", { url: `/cache/${exercise.global_exercise_id}` })
+    .then(function (data, textStatus, jqXHR) {
+      storedForm = JSON.parse(data["form_data"])
 
-    const keys = Object.keys(storedForm);
+      // if stored form is not empty
+      if (storedForm) {
+        let field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset")
 
-    keys.forEach((key, fieldset_index) => {
+        let inputdata = []
 
-      // Expand if needed
-      let additional_count = storedForm[key]["additional"]
-      appendNewInputRow(field_sets[fieldset_index], amount=additional_count)
+        const keys = Object.keys(storedForm);
+        keys.forEach((key, fieldset_index) => {
 
-      // Extract input data
-      for (const subkey in storedForm[key]) {
-        if (subkey != "additional") inputdata.push(storedForm[key][subkey])
-      }
+          // Expand if needed
+          let additional_count = storedForm[key]["additional"]
+          appendNewInputRow(field_sets[fieldset_index], amount=additional_count)
+
+          // Extract input data
+          for (const subkey in storedForm[key]) {
+            if (subkey != "additional") inputdata.push(storedForm[key][subkey])
+          }
+        });
+
+        // Set data
+        let input_fields = $(`#${exercise.global_exercise_id}`).find(".input")
+        $.each($(input_fields), function (index, input_field) {
+          $(input_field).val(inputdata[index])
+        });
+
+      };
+    })
+    .catch(function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR, textStatus, errorThrown)
     });
-
-    // Set data
-    let input_fields = $(`#${exercise.global_exercise_id}`).find(".input")
-    $.each($(input_fields), function (index, input_field) {
-      $(input_field).val(inputdata[index])
-    });
-
-  };
 }
 
 function persistForm(global_exercise_id) {
@@ -274,7 +277,17 @@ function persistForm(global_exercise_id) {
       form_data_to_store[parentindex]["additional"] = $(parent).find(".closer").length
     }
   });
-  localStorage.setItem(global_exercise_id, JSON.stringify(form_data_to_store));
+
+  // Set cache on server
+  sendAjax("PUT", { url: `/cache`, data: JSON.stringify(
+    {
+      "global_exercise_id" : global_exercise_id,
+      "form_data" : form_data_to_store
+    }
+  ) })
+    .catch(function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR, textStatus, errorThrown)
+    });
 }
 
 function setSectionValues(element, section) {
