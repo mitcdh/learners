@@ -118,7 +118,7 @@ function showNoExecution(parentID) {
 }
 
 function showMsg(parentID, data) {
-  var msg_detail = $(`#${parentID} #msg-detail`);
+  const msg_detail = $(`#${parentID} #msg-detail`).not(".upload-msg");
   msg_detail.removeClass("success error partial")
   if (data.partial)
     msg_detail.addClass("partial")
@@ -291,22 +291,19 @@ function executeAndCheck(exercise) {
     "name": exercise.global_exercise_id,
   }
 
-  if (exercise.exercise_type == "script") {
-    data["script"] = exercise.script
-  } else {
-    data["form"] = exercise.formData
-  }
+  if (exercise.exercise_type == "script") data["script"] = exercise.script
+  else data["form"] = exercise.formData
 
   data = JSON.stringify(data)
 
   sendAjax("POST", { url: `/execution/${exercise.exercise_type}`, data: data })
     .then(function (data, textStatus, jqXHR) {
       showExecutionState(exercise.global_exercise_id, data);
-      sendAjax("GET", { url: `/execution/${exercise.global_exercise_id}` })
+      sendAjax("GET", { url: `/submissions/${exercise.global_exercise_id}` })
         .then(function (data, textStatus, jqXHR) {
           visualFeedback(exercise.global_exercise_id, data, disable_on_success);
           printHistory(exercise.global_exercise_id, data.history);
-          getState();
+          updateProgress();
           defer.resolve(data);
         })
         .catch(function (jqXHR, textStatus, errorThrown) {
@@ -329,16 +326,25 @@ function executeAndCheck(exercise) {
 function getExecutionHistory(exercise) {
   var defer = $.Deferred();
 
-  var id_executed = `#${exercise.global_exercise_id} #exercise_executed`;
-  var id_completed = `#${exercise.global_exercise_id} #exercise_completed`;
+  const submissionCheckmark = `#${exercise.global_exercise_id} #exercise_executed`;
+  const completionCheckmark = `#${exercise.global_exercise_id} #exercise_completed`;
 
-  showLoading(id_executed);
-  showLoading(id_completed);
+  showLoading(submissionCheckmark);
+  showLoading(completionCheckmark);
 
-  sendAjax("GET", { url: `/execution/${exercise.global_exercise_id}` })
+  sendAjax("GET", { url: `/submissions/${exercise.global_exercise_id}` })
     .then(function (data, textStatus, jqXHR) {
-      visualFeedback(exercise.global_exercise_id, data);
-      printHistory(exercise.global_exercise_id, data.history);
+      if (data) {
+        // Set checkmarks
+        visualFeedback(exercise.global_exercise_id, data);
+        // Display execution history
+        printHistory(exercise.global_exercise_id, data.history);
+        // Update overall progress
+        updateProgress();
+      } else {
+        // Never executed
+        showNoExecution(exercise.global_exercise_id)
+      }
       defer.resolve(data);
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
@@ -349,16 +355,13 @@ function getExecutionHistory(exercise) {
   return defer.promise();
 }
 
-function getState() {
+function updateProgress() {
   var defer = $.Deferred();
-  sendAjax("GET", { url: `/execution-state` })
+  sendAjax("GET", { url: `/progress` })
     .then(function (data, textStatus, jqXHR) {
-
       $.each(data.success_list, function (parentTitle, parentExercise) {
-
         let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
         update_counter(menuItem, parentExercise.done, parentExercise.total)
-
         $.each(parentExercise.exercises, function (i, subExercise) {
           let subMenuItem = $(`.topics li[title='${subExercise.title}']`).find("a").first()
           if (subMenuItem.length > 0) {
@@ -393,33 +396,3 @@ function update_counter(element, done, total) {
     element.find("i").removeClass("fa-check done")
   }
 }
-
-
-// function postComment(exercise, comment) {
-// function postComment(page, comment) {
-//   console.log(page)
-//   console.log(comment)
-
-//   var defer = $.Deferred();
-//   let data = {
-//     "page": page,
-//     "comment": comment,
-//   }
-//   data = JSON.stringify(data)
-
-//   var msg_container = $(`#status-${exercise.global_exercise_id}`);
-
-//   sendAjax("POST", { url: `/comments`, data: data })
-//     .then(function (data, textStatus, jqXHR) {
-//       msg_container.html("Thank you for your feedback.").addClass("success");
-//       var submit_btn = $(`#submitComment`);
-//       submit_btn.prop("disabled", true);
-//       defer.resolve(data);
-//     })
-//     .catch(function (jqXHR, textStatus, errorThrown) {
-//       msg_container.html("Something went wrong.").addClass("error");
-//       defer.reject(jqXHR, textStatus, errorThrown);
-//     });
-
-//   return defer.promise();
-// }

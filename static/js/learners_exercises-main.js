@@ -1,5 +1,6 @@
 $(function () {
-  getState();
+
+  updateProgress();
 
   exercises = [];
   $(".exercise-info[name=info]").each(function () {
