@@ -581,6 +581,37 @@ td {
   background-color: white !important;
 }
 
+
+.drawio-container {
+  width: 100%;
+  background-color: #f6f6f6;
+  padding: 10px 30px;
+  max-width: 944px;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawio-container iframe {
+  text-align: center;
+  margin: 20px auto !important;
+  box-shadow: 4px 3px 4px #9d9d9d;
+  max-width: 90%;
+  background-color: white !important;
+}
+
+.drawio-container p {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.drawio-container img {
+  text-align: center;
+  margin: 20px auto !important;
+  box-shadow: 4px 3px 4px #9d9d9d;
+  max-width: 90%;
+  background-color: white !important;
+}
+
 /* .image-container.pdf {
   max-width: 400px !important;
   padding: 20px 0px !important;

@@ -390,14 +390,19 @@ function getSectionValues(element) {
 }
 
 function callSetDrawIO(event, parent, url_encoded_data, button_element) {
-  let container = $(button_element).closest(".image-container");
-  let current_input = $(container).find("textarea.drawio-input").val();
+  const container = $(button_element).closest(".image-container");
+  const current_input = $(container).find("textarea.drawio-input").val();
 
   if (current_input) url_encoded_data = current_input;
   url_encoded_data = url_encoded_data.replace("https://app.diagrams.net/", "");
 
   try {
-    parent.setDrawIO(url_encoded_data);
+    window.parent.postMessage({
+      'func': 'setDrawIO',
+      'message': `${url_encoded_data}`
+  }, "*");
+
+    // parent.setDrawIO(url_encoded_data);
   } catch (e) {
     let newTab = window.open(
       `https://app.diagrams.net/${url_encoded_data}`,
@@ -408,9 +413,13 @@ function callSetDrawIO(event, parent, url_encoded_data, button_element) {
   event.preventDefault();
 }
 
-function resetDrawIO(event, button_element) {
-  let container = $(button_element).closest(".image-container");
+function resetDrawIO(event, button_element, original_data) {
+  let container = $(button_element).closest(".drawio-container")[0];
   $(container).find("textarea.drawio-input").val("");
+  
+  // Update preview
+  const preview = $(container).find(".drawio-preview")[0];
+  $(preview).attr("src", `https://viewer.diagrams.net/${original_data}`)
   event.preventDefault();
 }
 
@@ -419,8 +428,14 @@ function insertDrawIOhook(element) {
   let title = current_value[0].split("title=")[1] || "unknown";
   let url_encoded_data = current_value[1];
   let new_value = "";
+    
   if (url_encoded_data) new_value = `?title=${title}#${url_encoded_data}`;
   $(element).val(new_value);
+
+  // Update preview
+  const preview = $(element).closest(".drawio-container").find(".drawio-preview")[0];
+  $(preview).attr("src", `https://viewer.diagrams.net/${new_value}`)
+
   if (!new_value) {
     $(element).attr(
       "placeholder",
@@ -436,5 +451,5 @@ $(function () {
 });
 
 $.extend(jQuery.validator.messages, {
-  required: "blaaaa",
+  required: "",
 });
