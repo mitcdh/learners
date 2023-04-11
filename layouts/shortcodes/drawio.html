@@ -2,8 +2,7 @@
 {{ $temp := (index (first 1 (after 1 (split $url_encoded_data "title="))) 0) }}
 {{ $diagramtitle := replace (index (first 1 (split $temp "#")) 0) "_" " " }}
 
-
-<div class="drawio-container">
+<div class="drawio-container" devstage="{{ .Page.Site.Params.devStage }}">
 <iframe class="drawio-preview" frameborder="0" style="width:80%; height:25vw;" src="https://viewer.diagrams.net/{{ $url_encoded_data }}"></iframe>
 <p>
     <span><b>Preview:</b> </span>
