@@ -42,6 +42,14 @@ function formExercise(exercise) {
   initForm(exercise);
 
   getExecutionHistory(exercise);
+
+  const drawioContainers = $(".drawio-container")
+  $.each(drawioContainers, (i, drawioContainer) => {
+    setTimeout((() => {
+      initDrawIO(drawioContainer.id)
+    }), 1000);
+
+  });
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -390,19 +398,18 @@ function getSectionValues(element) {
 }
 
 const updateDrawioPreview = (container, data) => {
-  $(container).find("textarea.drawio-input").val("");
   const preview = $(container).find(".drawio-preview")[0];
   $(preview).attr("src", `https://viewer.diagrams.net/${data}`)
 }
 
-function initDrawIO(container_id, url_encoded_data) {  
+function initDrawIO(container_id) {
   const container = $(`#${container_id}`);
-  const current_input = $(container).find("textarea.drawio-input").val();
-
-  if (current_input) url_encoded_data = current_input;
-  url_encoded_data = url_encoded_data.replace("https://app.diagrams.net/", "");
-
-  updateDrawioPreview(container, url_encoded_data)
+  let current_input = $(container).find("textarea.drawio-input").val();
+  
+  if (current_input) {
+    current_input = current_input.replace("https://app.diagrams.net/", "");
+    updateDrawioPreview(container, current_input)
+  }
 }
 
 function callSetDrawIO(event, url_encoded_data, button_element) {
@@ -438,7 +445,8 @@ function callSetDrawIO(event, url_encoded_data, button_element) {
 }
 
 function resetDrawIO(event, button_element, original_data) {
-  let container = $(button_element).closest(".drawio-container")[0];  
+  let container = $(button_element).closest(".drawio-container")[0];
+  $(container).find("textarea.drawio-input").val("");
   updateDrawioPreview(container, original_data)
   event.preventDefault();
 }
