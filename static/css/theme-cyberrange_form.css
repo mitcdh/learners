@@ -256,3 +256,17 @@ button.drawio-link svg {
   margin: auto 5px !important;
   display: inline-block;
 }
+
+.input-group h1,
+.input-group h2,
+.input-group h3,
+.input-group h4,
+.input-group h5,
+.input-group h6 {
+  padding: 1.0em 0 2em 0;
+}
+
+.input-group p {
+  padding-top: 0px;
+  margin-top: 0px;
+}
