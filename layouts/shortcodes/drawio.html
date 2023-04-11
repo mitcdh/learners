@@ -1,15 +1,16 @@
 {{ $url_encoded_data := .Get "data" }}
 {{ $temp := (index (first 1 (after 1 (split $url_encoded_data "title="))) 0) }}
 {{ $diagramtitle := replace (index (first 1 (split $temp "#")) 0) "_" " " }}
+{{ $drawio_id := printf "%s%s" "drawio" (md5 (printf "%s" $url_encoded_data)) }}
 
-<div class="drawio-container" devstage="{{ .Page.Site.Params.devStage }}">
+<div id="{{ $drawio_id }}" class="drawio-container" devstage="{{ .Page.Site.Params.devStage }}">
 <iframe class="drawio-preview" frameborder="0" style="width:80%; height:25vw;" src="https://viewer.diagrams.net/{{ $url_encoded_data }}"></iframe>
 <p>
     <span><b>Preview:</b> </span>
     <span>{{ $diagramtitle }}</span>
 </p>
 <div class="btn_wrapper_horizontal">
-<button class="drawio-link" onclick="callSetDrawIO(event, parent, '{{ $url_encoded_data }}', this)" href="#">
+<button class="drawio-link" onclick="callSetDrawIO(event, '{{ $url_encoded_data }}', this)" href="#">
     <svg class="bi" width="28" height="28" style="margin-left: 2px">
         <use xlink:href="#icon_drawio"></use>
     </svg>
@@ -29,5 +30,9 @@
     <label for="drawio-input">Paste URL-encoded Diagram here:</label>
     <textarea id="drawio-input" name="drawio-input" rows="4" cols="50" class="input drawio-input" placeholder="Please paste in the url-encoded diagram (menu - file - publish - link)"></textarea>
 </div>
+
+<script>
+    initDrawIO("{{ $drawio_id }}", "{{ $url_encoded_data }}")
+</script>
 
 </div>

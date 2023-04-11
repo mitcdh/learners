@@ -389,14 +389,28 @@ function getSectionValues(element) {
   return input_group_obj;
 }
 
-function callSetDrawIO(event, parent, url_encoded_data, button_element) {
-  const container = $(button_element).closest(".drawio-container");
+const updateDrawioPreview = (container, data) => {
+  $(container).find("textarea.drawio-input").val("");
+  const preview = $(container).find(".drawio-preview")[0];
+  $(preview).attr("src", `https://viewer.diagrams.net/${data}`)
+}
+
+function initDrawIO(container_id, url_encoded_data) {  
+  const container = $(`#${container_id}`);
   const current_input = $(container).find("textarea.drawio-input").val();
 
   if (current_input) url_encoded_data = current_input;
   url_encoded_data = url_encoded_data.replace("https://app.diagrams.net/", "");
 
-  console.log($(container).attr("devstage") === "true")
+  updateDrawioPreview(container, url_encoded_data)
+}
+
+function callSetDrawIO(event, url_encoded_data, button_element) {
+  const container = $(button_element).closest(".drawio-container");
+  const current_input = $(container).find("textarea.drawio-input").val();
+
+  if (current_input) url_encoded_data = current_input;
+  url_encoded_data = url_encoded_data.replace("https://app.diagrams.net/", "");
 
   const openDrawioInNewTab = () => {
     const newTab = window.open(
@@ -424,12 +438,8 @@ function callSetDrawIO(event, parent, url_encoded_data, button_element) {
 }
 
 function resetDrawIO(event, button_element, original_data) {
-  let container = $(button_element).closest(".drawio-container")[0];
-  $(container).find("textarea.drawio-input").val("");
-  
-  // Update preview
-  const preview = $(container).find(".drawio-preview")[0];
-  $(preview).attr("src", `https://viewer.diagrams.net/${original_data}`)
+  let container = $(button_element).closest(".drawio-container")[0];  
+  updateDrawioPreview(container, original_data)
   event.preventDefault();
 }
 
