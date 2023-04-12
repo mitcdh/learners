@@ -205,7 +205,8 @@ function sendAjax(type, payload) {
     $.ajax({
       type: type,
       // TODO: REMOVE prefix
-      url: "http://localhost:5000" + payload.url,
+      // url: "http://localhost:5000" + payload.url,
+      url: payload.url,
       headers: Object.assign(
         { "Content-type": "application/json" },
         { Authorization: `Bearer ${getCookie("jwt_cookie")}` },

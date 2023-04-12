@@ -107,7 +107,8 @@ async function uploadFile(upload_container) {
   form_data.append("file", file_data);
   await $.ajax({
     // TODO: Remove localhost
-    url: "http://localhost:5000" + "/uploads",
+    // url: "http://localhost:5000" + "/uploads",
+    url: "/uploads",
     cache: false,
     contentType: false,
     processData: false,
