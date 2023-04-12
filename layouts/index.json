@@ -1,59 +1,30 @@
 {
-    "exercises": 
-    [
-    {{ range $index, $page := .Site.Pages }}
-    {{- $exercises := $page.Scratch.Get "exercise" -}}
-    {{- if ne $page.Type "json" -}}
-    {{- $exercise_count := 0 -}}
-    {{- if $exercises -}}
-    {{- $exercise_count = $exercises | len -}}
-    {{- end -}}
-    {{- if gt $exercise_count 0 -}}
-    {{- if and $index (gt $index 0) -}}
-    ,
-    {{- end }}
-    {{- $exercises | jsonify -}}
-    {{- else -}}
-    {{- end -}}
-    {{- end -}}
-    {{- end -}}],
-    "questionaires": 
-    {{- $first := true -}}
-    [{{ range $index, $page := .Site.Pages }}
-    {{- $questionaires := $page.Scratch.Get "questionaire" -}}
-    {{- if ne $page.Type "json" -}}
-    {{- $questionaire_count := 0 -}}
-    {{- if $questionaires -}}
-    {{- $questionaire_count = $questionaires | len -}}
-    {{- end -}}
-    {{- if gt $questionaire_count 0 -}}
-    {{- if and $index (gt $index 0) -}}
-    {{- if not $first -}},{{- end }}
-    {{- $first = false -}}
-    {{- end }}
-    {{- $questionaires | jsonify -}}
-    {{- else -}}
-    {{- end -}}
-    {{- end -}}
-    {{- end -}}],
-    "questionaires_questions": 
-    {{- $first = true -}}
-    {{- $first := true -}}
-    [{{ range $index, $page := .Site.Pages }}
-    {{- $questionaire_question := $page.Scratch.Get "questionaire_question" -}}
-    {{- if ne $page.Type "json" -}}
-    {{- $questionaire_question_count := 0 -}}
-    {{- if $questionaire_question -}}
-    {{- $questionaire_question_count = $questionaire_question | len -}}
-    {{- end -}}
-    {{- if gt $questionaire_question_count 0 -}}
-    {{- if and $index (gt $index 0) -}}
-    {{- if not $first -}},{{- end }}
-    {{- $first = false -}}
-    {{- end }}
-    {{- $questionaire_question | jsonify -}}
-    {{- else -}}
-    {{- end -}}
-    {{- end -}}
-    {{- end -}}]
-}
+    "exercises": [
+      {{- $first := true -}}
+      {{- range $index, $page := .Site.Pages -}}
+          {{- if ne $page.Type "json" -}}
+              {{- $exercises := $page.Scratch.Get "exercise" -}}
+              {{- $i := 0 -}}
+              {{- range $exercises -}}
+                  {{- if not $first -}}, {{- end -}}
+                  {{- $first = false -}}
+                  {{- . | jsonify (dict "indent" "    ") -}}
+              {{- end -}}
+          {{- end -}}
+      {{- end -}}
+      ],
+    "questionaires": [
+      {{- $first = true -}}
+      {{- range $index, $page := .Site.Pages -}}
+          {{- if ne $page.Type "json" -}}
+              {{- $questionaire := $page.Scratch.Get "questionaire" -}}
+              {{- $i := 0 -}}
+              {{- range $questionaire -}}
+                  {{ if not $first -}}, {{- end -}}
+                  {{ $first = false -}}
+                  {{- . | jsonify (dict "indent" "    ") -}}
+              {{- end -}}
+          {{- end -}}
+      {{- end -}}
+      ]
+  }
