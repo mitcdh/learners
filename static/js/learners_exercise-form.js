@@ -12,15 +12,15 @@ function formExercise(exercise) {
   // Submit Handler
   exerciseForm.submit(async (event) => {
     event.preventDefault();
-
+    
     // Upload Handler
     let sucessfulUploadHandler = await uploadHandler(exerciseForm);
     persistForm(exercise.global_exercise_id);
-
+    
     // Validate Form
     let status = exerciseForm.validate(validationOptions);
     let validForm = !Object.keys(status.invalid).length;
-
+    
     if (validForm && sucessfulUploadHandler) {
       await submitForm(this, exercise);
       getExecutionHistory(exercise);
@@ -69,7 +69,7 @@ async function uploadHandler(exerciseForm) {
 
   if (fileInput) {
     await uploadFile(uploadContainer).then((data) => {
-
+      
       // User feedback
       const msgContainer = $(uploadContainer).find("#msg-detail")[0];
 
@@ -78,6 +78,7 @@ async function uploadHandler(exerciseForm) {
       if (!data.executed) {
         $(msgContainer).addClass("error");
         $(msgContainer).html(data.msg || "File upload failed.");
+        $(msgContainer).slideDown();
       }
       else if (data.executed) {
         $(msgContainer).addClass("success");
