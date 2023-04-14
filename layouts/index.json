@@ -4,7 +4,6 @@
       {{- range $index, $page := .Site.Pages -}}
           {{- if ne $page.Type "json" -}}
               {{- $exercises := $page.Scratch.Get "exercise" -}}
-              {{- $i := 0 -}}
               {{- range $exercises -}}
                   {{- if not $first -}}, {{- end -}}
                   {{- $first = false -}}
@@ -18,7 +17,6 @@
       {{- range $index, $page := .Site.Pages -}}
           {{- if ne $page.Type "json" -}}
               {{- $questionaire := $page.Scratch.Get "questionaire" -}}
-              {{- $i := 0 -}}
               {{- range $questionaire -}}
                   {{ if not $first -}}, {{- end -}}
                   {{ $first = false -}}
