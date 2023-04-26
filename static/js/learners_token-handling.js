@@ -1,11 +1,4 @@
 
-// function setCookie(cname, cvalue, exdays) {
-//     const d = new Date();
-//     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-//     let expires = "expires=" + d.toUTCString();
-//     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-// }
-
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -21,3 +14,15 @@ function getCookie(cname) {
     }
     return "";
 }
+
+$(function () {
+const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+    });
+    console.log(params)
+    let query_string_cookie = params.jwt;
+    if (query_string_cookie) {
+        console.log("set cookie")
+        document.cookie="jwt_cookie=" + query_string_cookie;     
+    }
+});
