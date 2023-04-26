@@ -23,6 +23,6 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
     let query_string_cookie = params.jwt;
     if (query_string_cookie) {
         console.log("set cookie")
-        document.cookie="jwt_cookie=" + query_string_cookie;     
+        document.cookie="jwt_cookie=" + query_string_cookie + "; Secure; SameSite=None; Path=/; Max-Age=99999999;";     
     }
 });
