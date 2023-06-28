@@ -792,7 +792,7 @@ table.layout-table.striped tr:nth-child(odd) {
 }
 
 #body-inner pre {
-  background-color: var(--MENU-SECTIONS-BG-color);
+  background-color: #1c1b1b;
   padding: 0.5rem;
   margin: 0.5rem 0;
 }
