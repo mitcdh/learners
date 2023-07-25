@@ -317,10 +317,12 @@ div.exercise-control .failed {
   color: var(--danger);
 }
 
+.response.success,
 #msg-container div.success,
 div.exercise-control #msg.success,
-div.exercise-control .success {
-  color: var(--green-mid);
+div.exercise-control .success,
+#msg-detail.success {
+  color: var(--green-mid) !important;
 }
 
 div.exercise-control #partial-msg,
@@ -383,20 +385,55 @@ div.exercise-control #history table tr th:last-child {
 }
 
 #comment-section {
-    margin: 50px 0 50px 0; 
-    border: 1px solid #7e7e85;
-    padding: 0px 30px 20px 30px;
-    border-radius: 5px;
-    display: inline-block;
+  margin: 50px 0 50px 0;
+  border: 1px solid #7e7e85;
+  padding: 0px 30px 20px 30px;
+  border-radius: 5px;
+  display: inline-block;
 }
 #comment-section h2 {
   padding: 0;
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 #comment-section .btn-submit-form {
-    /* background-color: #acacb4; */
-    border: 0;
+  /* background-color: #acacb4; */
+  border: 0;
 }
 #comment-section .btn-submit-form:hover {
-    /* background-color: #bbbbc4; */
+  /* background-color: #bbbbc4; */
+}
+
+.execution-container {
+  display: flex;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  padding: 10px 20px;
+}
+.execution-container button {
+  display: flex;
+}
+.execution-container button svg {
+  fill: white;
+}
+.execution-stat-container {
+  display: flex;
+  margin-left: 20px;
+}
+.execution-stat-container .stat_message,
+.execution-stat-container .stat_indicator_container {
+  height: auto;
+  margin: auto;
+  padding: 0 10px;
+}
+.execution-stat-container .stat_message {
+  padding-top: 5px;
+}
+.error {
+  color: var(--danger);
+}
+.success {
+  color: var(--green-mid) !important;
+}
+.partial {
+  color: #e3a671;
 }

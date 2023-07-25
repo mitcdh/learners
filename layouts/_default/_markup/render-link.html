@@ -20,4 +20,4 @@
     {{ $absolute_url = printf "%s%s%s%s" (.Page.Site.BaseURL) ("/res/") ($.Page.File.Dir) ($destination) }}
 {{- end -}}
 
-<a href="{{ $absolute_url }}"{{ with .Title}} title="{{ . }}"{{ end }} target="{{ $target }}">{{ .Text }}</a>
+<a href="{{ $absolute_url }}"{{ with .Title}} title="{{ . }}"{{ end }} target="{{ $target }}">{{ .Text | safeHTML }}</a>
