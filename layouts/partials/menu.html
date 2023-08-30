@@ -13,7 +13,9 @@
     <section id="homelinks">
       <ul>
         <li>
-            <a class="padding" href='{{ (cond (and (ne .Site.Params.landingPageURL nil) (.Site.IsMultiLingual)) .Site.Params.landingPageURL "/") }}'>{{ safeHTML (cond (ne .Site.Params.landingPageName nil) .Site.Params.landingPageName "<i class='fas fa-home'></i> Home") }}</a>
+          <a class="padding" href='{{ (cond (and (ne .Site.Params.landingPageURL nil) (.Site.IsMultiLingual)) .Site.Params.landingPageURL "/") }}'>
+            {{ safeHTML (cond (ne .Site.Params.landingPageName nil) .Site.Params.landingPageName "<i class='fas fa-home'></i> Home") }}
+          </a>
         </li>
       </ul>
     </section>
@@ -32,7 +34,6 @@
     <div class="highlightable">
       <section class="menu-links" data-simplebar>
         <ul class="topics">
-
             {{if eq .Site.Params.ordersectionsby "title"}}
               {{range .Site.Home.Sections.ByTitle}}
               {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
@@ -87,11 +88,7 @@
         </select>
         <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
           width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve">
-          <g>
-            <g id="arrow-drop-down">
-              <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
-            </g>
-          </g>
+          <g id="arrow-drop-down"><polygon points="0,63.75 127.5,191.25 255,63.75" /></g>
         </svg>
         </div>
         </a>
@@ -115,75 +112,71 @@
 {{ $showvisitedlinks := .showvisitedlinks }}
 {{ $currentNode := .currentnode }}
 {{ $currentFileUniqueID := "" }}
-{{ $topLevelEntry := false }}
 {{ with $currentNode.File }}{{ $currentFileUniqueID = .UniqueID }}{{ end }}
  {{with .sect}}
-  {{if and .IsSection (or (not .Params.hidden) $.showhidden)}}
+  {{if .IsSection }}
     {{safeHTML .Params.head}}
+    {{ $activeMenuEntry := eq .File.UniqueID $currentFileUniqueID}}
+    {{ $root_level_element := not .Parent.Parent }}
 
-    {{ $currentPermalink := .Permalink }}
-    {{ range .Site.Sections }}
-      {{ if eq $currentPermalink .Permalink }}
-        {{ $topLevelEntry = true }}
-      {{ end }}
+    {{ if or (not $root_level_element) .Site.Params.devStage }}
+      <li 
+        data-nav-id="{{ .RelPermalink }}" 
+        title="{{ .Title }}" 
+        id='{{ printf "%s" (md5 (printf "%s" .Page.File.Dir)) }}'
+        {{ if not .Site.Params.devStage }}
+          style="display: none;"
+        {{ end }}
+        class="
+          dd-item 
+          page-control 
+          {{ if .IsAncestor $currentNode }} parent {{end}} 
+          {{ if $activeMenuEntry }} active {{end}}" 
+      >
+
+        <a href="{{.RelPermalink}}" devstage="{{ .Site.Params.devStage }}" >
+            {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
+            {{ if $showvisitedlinks}}
+              <i class="fas fa-check read-icon"></i>
+            {{ end }}
+        </a>
     {{ end }}
 
-    {{ $activeMenuEntry := eq .File.UniqueID $currentFileUniqueID}}
-    <li data-nav-id="{{.RelPermalink}}" title="{{.Title}}" class="dd-item
-    {{if .IsAncestor $currentNode }}parent{{end}}
-    {{ if $activeMenuEntry }}active{{end}}
-    {{ if and $topLevelEntry (not .Site.Params.devStage) }}no-indent{{end}}
-    ">
-      {{ if or (not $topLevelEntry) (.Site.Params.devStage) }}
-      <a href="{{.RelPermalink}}" hideopts="{{.Params.hideopts}}" devstage="{{ .Site.Params.devStage }}" >
-          {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
-          {{ if $showvisitedlinks}}
-            <i class="fas fa-check read-icon"></i>
-          {{ end }}
-      </a>
-      {{ end }}
-      {{ $numberOfPages := (add (len ( where .Pages "Params.hidden" "ne" true )) (len ( where .Sections "Params.hidden" "ne" true ))) }}
-      {{ if ne $numberOfPages 0 }}
+    {{ if or ($activeMenuEntry) (.IsAncestor $currentNode)}}
       
-      {{ if or ($activeMenuEntry) ($topLevelEntry) (.IsAncestor $currentNode)}}
-      
-        <ul>
-          {{ $currentNode.Scratch.Set "pages" .Pages }}
-          {{ if .Sections }}
-            {{ $currentNode.Scratch.Set "pages" (.Pages | union .Sections) }}
-          {{end}}
-          {{ $pages := ($currentNode.Scratch.Get "pages") }}
-
+      <ul id='{{ printf "%s" (md5 (printf "%s" .Page.File.Dir)) }}' class="page-control">
+        {{ $currentNode.Scratch.Set "pages" .Pages }}
+        {{ if .Sections }}
+          {{ $currentNode.Scratch.Set "pages" (.Pages | union .Sections) }}
+        {{end}}
+        {{ $pages := ($currentNode.Scratch.Get "pages") }}
         {{if eq .Site.Params.ordersectionsby "title"}}
           {{ range $pages.ByTitle }}
-            {{ if and .Params.hidden (not $.showhidden) }}
-            {{else}}
             {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks }}
-            {{end}}
           {{ end }}
         {{else}}
           {{ range $pages.ByWeight }}
-            {{ if and .Params.hidden (not $.showhidden) }}
-            {{else}}
             {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks }}
-            {{end}}
           {{ end }}
         {{end}}
-        </ul>
-
-        {{ end }}
-
-      {{ end }}
-    </li>
+      </ul>
+    {{ end }}
+      
+    {{ if not $root_level_element }}
+      </li>
+    {{ end }}
+  
   {{else}}
-    {{ if not .Params.Hidden }}
       <li data-nav-id="{{.RelPermalink}}" title="{{.Title}}" class="dd-item {{if eq .File.UniqueID $currentFileUniqueID}}active{{end}}">
-        <a href="{{ .RelPermalink}}" hideopts="{{.Params.hideopts}}" devstage="{{ .Site.Params.devStage }}">
-        {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
-        {{ if $showvisitedlinks}}<i class="fas fa-check read-icon"></i>{{end}}
+        <a href="{{ .RelPermalink}}" 
+          devstage="{{ .Site.Params.devStage }}">
+              {{safeHTML .Params.Pre}} {{or .Params.menuTitle .LinkTitle .Title}} {{safeHTML .Params.Post}}
+              {{ if $showvisitedlinks}}
+                <i class="fas fa-check read-icon"></i>
+              {{end}}
         </a>
     </li>
-     {{ end }}
   {{end}}
  {{ end }}
 {{ end }}
+
