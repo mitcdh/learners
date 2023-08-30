@@ -1,5 +1,39 @@
-<!-- Partial intended to be overwritten to add custom headers, like CSS or any other info
-<style type="text/css">
-    /* Custom css */
-</style>
--->
+
+{{ $primary_currentPage := $.Sites.First.GetPage (replaceRE "^/.+?/" "/" .RelPermalink) }}
+
+<!-- Generate IDs  -->
+{{ $page_id := printf "%s" (md5 (printf "%s" $.Page.File.Dir)) }}
+
+<!-- Get Parent Information -->
+{{ $parents := slice }}
+{{ $parent := $primary_currentPage.Parent }}
+{{ range (seq 1 10) }}
+    {{ if $parent }}
+        {{ $parent_page_id := printf "%s" (md5 (printf "%s" $parent.File.Dir)) }}
+        {{ $parents = $parents | append $parent_page_id }}
+        {{ $parent = $parent.Parent }}
+    {{ end }}
+{{ end }}
+
+<!-- Determine Root Page ID -->
+{{ $root_page := $page_id }}
+{{ if gt (len $parents) 1 }}
+    {{ $root_page = index $parents (sub (len $parents) 2) }}
+{{ else }}
+    {{ $root_page = index $parents (sub (len $parents) 1) }}
+{{ end }}
+
+{{ $hierarchy := (sub (len $parents) 1) }}
+
+<!-- Set page info for the json -->
+{{ 
+    $.Page.Scratch.SetInMap "pageinfo" $page_id 
+    (dict 
+        "page_id" $page_id 
+        "parents" $parents 
+        "root_page" $root_page
+        "params" $.Params
+        "language" $.Lang
+        "hierarchy" $hierarchy
+        ) 
+}}

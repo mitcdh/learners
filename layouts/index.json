@@ -24,5 +24,18 @@
               {{- end -}}
           {{- end -}}
       {{- end -}}
-      ]
+      ],
+      "pages": [
+        {{- $first = true -}}
+        {{- range $index, $page := .Site.Pages -}}
+            {{- if ne $page.Type "json" -}}
+                {{- $pageinfo := $page.Scratch.Get "pageinfo" -}}
+                {{- range $pageinfo -}}
+                    {{ if not $first -}}, {{- end -}}
+                    {{ $first = false -}}
+                    {{- . | jsonify (dict "indent" "    ") -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+        ]
   }
