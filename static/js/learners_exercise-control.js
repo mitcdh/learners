@@ -1,11 +1,11 @@
 
 const short_msgs = {
-  executed: "Successfully executed",
+  executed: "submitted",
   execution_failed: "Connection failed",
   completed: "Exercise completed",
   partial: "Partially completed",
   completion_failed: "Exercise not completed",
-  never_executed: "Exercise not executed yet",
+  never_executed: "not executed",
   server_error: "Server error",
   data_fail: "Error in data format",
   history_completed: "succeeded",
@@ -96,15 +96,16 @@ function visualFeedback(
   if (data == "" || data == undefined) {
     showError(`#${parentID} #exercise_executed`);
     showError(`#${parentID} #exercise_completed`);
-    $(parentID + " #error-msg").html(short_msgs.server_error);
+    $(`#${parentID} #msg`).hide(300).html(short_msgs.server_error).animate({width:'toggle'}, 300);
     return false;
+
   } else if (!data.history) {
     showNoExecution(parentID);
     return false;
+
   } else {
     showMsg(parentID, data);
     showExecutionState(parentID, data);
-    showCompletionState(parentID, data, disable_on_success);
     return true;
   }
 }
@@ -114,7 +115,8 @@ function showNoExecution(parentID) {
   showNone(`#${parentID} #exercise_completed`);
   var msg_container = $(`#${parentID} #msg-container #msg`);
   msg_container.removeClass("success error partial")
-  msg_container.html(short_msgs.never_executed);
+  msg_container.hide(300).html(short_msgs.never_executed).animate({width:'toggle'}, 300);
+
 }
 
 function showMsg(parentID, data) {
@@ -147,19 +149,19 @@ function showExecutionState(parentID, data) {
     if (data.executed || data.partial) {
       showSuccess(id_executed);
       msg_container.addClass("success")
-      msg_container.html(short_msgs.executed);
+      msg_container.hide(300).html(short_msgs.executed).animate({width:'toggle'}, 300);
       return true;
     } else {
       showError(id_executed);
       showError(id_completed);
       msg_container.addClass("error")
-      msg_container.html(short_msgs.execution_failed);
+      msg_container.hide(300).html(short_msgs.execution_failed).animate({width:'toggle'}, 300);
       submit_btn.prop("disabled", false);
       return false;
     }
   } else {
     msg_container.addClass("error")
-    msg_container.html(short_msgs.server_error);
+    msg_container.hide(300).html(short_msgs.server_error).animate({width:'toggle'}, 300);
     return false;
   }
 }
@@ -175,26 +177,27 @@ function showCompletionState(parentID, data, disable_on_success) {
     if (data.partial) {
       showPartialSuccess(id_completed);
       msg_container.addClass("partial")
-      msg_container.html(short_msgs.partial);
+      msg_container.hide(300).html(short_msgs.partial).animate({width:'toggle'}, 300);
       submit_btn.prop("disabled", false);
       return false;
     } else if (data.completed) {
       showSuccess(id_completed);
       msg_container.addClass("success")
-      msg_container.html(short_msgs.completed);
+      // 
+      msg_container.hide(300).html(short_msgs.executed).animate({width:'toggle'}, 300);
       if (!disable_on_success) submit_btn.prop("disabled", false);
       return true;
     } else {
       showError(id_completed);
       msg_container.addClass("error")
-      msg_container.html(short_msgs.completion_failed);
+      msg_container.hide(300).html(short_msgs.completion_failed).animate({width:'toggle'}, 300);
       submit_btn.prop("disabled", false);
       return false;
     }
   } else {
     showError(id_completed);
     msg_container.addClass("error")
-    msg_container.html(short_msgs.data_fail);
+    msg_container.hide(300).html(short_msgs.data_fail).animate({width:'toggle'}, 300);
     submit_btn.prop("disabled", false);
   }
 }
@@ -205,8 +208,8 @@ function sendAjax(type, payload) {
     $.ajax({
       type: type,
       // TODO: REMOVE prefix
-      // url: "http://localhost:5000" + payload.url,
-      url: payload.url,
+      url: "http://localhost:5000" + payload.url,
+      // url: payload.url,
       headers: Object.assign(
         { "Content-type": "application/json" },
         { Authorization: `Bearer ${getCookie("jwt_cookie")}` },
@@ -328,22 +331,15 @@ function getExecutionHistory(exercise) {
   var defer = $.Deferred();
 
   const submissionCheckmark = `#${exercise.global_exercise_id} #exercise_executed`;
-  const completionCheckmark = `#${exercise.global_exercise_id} #exercise_completed`;
-
   showLoading(submissionCheckmark);
-  showLoading(completionCheckmark);
 
   sendAjax("GET", { url: `/submissions/${exercise.global_exercise_id}` })
     .then(function (data, textStatus, jqXHR) {
       if (data) {
-        // Set checkmarks
         visualFeedback(exercise.global_exercise_id, data);
-        // Display execution history
         printHistory(exercise.global_exercise_id, data.history);
-        // Update overall progress
         updateProgress();
       } else {
-        // Never executed
         showNoExecution(exercise.global_exercise_id)
       }
       defer.resolve(data);
@@ -361,14 +357,16 @@ function updateProgress() {
   sendAjax("GET", { url: `/progress` })
     .then(function (data, textStatus, jqXHR) {
       $.each(data.success_list, function (parentTitle, parentExercise) {
-        let menuItem = $(`.topics li[title='${parentTitle}']`).find("a").first()
-        update_counter(menuItem, parentExercise.done, parentExercise.total)
-        $.each(parentExercise.exercises, function (i, subExercise) {
-          let subMenuItem = $(`.topics li[title='${subExercise.title}']`).find("a").first()
-          if (subMenuItem.length > 0) {
-            update_counter(subMenuItem, subExercise.done, subExercise.total)
-          }
-        })
+        let menuItem = $(`.page-control[title='${parentTitle}']`).find("a").first()
+        if (menuItem.length) {
+          update_counter(menuItem, parentExercise.done, parentExercise.total)
+          $.each(parentExercise.exercises, function (i, subExercise) {
+            let subMenuItem = $(`.page-control[title='${subExercise.title}']`).find("a").first()
+            if (subMenuItem.length) {
+              update_counter(subMenuItem, subExercise.done, subExercise.total)
+            }
+          })
+        }
       }
       );
       defer.resolve(data);

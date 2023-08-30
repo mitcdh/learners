@@ -31,85 +31,48 @@
 >
   {{ .Inner }}
 
-<div class="exercise-control">
-  
-  <h5>Exercise Control</h5>
-  <h4>{{ $exercise_name }}</h4>
 
-  <section class="stats_display">
-    <ul class="stats-list">
-      <li>
-        <span>Form submitted</span>
+<div>
+
+  <button 
+    id="submitExercise" 
+    type="submit" 
+    class="btn-submit-withstatus" 
+    value="">
+    <div class="label">
+      submit
+    </div>
+    <div class="status">
+      <div id="msg-container">
+        <span id="msg" class="stat_message"></span>
         <span class="stat_indicator_container">
           <div
             id="exercise_executed"
             class="stat_indicator loading"
-            style="display: none"
-          >
+            style="display: none">
             <svg
               class="stat_icon"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 52 52"
-            >
+              viewBox="0 0 52 52">
               <circle class="stat_circle" cx="26" cy="26" r="26" fill="none" />
               <path
                 class="stat_check"
                 fill="none"
-                d="M14.1 27.2l7.1 7.2 16.7-16.8"
-              />
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
               <g class="stat_cross">
                 <path d="m15.07675,36.98865l21.84649,-21.9773" fill="none" />
                 <path d="m36.98865,36.92324l-21.9773,-21.84649" fill="none" />
               </g>
             </svg>
           </div>
-        </span>
-      </li>
-      <li>
-        <span>Exercise completed</span>
-        <span class="stat_indicator_container">
-          <div
-            id="exercise_completed"
-            class="stat_indicator loading"
-            style="display: none"
-          >
-            <svg
-              class="stat_icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 52 52"
-            >
-              <circle class="stat_circle" cx="26" cy="26" r="26" fill="none" />
-              <path
-                class="stat_check"
-                fill="none"
-                d="M14.1 27.2l7.1 7.2 16.7-16.8"
-              />
-              <g class="stat_cross">
-                <path d="m15.07675,36.98865l21.84649,-21.9773" fill="none" />
-                <path d="m36.98865,36.92324l-21.9773,-21.84649" fill="none" />
-              </g>
-            </svg>
-          </div>
-        </span>
-      </li>
-    </ul>
-  </section>
-
-  <button id="submitExercise" type="submit" class="btn-submit-form" value="">
-    <svg class="bi" width="22" height="22" style="margin-right: 5px;">
-      <use xlink:href="#play"></use>
-    </svg>
-    submit
+          </span>
+      </div>
+    </div>
   </button>
-
-  <div id="msg-container">
-    <div id="msg"></div>
+  
+  <div class="exercise-control">
+    <div id="history" style="display: none"></div>
   </div>
-
-  <div id="msg-detail">
-  </div>
-
-  <div id="history" style="display: none"></div>
-
 </div>
+
 </form>
