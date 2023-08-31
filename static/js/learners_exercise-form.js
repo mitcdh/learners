@@ -129,38 +129,37 @@ async function uploadFile(upload_container) {
   return defer.promise();
 }
 
-
-function appendNewInputRow(this_fieldset, amount = 1) {
-  const base = $(this_fieldset).find(".default-inputs");
-  const container = $(this_fieldset).find("#additionalInput")[0];
+function appendNewInputRow(fieldset_id, amount = 1) {
+  const base = $(`#${fieldset_id} .default-inputs`);
+  const container = $(`#${fieldset_id} #extendedInputs`);
   let current_count = $(container).find(".input-group").length;
 
   for (let i = 0; i < amount; i++) {
-    let new_input_row = base.clone();
     let new_index = current_count + i + 1;
-
-    // Update Titel of new input row:
-    $(new_input_row).find("h4")[0].append(` (Additional ${new_index})`);
+    let new_input_block = base.clone()
+                              .removeClass("default-inputs")
+                              .css("display", "none");
 
     // Update input names and labels
-    $.each($(new_input_row).find(".input"), function (index, input_object) {
-      let current_input_name = $(input_object).attr("name");
-      let new_input_name = `${current_input_name} (Additional ${new_index})`;
-      $(new_input_row)
-        .find(`label[for=${current_input_name}]`)
-        .attr("for", new_input_name);
-      $(input_object).attr("name", new_input_name);
-      $(input_object).val("");
-    });
+    $.each($(new_input_block).find(".input"), 
+      (index, input_object) => {
 
-    $(new_input_row).removeClass("default-inputs");
-    $(new_input_row).css("display", "none");
+        let current_input_name = $(input_object).attr("name");
+        let new_input_name = `${current_input_name} (${new_index})`;
 
-    let closer = $("<div class='closer'><svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-6 h-6'><path stroke-linecap='round' stroke-linejoin='round' d='M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /></svg></div>");
-    $(new_input_row).prepend(closer);
+        $(new_input_block)
+          .find(`label[for=${current_input_name}]`)
+          .attr("for", new_input_name);
 
-    $(container).append(new_input_row);
-    $(new_input_row).slideDown();
+        $(input_object).attr("name", new_input_name);
+        $(input_object).val("");
+      });
+      
+      $(new_input_block).find(".divider").first().val("--divider--")
+      $(new_input_block).find(".closer").first().css("display", "block")  
+
+    $(container).append(new_input_block);
+    $(new_input_block).slideDown();
   }
 }
 
@@ -207,6 +206,8 @@ function getFormData(exercise) {
 
     form_data[section_name] = section_obj;
   });
+
+  console.log(form_data)
 
   return form_data;
 }
@@ -266,7 +267,7 @@ function initForm(exercise) {
   $(`#${exercise.global_exercise_id}`)
     .find(".add-input-row")
     .click(function () {
-      appendNewInputRow($(this).closest("fieldset"), (amount = 1));
+      appendNewInputRow($(this).closest("fieldset").attr("id"));
     });
 
   $(document).on("click", ".closer", function () {
@@ -302,9 +303,9 @@ function loadForm(exercise) {
         const keys = Object.keys(storedForm);
         keys.forEach((key, fieldset_index) => {
           // Expand if needed
-          let additional_count = storedForm[key]["additional"];
+          let additional_count = storedForm[key]["additional"] - 1;
           appendNewInputRow(
-            field_sets[fieldset_index],
+            $(field_sets[fieldset_index]).attr("id"),
             (amount = additional_count)
           );
 
@@ -315,7 +316,7 @@ function loadForm(exercise) {
         });
 
         // Set data
-        let input_fields = $(`#${exercise.global_exercise_id}`).find(".input");
+        let input_fields = $(`#${exercise.global_exercise_id}`).find(".input").not(".divider");
         $.each($(input_fields), function (index, input_field) {
           if ($(input_field).attr("type") != "file") {
             $(input_field).val(inputdata[index]);
@@ -333,7 +334,7 @@ function persistForm(global_exercise_id) {
   let parent = null;
 
   $.each(
-    $(`#${global_exercise_id}`).find(".input"),
+    $(`#${global_exercise_id}`).find(".input").not(".divider"),
     function (index, input_field) {
       // get current fieldset
       let current_parent = $(input_field).closest("fieldset")[0];
