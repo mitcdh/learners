@@ -136,6 +136,7 @@
 
         <a href="{{.RelPermalink}}" devstage="{{ .Site.Params.devStage }}" >
             {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
+            {{ if and .Site.Params.devStage .Params.hideopts }} [hidden] {{ end }}
             {{ if $showvisitedlinks}}
               <i class="fas fa-check read-icon"></i>
             {{ end }}
@@ -171,6 +172,7 @@
         <a href="{{ .RelPermalink}}" 
           devstage="{{ .Site.Params.devStage }}">
               {{safeHTML .Params.Pre}} {{or .Params.menuTitle .LinkTitle .Title}} {{safeHTML .Params.Post}}
+              {{ if and .Site.Params.devStage .Params.hideopts }} [hidden] {{ end }}
               {{ if $showvisitedlinks}}
                 <i class="fas fa-check read-icon"></i>
               {{end}}
