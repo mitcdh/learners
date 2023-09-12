@@ -148,7 +148,7 @@ function appendNewInputRow(fieldset_id, amount = 1) {
         let new_input_name = `${current_input_name} (${new_index})`;
 
         $(new_input_block)
-          .find(`label[for=${current_input_name}]`)
+          .find(`label[for="${current_input_name}"]`)
           .attr("for", new_input_name);
 
         $(input_object).attr("name", new_input_name);
@@ -161,6 +161,12 @@ function appendNewInputRow(fieldset_id, amount = 1) {
     $(container).append(new_input_block);
     $(new_input_block).slideDown();
   }
+}
+
+function showGroupDetails(btn_obj) {
+  const group = $(btn_obj).siblings(".group-details")
+  $(group).toggle()
+  event.preventDefault()
 }
 
 
@@ -196,10 +202,15 @@ function getFormData(exercise) {
       $(this).find("h4").first().text() || `Section ${section}`;
 
     $.each(
-      $(this).find(".input").not("[name='minInputs']").not(".uploader-element"),
+      $(this).find(".input, .editable-table").not("[name='minInputs']").not(".uploader-element"),
       function () {
         let input_name = $(this).attr("name");
-        let input_value = $(this).val();
+        let input_value = "";
+        if ($(this).hasClass("input")) {
+          input_value = $(this).val();
+        } else if ($(this).hasClass("editable-table")) {
+          input_value = $(this).prop("outerHTML").replaceAll('contenteditable="true"', "");;
+        }
         section_obj[input_name] = input_value;
       }
     );
@@ -293,35 +304,49 @@ function loadForm(exercise) {
   sendAjax("GET", { url: `/cache/${exercise.global_exercise_id}` })
     .then(function (data, textStatus, jqXHR) {
       storedForm = JSON.parse(data["form_data"]);
-
+        
       // if stored form is not empty
       if (storedForm) {
-        let field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset");
-
         let inputdata = [];
 
-        const keys = Object.keys(storedForm);
-        keys.forEach((key, fieldset_index) => {
-          // Expand if needed
-          let additional_count = storedForm[key]["additional"] - 1;
-          appendNewInputRow(
-            $(field_sets[fieldset_index]).attr("id"),
-            (amount = additional_count)
-          );
+        let dom_field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset");
+       
 
-          // Extract input data
-          for (const subkey in storedForm[key]) {
-            if (subkey != "additional") inputdata.push(storedForm[key][subkey]);
+        const stored_fieldsets = Object.values(storedForm);
+        stored_fieldsets.forEach((stored_fieldset, fieldset_index) => {
+          // Expand if needed
+
+          for(let i = 0; i < stored_fieldset.additional; i++){
+            $(dom_field_sets[fieldset_index]).find('.add-input-row').trigger('click')
+            $('.case-management-container').find('.add-case').trigger('click')
           }
+
+          const stored_inputs = Object.values(stored_fieldset);
+          stored_inputs.forEach((stored_input, input_index) => {
+            if (Object.keys(stored_fieldset)[input_index] != "additional") {
+              inputdata.push(stored_input)
+            }
+          })  
+
+
+
         });
 
         // Set data
-        let input_fields = $(`#${exercise.global_exercise_id}`).find(".input").not(".divider");
-        $.each($(input_fields), function (index, input_field) {
-          if ($(input_field).attr("type") != "file") {
-            $(input_field).val(inputdata[index]);
+        let _inputs = $(`#${exercise.global_exercise_id}`).find(".input, .editable-table").not(".divider");
+        $.each($(_inputs), function (index, _input) {
+          if ($(_input).attr("type") != "file") {
+            if (inputdata[index].type == "TABLE") {
+              $(_input).html(inputdata[index].value);
+            } else {
+              $(_input).val(inputdata[index].value);
+            }
           }
-        });
+          
+        });    
+        $(".editable-table tr td").focusout(() => {
+          detectFullTable($(event.target).closest("table"), $('.case-management-container'))
+        })
       }
     })
     .catch(function (jqXHR, textStatus, errorThrown) {
@@ -334,27 +359,55 @@ function persistForm(global_exercise_id) {
   let parent = null;
 
   $.each(
-    $(`#${global_exercise_id}`).find(".input").not(".divider"),
-    function (index, input_field) {
-      // get current fieldset
-      let current_parent = $(input_field).closest("fieldset")[0];
+      $(`#${global_exercise_id}`).find(".input, .editable-table").not(".divider"),
+      
+      // callback
+      function (index, _input) {
 
-      // init parent fieldset
-      if (parent != current_parent) {
-        parent = current_parent;
-        parentindex = index;
-      }
+        // get current fieldset
+        const current_fieldset = $(_input).closest("fieldset")[0];
 
-      // if in the same fieldset
-      if (parent == current_parent) {
-        form_data_to_store[parentindex] = form_data_to_store[parentindex] || {};
-        form_data_to_store[parentindex][index] =
-          $(input_field).val() || $(input_field).attr("value") || "";
-        form_data_to_store[parentindex]["additional"] =
-          $(parent).find(".closer").length;
+        // Determine if case
+        const is_case_object = Boolean($(current_fieldset).parents().find("#cases").length)
+        
+        // init parent fieldset
+        if (parent != current_fieldset) {
+          parent = current_fieldset;
+          parentindex = index;
+        }
+
+        // if in the same fieldset
+        if (parent == current_fieldset) {
+          form_data_to_store[parentindex] = form_data_to_store[parentindex] || {};
+
+          const field_type = $(_input).prop('nodeName')
+
+          // Get amount of additionals
+          let additional_count = 0
+          if (is_case_object) {
+            additional_count = $(parent).closest("#cases").find(".case-container").length  
+          } else {
+            additional_count = $(parent).find(".closer").length
+          }
+
+          // Get input value
+          let input_value = null
+          if (['INPUT', 'SELECT', 'TEXTAREA'].includes(field_type)) {
+            input_value = $(_input).val()
+          }
+          else if (['TABLE'].includes(field_type)) {
+            input_value = $(_input).html()
+          }
+
+          form_data_to_store[parentindex][index] = {
+            "value": input_value || "",
+            "type": field_type || "default"
+          }
+          form_data_to_store[parentindex]["additional"] = additional_count - 1
+
+        }
       }
-    }
-  );
+    );
 
   // Set cache on server
   sendAjax("PUT", {

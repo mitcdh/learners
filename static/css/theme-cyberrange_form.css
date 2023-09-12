@@ -12,7 +12,6 @@
   width: 100%;
 }
 
-
 .input-group label {
   display: inline-block;
   width: 20%;
@@ -20,7 +19,9 @@
   padding-right: 20px;
 }
 
-.input-group input, .input-group textarea, .input-group select {
+.input-group input,
+.input-group textarea,
+.input-group select {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
   padding: 15px;
   transition: border-color;
@@ -77,7 +78,9 @@
 
 /* ------------------------------------------------------------------------------------------------- */
 
-.input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
   outline: none;
   border: 1px solid var(--dark);
 }
@@ -92,7 +95,9 @@
   margin: 1.0em 0 0 0;
 } */
 
-input.error, textarea.error, select.error {
+input.error,
+textarea.error,
+select.error {
   border: 1px solid var(--red-mid) !important;
   background-color: #eed9df;
   clear: both;
@@ -111,7 +116,8 @@ fieldset {
   margin: 0 !important;
 }
 
-button.add-input-row {
+button.add-input-row,
+button.add-case {
   width: 100%;
   font-weight: 400;
   font-family: "Rubik", sans-serif;
@@ -128,17 +134,19 @@ button.add-input-row {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-button.add-input-row:hover {
+button.add-input-row:hover,
+button.add-case:hover {
   background-color: color-mix(in srgb, var(--primary-color) 7%, #ffffff);
 }
 
-button.add-input-row span {
+button.add-input-row span,
+button.add-case span {
   margin: auto 4px;
   padding: 7px 0;
 }
 
-
-.add-input-row svg {
+.add-input-row svg,
+button.add-case svg {
   margin-top: 4px;
   height: 30px;
 }
@@ -170,9 +178,8 @@ button.btn-submit-form {
 }
 
 button.btn-submit-form:hover {
-  background-color:  var(--green-light);
+  background-color: var(--green-light);
 }
-
 
 button.gpdf {
   display: inline-block;
@@ -193,12 +200,14 @@ button.gpdf svg.bi {
   transition: 200ms ease;
 }
 
-button.gpdf:hover, button.gpdf.active {
+button.gpdf:hover,
+button.gpdf.active {
   color: white;
-  background-color:  var(--primary-color);
+  background-color: var(--primary-color);
 }
 
-button.gpdf:hover svg.bi, button.gpdf.active svg.bi {
+button.gpdf:hover svg.bi,
+button.gpdf.active svg.bi {
   fill: white;
 }
 
@@ -267,10 +276,240 @@ button.drawio-link svg {
 .input-group h4,
 .input-group h5,
 .input-group h6 {
-  padding: 1.0em 0 2em 0;
+  padding: 1em 0 2em 0;
 }
 
 .input-group p {
   padding-top: 0px;
   margin-top: 0px;
+}
+
+.group-details {
+  background-color: green;
+}
+
+.input-group.list-row {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.list-row {
+  display: flex;
+}
+
+.list-row > * {
+  padding: 0 20px;
+}
+
+.list-row .input {
+  margin-bottom: 0;
+}
+
+.case-management-container .case-container {
+  box-shadow: 
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2), 
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.case-management-container .add-case {
+  margin-top: 2rem;
+}
+
+.case-management-container .input {
+}
+
+.case-management-container .head {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  border: thin solid color-mix(in srgb, var(--primary-color) 92%, #000000);
+}
+
+.case-management-container .head fieldset {
+  width: 100%;
+  display: flex;
+}
+
+.case-management-container .head:hover {
+  background-color: color-mix(in srgb, var(--primary-color) 95%, #ffffff);
+}
+
+.case-management-container .case-container:first-of-type .head {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.case-management-container .case-container:last-of-type .head {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.case-management-container .head label {
+  height: fit-content;
+  margin: auto;
+  margin-left: 1rem;
+  color: white;
+  font-weight: 400;
+  font-size: 90%;
+  opacity: 0.6;
+}
+.case-management-container .head .delete-row {
+  display: flex;
+  padding: 10px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+.case-management-container .head svg,
+.case-management-container .head .delete-row svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  opacity: 0.6;
+  cursor: pointer;
+  pointer-events: none;
+}
+.case-management-container .head .delete-row:hover svg {
+  opacity: 1;
+}
+.case-management-container .head:hover svg.chevron {
+  opacity: 1;
+}
+.case-management-container .head .chevron {
+  transition: all 250ms ease;
+  transform: rotate(0deg);
+}
+.case-management-container .head.active .chevron {
+  transform: rotate(180deg);
+}
+.case-management-container .head .input.status-input {
+  width: 240px;
+}
+.case-management-container .head .input {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  border-radius: 4px;
+  background-color: #00000010;
+  color: white;
+  margin: 0.25rem 0.5rem;
+}
+.case-management-container .head .input::placeholder {
+  color: white;
+  opacity: 0.6;
+}
+
+.case-management-container .content {
+}
+
+.case-management-container input,
+.case-management-container textarea,
+.case-management-container select {
+  padding: 10px;
+  transition: border-color;
+  font-family: "Rubik", sans-serif;
+  color: var(--dark);
+  text-transform: none;
+  font-weight: 300;
+  background-color: var(--background-gray-color);
+  text-align: left;
+  display: inline-block;
+  transition: all 250ms;
+}
+
+.case-management-container .content input,
+.case-management-container .content textarea,
+.case-management-container .content select {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #d5d5d5;
+  border-radius: 0.1875rem;
+}
+
+.case-management-container input:focus,
+.case-management-container textarea:focus,
+.case-management-container select:focus {
+  outline: none;
+  /* border: 1px solid var(--dark); */
+}
+.case-management-container select {
+  cursor: pointer;
+}
+.case-management-container select option {
+  background-color: var(--background-gray);
+}
+.case-management-container .case-container table.text, 
+.case-management-container .case-container table.text tr,
+.case-management-container .case-container table.text tr td {
+  border: 0; font-size: 90%; padding: 0
+
+}
+.case-management-container .case-container table.editable-table {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.case-management-container .case-container table.editable-table tr th {
+  font-size: 80%;
+  border-bottom: 2px solid #dddddd;
+}
+.case-management-container .case-container table.editable-table tr {
+  border-bottom: 1px solid #dddddd;
+}
+.case-management-container .case-container table.editable-table tr td {
+  padding: 0.7rem 0.5rem;
+  background-color: var(--background-gray-color);
+  vertical-align: middle;
+}
+.case-management-container .case-container table.editable-table tr td,
+.case-management-container .case-container table.editable-table tr th {
+  border-right: 1px solid #ddd;
+}
+.case-management-container .case-container table.editable-table tr td[contenteditable="true"]:empty::before {
+  content: "\00a0";
+}
+.case-management-container .case-container label.table-heading {
+  margin-top: 2.5rem;
+}
+.case-management-container .case-container .slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;  
+  background: rgb(148,194,116);
+  background: linear-gradient(90deg, rgba(148,194,116,1) 0%, rgba(213,170,47,1) 50%, rgba(187,50,68,1) 100%);
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.case-management-container .case-container .slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%; 
+  background-color: white;
+  box-shadow: 
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2), 
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.case-management-container .case-container .slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2), 
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }

@@ -17,40 +17,39 @@
         }
       }
     }
-    return undefined; 
+    return undefined;
   }
 
   function showHidePages() {
     let pages = {};
     sendAjax("GET", { url: `/pages` })
-        .then(function (data, textStatus, jqXHR) {
-            pages = data.pages;
+      .then(function (data, textStatus, jqXHR) {
+        pages = data.pages;
 
-            const menuItems = document.querySelectorAll(".page-control"); 
-            for (let i = 0; i < menuItems.length; i++) {
-            const menuItem = menuItems[i]; 
+        const menuItems = document.querySelectorAll(".page-control");
+        for (let i = 0; i < menuItems.length; i++) {
+          const menuItem = menuItems[i];
 
-            let hidden = findHiddenValueByPageId(pages, menuItem.id);
-            if (hidden) {
-                $(menuItem).slideUp(250, () => {
-                    menuItem.classList.add("hidden");
-                })
-            } else {
-                menuItem.classList.remove("hidden");
-                $(menuItem).slideDown(400)
-                }
-            }
-        })
-        .catch(function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR, textStatus, errorThrown);
+          let hidden = findHiddenValueByPageId(pages, menuItem.id);
+          if (hidden) {
+            $(menuItem).slideUp(250, () => {
+              menuItem.classList.add("hidden");
             });
-
-}
+          } else {
+            menuItem.classList.remove("hidden");
+            $(menuItem).slideDown(400);
+          }
+        }
+      })
+      .catch(function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR, textStatus, errorThrown);
+      });
+  }
 </script>
 
 {{ if not .Site.Params.devStage }}
 <script>
-    showHidePages()
-    const intervalId = setInterval(showHidePages, 10000);
+  showHidePages();
+  const intervalId = setInterval(showHidePages, 10000);
 </script>
 {{ end }}
