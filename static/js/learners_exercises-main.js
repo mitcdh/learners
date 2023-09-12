@@ -39,6 +39,9 @@ $(function () {
   });
 
   init_comment_forms();
+
+  initCaseManagement();
+
 });
 
 function init_comment_forms() {
