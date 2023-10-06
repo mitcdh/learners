@@ -8,8 +8,10 @@
 
 <div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
-  <select name="{{ $input_name }}" id="{{ $input_name }}" class="input {{ if $input_required }}required{{ end }}">
-    <option value="">{{ $default_selection }}</option>
-    {{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
-  </select>
+  <div class="input-field-wrapper">
+    <select name="{{ $input_name }}" id="{{ $input_name }}" class="input {{ if $input_required }}required{{ end }}">
+      <option value="">{{ $default_selection }}</option>
+      {{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
+    </select>
+  </div>
 </div>
