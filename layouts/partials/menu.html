@@ -135,7 +135,9 @@
       >
 
         <a href="{{.RelPermalink}}" devstage="{{ .Site.Params.devStage }}" >
-            {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
+            <span>
+              {{safeHTML .Params.Pre}}{{or .Params.menuTitle .LinkTitle .Title}}{{safeHTML .Params.Post}}
+            </span>
             {{ if and .Site.Params.devStage .Params.hideopts }} [hidden] {{ end }}
             {{ if $showvisitedlinks}}
               <i class="fas fa-check read-icon"></i>
@@ -171,7 +173,9 @@
       <li data-nav-id="{{.RelPermalink}}" title="{{.Title}}" class="dd-item {{if eq .File.UniqueID $currentFileUniqueID}}active{{end}}">
         <a href="{{ .RelPermalink}}" 
           devstage="{{ .Site.Params.devStage }}">
-              {{safeHTML .Params.Pre}} {{or .Params.menuTitle .LinkTitle .Title}} {{safeHTML .Params.Post}}
+          <span>
+            {{safeHTML .Params.Pre}} {{or .Params.menuTitle .LinkTitle .Title}} {{safeHTML .Params.Post}}
+          </span>
               {{ if and .Site.Params.devStage .Params.hideopts }} [hidden] {{ end }}
               {{ if $showvisitedlinks}}
                 <i class="fas fa-check read-icon"></i>

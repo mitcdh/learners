@@ -340,6 +340,19 @@ a:hover {
   color: var(--MENU-SECTIONS-LINK-HOVER-color);
 }
 
+#sidebar ul li a {
+  display: flex;
+  justify-content: space-between;
+}
+
+#sidebar ul li a span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 18ch;
+  float: left;
+}
+
 #sidebar ul li.active > a,
 #sidebar ul li.active > div a {
   background: var(--background-gray-color);
