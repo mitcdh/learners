@@ -1,8 +1,12 @@
 {{ $src := .Destination }}
 {{ $alt := .PlainText | safeHTML }}
 {{ $tag := index (first 1 (after 1 (split $src "#"))) 0 }}
-{{ $caption := $alt }}
+{{ $caption := first 1 (split $alt ";") }}
 {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
+
+{{ $height := index (split (index (split $alt "height=") 1) ";") 0 }}
+{{ $width := index (split (index (split $alt "width=") 1) ";") 0 }}  
+{{ $align := index (split (index (split $alt "align=") 1) ";") 0 }} 
 
 {{ if (not .Page.Site.Params.devStage) }}
 {{ $src = printf "%s/res/%s%s" .Page.Site.BaseURL $pageDir $src }}
@@ -60,5 +64,5 @@
    </div>
 
 {{- else -}}
-   <img src="{{ $src }}" width="" height="" alt="{{ $alt }}" />
+   <img src="{{ $src }}" style="max-width: {{ $width }}; max-height: {{ $height }}; {{ if $align }} margin-{{ $align }}: 0; {{ end }}" alt="{{ $alt }}" />
 {{- end -}}
