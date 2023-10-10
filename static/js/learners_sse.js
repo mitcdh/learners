@@ -1,7 +1,6 @@
 function establishSSEConnection(endpoint) {
   new_sse = new EventSource(endpoint);
-  new_sse.addEventListener("newNotification", function (event) {
-    console.log("Received SSE message:", event.data);
+  new_sse.addEventListener("newContent", function (event) {
     showHidePages()
   });
 
