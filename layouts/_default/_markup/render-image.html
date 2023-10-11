@@ -1,7 +1,7 @@
 {{ $src := .Destination }}
 {{ $alt := .PlainText | safeHTML }}
 {{ $tag := index (first 1 (after 1 (split $src "#"))) 0 }}
-{{ $caption := first 1 (split $alt ";") }}
+{{ $caption := index (first 1 (split $alt ";")) 0  }}
 {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
 
 {{ $height := index (split (index (split $alt "height=") 1) ";") 0 }}
