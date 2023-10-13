@@ -2,11 +2,6 @@ let sse;
 let exercises = [];
 
 $(function () {
-  const stream_endpoint = `${window.location.origin}/stream`;
-  console.log(stream_endpoint);
-
-  console.log("open sse connection");
-  sse = establishSSEConnection(stream_endpoint);
 
   $(window).on("beforeunload", function () {
     console.log("close sse connection");
