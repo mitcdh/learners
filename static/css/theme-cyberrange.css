@@ -960,3 +960,7 @@ ol ol {
 .btn-submit-withstatus .status div span:last-of-type {
   margin: auto 5px auto 10px;
 }
+
+#prefooter {
+  margin-top: 20px;
+}

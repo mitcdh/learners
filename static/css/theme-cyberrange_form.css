@@ -524,6 +524,40 @@ button.drawio-link svg {
   background-color: #f0f0f0 !important;
   padding: 28px 28px;
 }
+.inject-email-container.ransom {
+  margin: 20px auto !important;
+  box-shadow: 4px 3px 4px #9d9d9d;
+  width: 100%;
+  background-color: #ab0000 !important;
+  padding: 28px 28px;
+}
+.inject-email-container.ransom p,
+.inject-email-container.ransom li,
+.inject-email-container.ransom h1,
+.inject-email-container.ransom h2,
+.inject-email-container.ransom h3,
+.inject-email-container.ransom h4,
+.inject-email-container.ransom a,
+.inject-email-container.ransom .inject-email-header,
+.inject-email-container.ransom span {
+  color: white !important;
+  font-family: Courier, monospace, monospace !important;
+  font-weight: bold;
+}
+.inject-email-container.ransom h1,
+.inject-email-container.ransom h2,
+.inject-email-container.ransom h3,
+.inject-email-container.ransom h4 {
+  text-transform: uppercase;
+}
+.inject-email-container.ransom a {
+  text-transform: uppercase;
+  color: white !important;
+  font-family: Courier, monospace, monospace !important;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .inject-email-header .label {
   font-weight: bold;
 }
@@ -531,6 +565,9 @@ button.drawio-link svg {
   border-width: 4px;
   border-color: #000000;
   width: 50%;
+}
+.inject-email-container.ransom .inject-email-seperator {
+  border-color: #ffffff;
 }
 
 .input-field-wrapper {
