@@ -3,3 +3,15 @@
   showHidePages();
 </script>
 {{ end }}
+
+{{ if or (eq .Params.type "inject") (.Params.hideopts) (.Params.sse) }}
+<script>
+    // const stream_endpoint = `localhost:5000/stream`;
+    const stream_endpoint = `${window.location.origin}/stream`;
+    console.log(stream_endpoint);
+  
+    console.log("open sse connection");
+    sse = establishSSEConnection(stream_endpoint);
+  
+</script>
+{{ end }}

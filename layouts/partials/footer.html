@@ -68,18 +68,6 @@
     <script src="{{"js/learn.js" | relURL}}{{ if not .Site.Params.disableAssetsBusting }}?{{ now.Unix }}{{ end }}"></script>
     {{ if (or (and (ne .Params.disableMermaid nil) (not .Params.disableMermaid)) (not .Site.Params.disableMermaid)) }}
 
-    {{ if or (eq .Params.type "inject") (.Params.hideopts) (.Params.sse) }}
-        <script>
-            // const stream_endpoint = `localhost:5000/stream`;
-            const stream_endpoint = `${window.location.origin}/stream`;
-            console.log(stream_endpoint);
-          
-            console.log("open sse connection");
-            sse = establishSSEConnection(stream_endpoint);
-          
-        </script>
-    {{ end }}
-
     {{ end }}
     {{ partial "custom-footer.html" . }}
   </body>
