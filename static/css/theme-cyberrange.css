@@ -503,11 +503,18 @@ td {
 }
 
 .image-container {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
   width: 100%;
   background-color: #f6f6f6;
   padding: 10px 30px;
   max-width: 944px;
+}
+.image-container a {
+  display: contents;
+  width: fit-content;
 }
 .image-container p {
   display: block;
