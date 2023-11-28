@@ -1,15 +1,27 @@
-function establishSSEConnection(endpoint) {
-  new_sse = new EventSource(endpoint);
-  new_sse.addEventListener("newContent", function (event) {
-    showHidePages()
-  });
+window.addEventListener('message', (event) => {
+  evt_data = event.data;
+  switch (evt_data.function) {
+    case 'visibility':
+      controlVisibility(pages = evt_data.data);
+      break;
+    default:
+    //
+  }
+});
 
-  new_sse.onerror = function (event) {
-    console.error("SSE Connection Error", event);
-  };
-  return new_sse;
-}
+function controlVisibility(pages) {
+  const menuItems = document.querySelectorAll('.page-control');
+  for (let i = 0; i < menuItems.length; i++) {
+    const menuItem = menuItems[i];
 
-function closeSSEConnection(see) {
-  sse.close();
+    let hidden = findHiddenValueByPageId(pages, menuItem.id);
+    if (hidden) {
+      $(menuItem).slideUp(250, () => {
+        menuItem.classList.add('hidden');
+      });
+    } else {
+      menuItem.classList.remove('hidden');
+      $(menuItem).slideDown(400);
+    }
+  }
 }
