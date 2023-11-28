@@ -1,7 +1,12 @@
 {{ $src := .Get "src" }}
 {{ $input_label := .Get "label" | htmlEscape | default "DrawIO Exercise" }} 
 {{ $input_name := $input_label | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}
-{{ $drawio_id := printf "%s%s" "drawio" (md5 (printf "%s" $src)) }}
+{{ $drawio_id := printf "%s%s" "drawio" (md5 (printf "%s%s" $src $input_name)) }}
+{{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
+
+{{ if (not .Page.Site.Params.devStage) }}
+{{ $src = printf "%s/res/%s%s" .Page.Site.BaseURL $pageDir $src }}
+{{ end }}
 
 <div id="{{ $drawio_id }}" class="drawio-exercise-container" devstage="{{ .Page.Site.Params.devStage }}">
 
