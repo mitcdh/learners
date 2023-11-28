@@ -43,13 +43,6 @@ function formExercise(exercise) {
 
   getExecutionHistory(exercise);
 
-  const drawioContainers = $(".drawio-container")
-  $.each(drawioContainers, (i, drawioContainer) => {
-    setTimeout((() => {
-      initDrawIO(drawioContainer.id)
-    }), 1000);
-
-  });
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -206,7 +199,15 @@ function getFormData(exercise) {
       function () {
         let input_name = $(this).attr("name");
         let input_value = "";
-        if ($(this).hasClass("input")) {
+        if ($(this).hasClass("drawio-object")) {
+          if (this.contentDocument) {
+            let svgContent = this.contentDocument.documentElement.outerHTML;
+            let base64String = btoa(svgContent);
+            input_value = 'data:image/svg+xml;base64,' + base64String;
+          } else {
+            input_value = this.data
+          }
+        } else if ($(this).hasClass("input")) {
           input_value = $(this).val();
         } else if ($(this).hasClass("editable-table")) {
           input_value = $(this).prop("outerHTML").replaceAll('contenteditable="true"', "");;
@@ -450,87 +451,6 @@ function getSectionValues(element) {
   );
   return input_group_obj;
 }
-
-const updateDrawioPreview = (container, data) => {
-  const preview = $(container).find(".drawio-preview")[0];
-  $(preview).attr("src", `https://viewer.diagrams.net/${data}`)
-}
-
-function initDrawIO(container_id) {
-  const container = $(`#${container_id}`);
-  let current_input = $(container).find("textarea.drawio-input").val();
-  
-  if (current_input) {
-    current_input = current_input.replace("https://app.diagrams.net/", "");
-    updateDrawioPreview(container, current_input)
-  }
-}
-
-function callSetDrawIO(event, url_encoded_data, button_element) {
-  const container = $(button_element).closest(".drawio-container");
-  const current_input = $(container).find("textarea.drawio-input").val();
-
-  if (current_input) url_encoded_data = current_input;
-  url_encoded_data = url_encoded_data.replace("https://app.diagrams.net/", "");
-
-  const openDrawioInNewTab = () => {
-    const newTab = window.open(
-      `https://app.diagrams.net/${url_encoded_data}`,
-      "_blank"
-    );
-    newTab.name = `drawio_tab`;
-  }
-
-  if ($(container).attr("devstage") === "true") {
-    openDrawioInNewTab()
-  } else {
-    try {
-      window.parent.postMessage({
-        'func': 'setDrawIO',
-        'message': `${url_encoded_data}`
-      }, "*");  
-    } catch (e) {
-      console.error(e)
-      openDrawioInNewTab()
-    }
-  }
-
-  event.preventDefault();
-}
-
-function resetDrawIO(event, button_element, original_data) {
-  let container = $(button_element).closest(".drawio-container")[0];
-  $(container).find("textarea.drawio-input").val("");
-  updateDrawioPreview(container, original_data)
-  event.preventDefault();
-}
-
-function insertDrawIOhook(element) {
-  let current_value = $(element).val().split("#");
-  let title = current_value[0].split("title=")[1] || "unknown";
-  let url_encoded_data = current_value[1];
-  let new_value = "";
-    
-  if (url_encoded_data) new_value = `?title=${title}#${url_encoded_data}`;
-  $(element).val(new_value);
-
-  // Update preview
-  const preview = $(element).closest(".drawio-container").find(".drawio-preview")[0];
-  $(preview).attr("src", `https://viewer.diagrams.net/${new_value}`)
-
-  if (!new_value) {
-    $(element).attr(
-      "placeholder",
-      "Please paste in the url-encoded diagram (menu - file - publish - link)"
-    );
-  }
-}
-
-$(function () {
-  $(".drawio-input").bind("input propertychange", function () {
-    insertDrawIOhook(this);
-  });
-});
 
 $.extend(jQuery.validator.messages, {
   required: "",

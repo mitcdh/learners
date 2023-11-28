@@ -3,11 +3,6 @@ let exercises = [];
 
 $(function () {
 
-  $(window).on("beforeunload", function () {
-    console.log("close sse connection");
-    closeSSEConnection(sse);
-  });
-
   updateProgress();
 
   $(".exercise-info[name=info]").each(function () {
@@ -21,9 +16,6 @@ $(function () {
         break;
       case "script":
         scriptExercise(exercise);
-        break;
-      case "questionaire":
-        questionaire(exercise);
         break;
     }
   });

@@ -10,13 +10,19 @@
   display: inline-flex;
   align-items: left;
   width: 100%;
+  flex-wrap: wrap;
+  margin: 10px 0;
 }
 
 .input-group label {
-  display: inline-block;
-  width: 20%;
-  margin: 15px 0 auto;
-  padding-right: 20px;
+  display: inline-flex;
+  min-width: 25%;
+  margin: 15px 5px auto;
+  flex-wrap: wrap;
+  width: 25%;
+  flex-grow: 1;
+  line-height: 1.1;
+  margin: auto;
 }
 
 .input-group input,
@@ -35,7 +41,7 @@
   width: 100%;
   display: inline-flex;
   flex-grow: 1;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0px;
   transition: border-color 250ms;
 }
 
@@ -225,6 +231,8 @@ button.btn-submit-form svg.bi {
 .required_marker {
   font-weight: 300;
   font-size: 75%;
+  margin: auto 10px 2px 6px;
+  display: inline-block;
 }
 
 .btn_wrapper_horizontal {
@@ -572,8 +580,9 @@ button.drawio-link svg {
 
 .input-field-wrapper {
   position: relative;
-  display: flex;
-  width: 100%;
+  display: inline-flex;
+  min-width: 75%;
+  flex-grow: 1;
 }
 
 .edit-flag {
