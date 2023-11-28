@@ -312,7 +312,6 @@ function loadForm(exercise) {
 
         let dom_field_sets = $(`#${exercise.global_exercise_id}`).find("fieldset");
        
-
         const stored_fieldsets = Object.values(storedForm);
         stored_fieldsets.forEach((stored_fieldset, fieldset_index) => {
           // Expand if needed
@@ -328,9 +327,6 @@ function loadForm(exercise) {
               inputdata.push(stored_input)
             }
           })  
-
-
-
         });
 
         // Set data
@@ -339,7 +335,11 @@ function loadForm(exercise) {
           if ($(_input).attr("type") != "file") {
             if (inputdata[index].type == "TABLE") {
               $(_input).html(inputdata[index].value);
-            } else {
+            } 
+            else if (inputdata[index].type == "OBJECT") {
+              $(_input).attr('data', inputdata[index].value);
+            }
+            else {
               $(_input).val(inputdata[index].value);
             }
           }
@@ -398,6 +398,9 @@ function persistForm(global_exercise_id) {
           }
           else if (['TABLE'].includes(field_type)) {
             input_value = $(_input).html()
+          }
+          else if (['OBJECT'].includes(field_type)) {
+            input_value = $(_input).attr('data')
           }
 
           form_data_to_store[parentindex][index] = {

@@ -25,6 +25,10 @@
   margin: auto;
 }
 
+.input-group label.error {
+  display: none !important;
+}
+
 .input-group input,
 .input-group textarea,
 .input-group select {
