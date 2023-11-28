@@ -1,5 +1,5 @@
 {{ $file := .Get "file" }}
-{{ $followup_title := .Get "followup_title" | default "Questionaire" }}
+{{ $followup_title := .Get "followup_title" | default "Questionnaire" }}
 
 {{ $.Page.Scratch.Add "pdfid" 1 }}
 {{ $slide_container_id := printf "pdfid_%s" (md5 ($.Page.Scratch.Get "pdfid") | string) }}
@@ -23,7 +23,7 @@
   </object>
 </div>
 
-<div class="questionaire-start">
+<div class="questionnaire-start">
     <h2>{{ $followup_title }}</h2>
 </div>
 

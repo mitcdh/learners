@@ -787,23 +787,23 @@ pre .copy-to-clipboard {
   padding: 0 4rem 4rem 8rem !important;
 }
 
-.questionaire-options-container {
+.questionnaire-options-container {
   margin-bottom: 30px;
 }
 
-.questionaire-form label {
+.questionnaire-form label {
   display: inline-block;
 }
 
-.questionaire-option-container {
+.questionnaire-option-container {
   display: flex;
   flex-wrap: wrap;
 }
 
-.questionaire-option input {
+.questionnaire-option input {
   display: none;
 }
-.questionaire-option label {
+.questionnaire-option label {
   margin: 0px;
   cursor: pointer;
   display: block;
@@ -814,24 +814,24 @@ pre .copy-to-clipboard {
   transition: all 0.2s;
 }
 
-.questionaire-option-all label {
+.questionnaire-option-all label {
   text-align: center !important;
 }
 
-.questionaire-option-container input[type="radio"] + label {
+.questionnaire-option-container input[type="radio"] + label {
   background: #f6f6f6;
   color: var(--MAIN-TEXT-color);
 }
-.questionaire-option-container input[type="radio"] + label:hover {
+.questionnaire-option-container input[type="radio"] + label:hover {
   background: #dedede;
   color: var(--MAIN-TEXT-color);
 }
-.questionaire-option-container input[type="radio"]:checked + label {
+.questionnaire-option-container input[type="radio"]:checked + label {
   background: #6ea151;
   color: white;
 }
 
-.questionaire-option {
+.questionnaire-option {
   border-radius: 5px;
   display: flex;
   align-items: center;

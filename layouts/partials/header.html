@@ -114,8 +114,8 @@
           }
         </style>
 
-        <!-- Get questionaires data -->
-        {{ if .Params.questionaire }}
+        <!-- Get questionnaires data -->
+        {{ if .Params.questionnaire }}
 
           {{ $root_candidate := $.Page.CurrentSection }}
           {{ range ((where .Site.Pages "Section" $.Page.Section).ByWeight) }}
@@ -124,33 +124,33 @@
 
           {{ $order_weight := add (add (mul $root_candidate.Weight 100) (mul $.Page.Parent.Weight 10)) $.Page.Weight | int}}
 
-          {{ $global_questionaire_id := md5 (printf "%s%s%s" $.Page.File.Dir ( $.Page.Title | default $.Page.Params.MenuTitle ) $.Page.Lang) }}
+          {{ $global_questionnaire_id := md5 (printf "%s%s%s" $.Page.File.Dir ( $.Page.Title | default $.Page.Params.MenuTitle ) $.Page.Lang) }}
           {{ $.Page.Scratch.Add "local_question_id" 1 }}
           {{ $local_question_id := ($.Page.Scratch.Get "local_question_id") }}
 
-          {{ $local_questionaire_data := slice }}
-          {{ range $index, $element := .Params.questionaire }}
+          {{ $local_questionnaire_data := slice }}
+          {{ range $index, $element := .Params.questionnaire }}
             {{ $element = merge $element (dict "id" (add $index 1)) }}
-            {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionaire_id (add $index 1)))) }}
-            {{ $local_questionaire_data = $local_questionaire_data | append $element }}
+            {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
+            {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
           {{ end }}
-          {{ $.Page.Scratch.SetInMap "questionaire_data" $.Page.Lang $local_questionaire_data }}
+          {{ $.Page.Scratch.SetInMap "questionnaire_data" $.Page.Lang $local_questionnaire_data }}
           
           <!-- Loop over all languages to get the translated versions (if available) -->
           {{ range .Translations }}
             {{ $currentLang := .Lang }}
-            {{ if .Params.questionaire }}
-              {{ $local_questionaire_data := slice }}
-              {{ range $index, $element := .Params.questionaire }}
+            {{ if .Params.questionnaire }}
+              {{ $local_questionnaire_data := slice }}
+              {{ range $index, $element := .Params.questionnaire }}
                 {{ $element = merge $element (dict "id" (add $index 1)) }}
-                {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionaire_id (add $index 1)))) }}
-                {{ $local_questionaire_data = $local_questionaire_data | append $element }}
+                {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
+                {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
               {{ end }}
-              {{ $.Page.Scratch.SetInMap "questionaire_data" $currentLang $local_questionaire_data }}    
+              {{ $.Page.Scratch.SetInMap "questionnaire_data" $currentLang $local_questionnaire_data }}    
             {{ end }}
           {{ end }}
           
-          {{ $.Page.Scratch.SetInMap "questionaire" $global_questionaire_id (dict "questions" ($.Page.Scratch.Get "questionaire_data") "global_questionaire_id" $global_questionaire_id "order_weight" $order_weight "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title)) }}
+          {{ $.Page.Scratch.SetInMap "questionnaire" $global_questionnaire_id (dict "questions" ($.Page.Scratch.Get "questionnaire_data") "global_questionnaire_id" $global_questionnaire_id "order_weight" $order_weight "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title)) }}
   
         {{ end }}
 

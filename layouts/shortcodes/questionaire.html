@@ -1,9 +1,9 @@
-{{ $questionaire_name := $.Page.Title | default $.Page.Params.MenuTitle }} 
-{{ if ($.Page.Scratch.Get $questionaire_name | default false) }}
+{{ $questionnaire_name := $.Page.Title | default $.Page.Params.MenuTitle }} 
+{{ if ($.Page.Scratch.Get $questionnaire_name | default false) }}
   {{ $divider := "------------------------------------------------------------------------------------------------------------\n"}}
-  {{- errorf "\n\n%sDuplicate questionaire name: '%s' already used on page '%s'.\nAll questionaire Names must be unique per page.\n%s" $divider $questionaire_name $.Page.File $divider -}}
+  {{- errorf "\n\n%sDuplicate questionnaire name: '%s' already used on page '%s'.\nAll questionnaire Names must be unique per page.\n%s" $divider $questionnaire_name $.Page.File $divider -}}
 {{ end }}
-{{ $.Page.Scratch.Set $questionaire_name true }}
+{{ $.Page.Scratch.Set $questionnaire_name true }}
 
 {{ $pages := (where .Site.Pages "Section" $.Page.Section).ByWeight }}
 {{ $root_candidate := $.Page.CurrentSection }}
@@ -19,32 +19,32 @@
 {{ $parent_weight := $.Page.Parent.Weight | int }}
 {{ $child_weight := $.Page.Weight | int }}
 
-{{ $.Page.Scratch.Add "local_questionaire_id" 1 }}
-{{ $local_questionaire_id := ($.Page.Scratch.Get "local_questionaire_id") }}
+{{ $.Page.Scratch.Add "local_questionnaire_id" 1 }}
+{{ $local_questionnaire_id := ($.Page.Scratch.Get "local_questionnaire_id") }}
 
-{{ $global_questionaire_id := md5 (printf "%s%s" $.Page.File.Dir $questionaire_name) }}
+{{ $global_questionnaire_id := md5 (printf "%s%s" $.Page.File.Dir $questionnaire_name) }}
 
-{{ $order_weight := add (add (mul $root_weight 1000) (mul $parent_weight 100)) (add (mul $child_weight 10) ($local_questionaire_id | int)) | int}}
+{{ $order_weight := add (add (mul $root_weight 1000) (mul $parent_weight 100)) (add (mul $child_weight 10) ($local_questionnaire_id | int)) | int}}
 
-{{ $.Page.Scratch.SetInMap "questionaire" $global_questionaire_id (dict "global_questionaire_id" $global_questionaire_id "order_weight" $order_weight "questionaire_name" (htmlEscape $questionaire_name) "local_questionaire_id" ($.Page.Scratch.Get "local_questionaire_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_name) "child_weight" $child_weight "parent_weight" $parent_weight "root_weight" $root_weight)}}
+{{ $.Page.Scratch.SetInMap "questionnaire" $global_questionnaire_id (dict "global_questionnaire_id" $global_questionnaire_id "order_weight" $order_weight "questionnaire_name" (htmlEscape $questionnaire_name) "local_questionnaire_id" ($.Page.Scratch.Get "local_questionnaire_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_name) "child_weight" $child_weight "parent_weight" $parent_weight "root_weight" $root_weight)}}
 
-<input class="exercise-info" type="hidden" name="info" value='{"global_questionaire_id":"{{ $global_questionaire_id }}", "questionaire_name":"{{ htmlEscape $questionaire_name }}", "exercise_type":"questionaire" }'> 
+<input class="exercise-info" type="hidden" name="info" value='{"global_questionnaire_id":"{{ $global_questionnaire_id }}", "questionnaire_name":"{{ htmlEscape $questionnaire_name }}", "exercise_type":"questionnaire" }'> 
 
 
 <form
-  id="{{ $global_questionaire_id }}"
-  class="form questionaire-control"
+  id="{{ $global_questionnaire_id }}"
+  class="form questionnaire-control"
 >
   {{ .Inner }}
 
 <div class="exercise-control">
   
-  <h4>Questionaire Submission</h4>
+  <h4>Questionnaire Submission</h4>
 
   <section class="stats_display">
     <ul class="stats-list">
       <li>
-        <span>Questionaire submitted</span>
+        <span>Questionnaire submitted</span>
         <span class="stat_indicator_container">
           <div
             id="exercise_executed"
@@ -72,7 +72,7 @@
    </ul>
   </section>
 
-  <button id="submitquestionaire" type="submit" class="btn-submit-form" value="">
+  <button id="submitquestionnaire" type="submit" class="btn-submit-form" value="">
     <svg class="bi" width="22" height="22" style="margin-right: 5px;">
       <use xlink:href="#play"></use>
     </svg>
