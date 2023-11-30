@@ -207,6 +207,12 @@ function getFormData(exercise) {
           } else {
             input_value = this.data
           }
+        } else if ($(this).hasClass("input") && ( $(this).hasClass('radio') || $(this).hasClass('checkboxes') )) {
+          let selected_values = [];
+            $.each($(this).find("input:checked"), (index, checked_element) => {
+              selected_values.push($(checked_element).val());
+            });
+            input_value = selected_values          
         } else if ($(this).hasClass("input")) {
           input_value = $(this).val();
         } else if ($(this).hasClass("editable-table")) {
@@ -339,6 +345,13 @@ function loadForm(exercise) {
             else if (inputdata[index].type == "OBJECT") {
               $(_input).attr('data', inputdata[index].value);
             }
+            else if (inputdata[index].type == "DIV") {
+              $.each($(_input).find("input"), (_index, option) => {
+                if ( inputdata[index].value.includes($(option).val()) ) {
+                  $(option).prop("checked", true);
+                }
+              });
+            }
             else {
               $(_input).val(inputdata[index].value);
             }
@@ -401,6 +414,13 @@ function persistForm(global_exercise_id) {
           }
           else if (['OBJECT'].includes(field_type)) {
             input_value = $(_input).attr('data')
+          }
+          else if (['DIV'].includes(field_type) && ( $(_input).hasClass('radio') || $(_input).hasClass('checkboxes') )) {
+            let selected_values = [];
+            $.each($(_input).find("input:checked"), (index, checked_element) => {
+              selected_values.push($(checked_element).val());
+            });
+            input_value = selected_values
           }
 
           form_data_to_store[parentindex][index] = {

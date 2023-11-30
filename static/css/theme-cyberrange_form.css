@@ -49,6 +49,25 @@
   transition: border-color 250ms;
 }
 
+.input-group .input-radio-option-wrapper {
+  display: inline-flex;
+  width: 100%;
+  justify-content: start;
+  align-content: start;
+  margin-bottom: 1rem;
+}
+
+.input-group .input-radio-option-wrapper input {
+  width: 1rem;
+  margin-right: 1rem;
+}
+
+.input-group .input-radio-option-wrapper label {
+  margin: auto 0 auto 0 !important;
+  padding: 0 0 0 0 !important;
+  font-weight: normal;
+}
+
 /* two rows */
 
 .input-group .input-row.wide {
