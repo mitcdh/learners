@@ -16,7 +16,7 @@
     <div class="input-radio-option-wrapper">
       <input type="radio" id='{{ $input_name }}_{{ strings.TrimLeft " " . }}' name="{{ $input_name }}" value='{{ strings.TrimLeft " " . }}'
       {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" checked{{end}}/>
-      <label for='{{ $input_name }}_{{ strings.TrimLeft " " . }}'>'{{ strings.TrimLeft " " . }}'</label>
+      <label for='{{ $input_name }}_{{ strings.TrimLeft " " . }}'>{{ strings.TrimLeft " " . }}</label>
     </div>
     {{- end -}}
   </div>
