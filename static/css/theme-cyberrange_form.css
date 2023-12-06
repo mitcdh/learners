@@ -608,6 +608,17 @@ button.drawio-link svg {
   flex-grow: 1;
 }
 
+.uploader-element .btn-submit-upload { 
+  margin: auto !important;
+  margin-left: 10px !important;
+}
+.uploader-element .input-field-wrapper {
+  position: relative;
+  display: inline-flex;
+  min-width: 60%;
+  flex-grow: 1;
+}
+
 .edit-flag {
   position: absolute;
   right: 0;
