@@ -100,7 +100,7 @@ async function uploadFile(upload_container) {
   let form_data = new FormData();
   form_data.append("file", file_data);
   await $.ajax({
-    url: `${baseUrl}/uploads`,
+    url: `${apiUrl}/uploads`,
     cache: false,
     contentType: false,
     processData: false,
