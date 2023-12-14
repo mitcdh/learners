@@ -40,7 +40,7 @@
 
 <script>
     let apiUrl = ("{{ $.Site.BaseURL }}").split("statics")[0]
-    if (!apiUrl.startsWith("http")) {
+    if (!apiUrl.startsWith("http") && !apiUrl.startsWith("//")) {
         apiUrl = `${window.location.origin}/${apiUrl}`.replace(/([^:])\/{2,}/g, '$1/');
     }
 </script>
