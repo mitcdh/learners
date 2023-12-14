@@ -297,6 +297,9 @@ function initForm(exercise) {
     }, 500);
   });
 
+  $(document).on("focusout", ".input-table tr td", function () {
+    persistForm(exercise.global_exercise_id);
+  });
   $(document).on("change", ".input", function () {
     persistForm(exercise.global_exercise_id);
   });
@@ -322,7 +325,6 @@ function loadForm(exercise) {
 
           for(let i = 0; i < stored_fieldset.additional; i++){
             $(dom_field_sets[fieldset_index]).find('.add-input-row').trigger('click')
-            $('.case-management-container').find('.add-case').trigger('click')
           }
 
           const stored_inputs = Object.values(stored_fieldset);
@@ -357,7 +359,7 @@ function loadForm(exercise) {
           
         });    
         $(".editable-table tr td").focusout(() => {
-          detectFullTable($(event.target).closest("table"), $('.case-management-container'))
+          detectFullTable($(event.target).closest("table"))
         })
       }
     })
