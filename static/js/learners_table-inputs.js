@@ -1,8 +1,5 @@
 function isEmpty(td) {
-  if ($(td).prop("contenteditable") !== "true") {
-    console.log("td is empty");
-    return true;
-  }
+  if ($(td).prop("contenteditable") !== "true") return true;
   if (
     td.text == "" ||
     td.text() == " " ||
@@ -12,11 +9,7 @@ function isEmpty(td) {
     td.html() == undefined ||
     td.is(":empty") ||
     td.is(":not(:visible)")
-  ) {
-    console.log("td is empty");
-    return true;
-  }
-  console.log("td is not empty");
+  ) return true;
   return false;
 }
 
