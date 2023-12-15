@@ -18,6 +18,14 @@ from collections import OrderedDict
     show_default=True,
 )
 @click.option(
+    "-b",
+    "--baseUrl",
+    "baseUrl",
+    default="/api",
+    help="BaseUrl of deployment, should be set to the learners backend URL",
+    show_default=True,
+)
+@click.option(
     "-e",
     "--envs",
     "contentEnvs",
@@ -75,6 +83,7 @@ from collections import OrderedDict
 )
 def main(
     publishDir,
+    baseUrl,
     contentEnvs,
     staticFolders,
     configFile,
@@ -98,8 +107,9 @@ def main(
     cmdPublishDir = publishDir
     if not os.path.isabs(cmdPublishDir):
         cmdPublishDir = os.path.join(hugo_base_path, cmdPublishDir)
-    
-    print("cmdPublishDir", cmdPublishDir)
+
+    if vite_backend := os.getenv("VITE_BACKEND"):
+        baseUrl = vite_backend
 
     # Check if publishDir exists
     prompt = f"[info] Checking if destination directory '{publishDir}' exists ..."
@@ -115,7 +125,9 @@ def main(
         print(f"[info] Cleaning publish directory {publishDir} ... CHECK")
 
     print("\n[info] Extracting information... ")
-    os.system(f"hugo -e _default -d {publishDir}/base -s ../../ --quiet")
+    os.system(
+        f"hugo -e _default -d {publishDir}/base -s ../../ --baseURL /{baseUrl}/statics/hugo/base --quiet"
+    )
 
     print(f"[info] Default env built")
     try:
@@ -157,7 +169,7 @@ def main(
     # Building hugo static pages
     print("[info] Building Hugo pages:")
     for hugoEnv in contentEnvs:
-        buildHugoFiles = f"hugo -e {hugoEnv} -d {publishDir}/{hugoEnv} -s ../../ --quiet"
+        buildHugoFiles = f"hugo -e {hugoEnv} -d {publishDir}/{hugoEnv} -s ../../ --baseURL /{baseUrl}/statics/hugo/{hugoEnv} --quiet"
         os.system(buildHugoFiles)
         print(f"       - Environment '{hugoEnv}' built")
         if hugoEnv != "base":
@@ -209,7 +221,6 @@ def update_css(css_file_path, primary_color):
 
 
 def create_folder_list(directory):
-
     if not os.path.exists(directory) or not os.path.isdir(directory):
         raise ValueError("[error] Invalid content directory path")
 
