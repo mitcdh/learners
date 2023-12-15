@@ -39,16 +39,6 @@
 }}
 
 <script>
-    let apiUrl =
-    import.meta.env.VITE_BACKEND ||
-    (import.meta.env.VITE_BASEURL
-      ? `${import.meta.env.VITE_BASEURL}/api`
-      : undefined);
-
-  apiUrl = !apiUrl.startsWith("http")
-      ? `${window.location.origin}/${apiUrl}`.replace(
-          /([^:])\/{2,}/g,
-          "$1/"
-        )
-      : apiUrl;
+    let apiUrl = ("{{ $.Site.BaseURL }}").split("statics")[0]
+    apiUrl = !apiUrl.startsWith("http") ? `${window.location.origin}/${apiUrl}`.replace(/([^:])\/{2,}/g,"$1/")
 </script>
