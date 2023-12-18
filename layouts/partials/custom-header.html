@@ -1,12 +1,9 @@
-
-{{ $primary_currentPage := $.Sites.First.GetPage (replaceRE "^/.+?/" "/" .RelPermalink) }}
-
 <!-- Generate IDs  -->
 {{ $page_id := printf "%s" (md5 (printf "%s" $.Page.File.Dir)) }}
 
 <!-- Get Parent Information -->
 {{ $parents := slice }}
-{{ $parent := $primary_currentPage.Parent }}
+{{ $parent := .CurrentSection.Parent }}
 {{ range (seq 1 10) }}
     {{ if $parent }}
         {{ $parent_page_id := printf "%s" (md5 (printf "%s" $parent.File.Dir)) }}
@@ -24,6 +21,7 @@
 {{ end }}
 
 {{ $hierarchy := (sub (len $parents) 1) }}
+
 
 <!-- Set page info for the json -->
 {{ 
