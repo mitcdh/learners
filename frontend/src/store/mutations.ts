@@ -100,5 +100,4 @@ export default {
 
   SET_QUESTIONNAIRES: (state: { questionnaires: any }, payload: any) =>
     (state.questionnaires = payload),
-
 };
