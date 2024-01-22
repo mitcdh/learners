@@ -6,6 +6,8 @@
 {{ $.Page.Scratch.Add "fieldset" 1 }}
 {{ $fieldset_id := printf "%s" (md5 (printf "fieldset%s%s" ($.Page.File.Dir) ($.Page.Scratch.Get "fieldset"))) }}
 
+</fieldset>
+
 <fieldset 
   extendable="{{ $group_extendable }}" 
   title='{{ $group_title | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}'

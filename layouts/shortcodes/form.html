@@ -16,6 +16,8 @@
 <!-- Set exercise information for the exercise json -->
 {{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title) "exercise_type" "form" "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight)}}
 
+{{ $.Page.Scratch.Add "fieldset" 1 }}
+{{ $fieldset_id := printf "%s" (md5 (printf "fieldset%s%s" ($.Page.File.Dir) ($.Page.Scratch.Get "fieldset"))) }}
 
 <!-- Shortcode HTML content -->
 <input class="exercise-info" type="hidden" name="info" value='{"global_exercise_id":"{{ $global_exercise_id }}", "exercise_name":"{{ htmlEscape $exercise_name }}", "exercise_type":"form" }'> 
@@ -29,8 +31,16 @@
   id="{{ $global_exercise_id }}"
   class="form exercise-control"
 >
+
+<fieldset 
+  title='{{ htmlEscape $exercise_name | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}'
+  id="{{ $fieldset_id }}"
+  class="input-group default-inputs"
+>
+
   {{ .Inner }}
 
+</fieldset>
 
 <div>
 
