@@ -5,6 +5,9 @@ function scriptExercise(exercise) {
   $(`#${exercise.global_exercise_id} .btn-run-exercise`).click(function () {
     executeScript(exercise)
   });
+  $(`#venjixControl`).click(function () {
+    executeScript(this, exercise)
+  });
 };
 
 function checkScriptExecution(button_id, script) {

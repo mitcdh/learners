@@ -6,16 +6,16 @@
   border-radius: 4px;
 }
 
-.input-group .input-row {
+/* .input-group .input-row {
   display: inline-flex;
   align-items: left;
   width: 100%;
   flex-wrap: wrap;
   margin: 10px 0;
-}
+} */
 
 .input-group label {
-  display: inline-flex;
+  display: inline;
   min-width: 25%;
   margin: 15px 5px auto;
   flex-wrap: wrap;
@@ -70,10 +70,32 @@
 
 /* two rows */
 
-.input-group .input-row.wide {
+/* .input-group .input-row.wide {
   display: grid;
   align-items: left;
   width: 100%;
+} */
+.input-group .input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  width: 100%;
+  flex-wrap: wrap;
+  margin: 0 0 10px 0;
+}
+
+.input-group .input-row.wide {
+  flex-direction: column;
+  justify-content: start;
+}
+
+.input-group .input-row label {
+  margin: 0 auto;
+  padding: 10px 10px 10px 0;
+}
+.input-group .input-row.wide label {
+  padding: 10px 10px 10px 0;
+  /* padding-bottom: 10px; */
 }
 
 .input-group .input-row.uploader-element.wide {
@@ -306,7 +328,7 @@ button.drawio-link svg {
 .input-group h4,
 .input-group h5,
 .input-group h6 {
-  padding: 1em 0 2em 0;
+  padding: 1em 0 1em 0;
 }
 
 .input-group p {
@@ -348,7 +370,7 @@ table.input-table tr td[contenteditable="true"] {
   padding-right: 22px;
 }
 
-table.input-table tr td[contenteditable="true"]:hover, 
+table.input-table tr td[contenteditable="true"]:hover,
 table.input-table tr td[contenteditable="true"]:focus {
   outline: 2px solid var(--primary-color);
 }

@@ -886,6 +886,9 @@ ol ol {
   background-color: #f6f6f6;
   min-height: 50px;
 }
+#venjixControl.btn-submit-withstatus {
+  width: auto;
+}
 
 .btn-submit-withstatus div {
   transition: background-color 200ms ease;
@@ -900,6 +903,10 @@ ol ol {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   min-width: 70%;
+}
+#venjixControl.btn-submit-withstatus .label {
+  min-width: 0%;
+  padding: 14px 30px;
 }
 .btn-submit-withstatus:hover .label {
   background-color: var(--green-light);
