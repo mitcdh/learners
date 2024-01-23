@@ -1,13 +1,13 @@
-// const validationOptions = {
-//   ignore: [],
-//   rules: getValidationRules(),
-// };
+const validationOptions = {
+  ignore: [],
+  rules: getValidationRules(),
+};
 
 function formExercise(exercise) {
   const exerciseForm = $(`#${exercise.global_exercise_id}`);
 
-  // // Initital validation
-  // exerciseForm.validate(validationOptions);
+  // Initital validation
+  exerciseForm.validate(validationOptions);
 
   // Submit Handler
   exerciseForm.submit(async (event) => {
@@ -18,7 +18,7 @@ function formExercise(exercise) {
     persistForm(exercise.global_exercise_id);
 
     // Validate Form
-    // let status = exerciseForm.validate(validationOptions);
+    let status = exerciseForm.validate(validationOptions);
     let validForm = !Object.keys(status.invalid).length;
 
     if (validForm && sucessfulUploadHandler) {
@@ -28,7 +28,7 @@ function formExercise(exercise) {
   });
 
   $("#upload_form").submit(function (event) {
-    // const status = $(this).validate(validationOptions);
+    const status = $(this).validate(validationOptions);
     const validForm = !Object.keys(status.invalid).length;
 
     if (validForm) {
@@ -201,7 +201,7 @@ function getValidationRules() {
   var rule_dict = {};
   $.each($(".form .required"), function () {
     key = $(this).attr("id");
-    rule_dict[key] = "required";
+    rule_dict[key] = { "required": true };
   });
   return rule_dict;
 }
