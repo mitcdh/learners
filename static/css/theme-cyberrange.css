@@ -875,7 +875,7 @@ ol ol {
   display: none;
 }
 
-.btn-submit-withstatus {
+.btn-default-withstatus {
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -886,16 +886,16 @@ ol ol {
   background-color: #f6f6f6;
   min-height: 50px;
 }
-#venjixControl.btn-submit-withstatus {
+#venjixControl.btn-default-withstatus {
   width: auto;
 }
 
-.btn-submit-withstatus div {
+.btn-default-withstatus div {
   transition: background-color 200ms ease;
   flex-grow: 1;
 }
 
-.btn-submit-withstatus .label {
+.btn-default-withstatus .label {
   flex: auto;
   padding: 14px;
   color: #fff;
@@ -904,15 +904,23 @@ ol ol {
   border-bottom-left-radius: 4px;
   min-width: 70%;
 }
-#venjixControl.btn-submit-withstatus .label {
+#venjixControl.btn-default-withstatus .label {
   min-width: 0%;
   padding: 14px 30px;
 }
-.btn-submit-withstatus:hover .label {
+.btn-default-withstatus:hover .label {
   background-color: var(--green-light);
 }
+.btn-default-withstatus:disabled,
+.btn-default-withstatus:disabled .status,
+.btn-default-withstatus:disabled:hover {
+  background-color: #f6f6f6 !important;
+}
+.btn-default-withstatus:disabled .label {
+  background-color: #d1d1d1 !important;
+}
 
-.btn-submit-withstatus .status {
+.btn-default-withstatus .status {
   align-self: end;
   display: flex;
   height: 100%;
@@ -929,18 +937,18 @@ ol ol {
   max-width: fit-content;
 }
 
-.btn-submit-withstatus .status div {
+.btn-default-withstatus .status div {
   display: flex;
   justify-content: center;
   align-content: center;
   flex-direction: row;
   padding-left: 10px;
 }
-.btn-submit-withstatus .status div span {
+.btn-default-withstatus .status div span {
   margin: auto;
   height: fit-content;
 }
-.btn-submit-withstatus .status div span:last-of-type {
+.btn-default-withstatus .status div span:last-of-type {
   margin: auto 5px auto 10px;
 }
 

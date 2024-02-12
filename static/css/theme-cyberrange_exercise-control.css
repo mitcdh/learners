@@ -297,13 +297,13 @@ div.exercise-control button.btn-run-exercise svg.bi {
 
 /* div.exercise-control #msg-container,
 #msg-container {
-  display: flex;
-  width: auto;
-  text-align: right;
-  float: right;
-  height: 58px;
-  margin-top: 10px;
-  vertical-align: middle;
+display: flex;
+width: auto;
+text-align: right;
+float: right;
+height: 58px;
+margin-top: 10px;
+vertical-align: middle;
 } */
 
 div.exercise-control #msg-container #msg,
@@ -334,6 +334,8 @@ div.exercise-control .partial {
 
 div.exercise-control #history {
   padding: 14px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 div.exercise-control #history table {
@@ -451,4 +453,11 @@ div.exercise-control #history table tr th:last-child {
 }
 .partial {
   color: #e3a671;
+}
+
+.script_response {
+  background-color: #f6f6f6;
+  padding: 10px 16px;
+  border-radius: 3px;
+  border-left: 6px solid #b1b1b1;
 }

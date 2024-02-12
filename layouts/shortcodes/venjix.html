@@ -17,19 +17,19 @@
 {{ $order_weight := add (add (mul $root_candidate.Weight 1000) (mul $.Page.Parent.Weight 100)) (add (mul $.Page.Weight 10) ($local_exercise_id | int)) | int}}
 
 <!-- Set exercise information for the exercise json -->
-{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title) "exercise_type" "script" "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight)}}
+{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title) "exercise_type" "script" "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight "script_name" $exercise_script )}}
 
 {{ $.Page.Scratch.Add "fieldset" 1 }}
 {{ $fieldset_id := printf "%s" (md5 (printf "fieldset%s%s" ($.Page.File.Dir) ($.Page.Scratch.Get "fieldset"))) }}
 
 <!-- Shortcode HTML content -->
-<input class="exercise-info" type="hidden" name="info" value='{"global_exercise_id":"{{ $global_exercise_id }}", "exercise_name":"{{ htmlEscape $exercise_name }}", "exercise_type":"script" }'> 
+<input class="exercise-info" type="hidden" name="info" value='{"global_exercise_id":"{{ $global_exercise_id }}", "exercise_name":"{{ htmlEscape $exercise_name }}", "exercise_type":"script", "script_name":"{{ $exercise_script }}" }'> 
 
 <div id="{{ $global_exercise_id }}">
   <button 
     id="venjixControl" 
-    class="btn-submit-withstatus" 
-    value="">
+    class="btn-default-withstatus btn-script-trigger" 
+    value="{{ $exercise_script }}">
     <div class="label">
       {{ $label }}
     </div>
@@ -60,6 +60,8 @@
       </div>
     </div>
   </button>
+  
+  <div class="script_response" style="display: none"></div>
   
   <div class="exercise-control">
     <div id="history" style="display: none"></div>

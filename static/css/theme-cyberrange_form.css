@@ -15,7 +15,7 @@
 } */
 
 .input-group label {
-  display: inline;
+  display: inline-flex;
   min-width: 25%;
   margin: 15px 5px auto;
   flex-wrap: wrap;
