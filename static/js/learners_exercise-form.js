@@ -23,7 +23,6 @@ function formExercise(exercise) {
 
     if (validForm && sucessfulUploadHandler) {
       await submitForm(this, exercise);
-      getExecutionHistory(exercise);
     }
   });
 
@@ -41,7 +40,7 @@ function formExercise(exercise) {
   loadForm(exercise);
   initForm(exercise);
 
-  getExecutionHistory(exercise);
+  getExecutionHistory(exercise.global_exercise_id);
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -69,11 +68,11 @@ async function uploadHandler(exerciseForm) {
         $(msgContainer).removeClass("error success");
         if (!data.executed) {
           $(msgContainer).addClass("error");
-          $(msgContainer).html(data.msg || "File upload failed.");
+          $(msgContainer).html(data.status_msg || "File upload failed.");
           $(msgContainer).slideDown();
         } else if (data.executed) {
           $(msgContainer).addClass("success");
-          $(msgContainer).html(data.msg || "File uploaded.");
+          $(msgContainer).html(data.status_msg || "File uploaded.");
           $(msgContainer).slideDown();
         } else {
           $(msgContainer).removeClass();
@@ -201,7 +200,7 @@ function getValidationRules() {
   var rule_dict = {};
   $.each($(".form .required"), function () {
     key = $(this).attr("id");
-    rule_dict[key] = { "required": true };
+    rule_dict[key] = { required: true };
   });
   return rule_dict;
 }
@@ -296,17 +295,75 @@ function minimumElements(form) {
 
 function submitForm(form, exercise) {
   var defer = $.Deferred();
+  console.log("submit:", form);
   if (minimumElements(form)) {
     formData = getFormData(exercise);
+
+    // Get the DOM elements for status display
+    const button = $(
+      `#${exercise.global_exercise_id} .btn-default-withstatus`
+    ).first();
+    const stat_indicator = $(
+      `#${exercise.global_exercise_id} .stat_indicator`
+    ).first();
+    const stat_message = $(
+      `#${exercise.global_exercise_id} .stat_message`
+    ).first();
+
+    console.log(button);
+    console.log(stat_indicator);
+    console.log(stat_message);
+
+    // deactivate button and show loading
+    $(button).prop("disabled", true);
+
     sendAjax("POST", {
       url: `/submissions/form/${exercise.global_exercise_id}`,
       data: JSON.stringify(formData),
     })
       .then(function (data, textStatus, jqXHR) {
-        defer.resolve(data);
+        if (data) {
+          if (!data.executed)
+            displayError(
+              stat_indicator,
+              stat_message,
+              data.status_msg || "Error: execution failed"
+            );
+          else if (data.partial)
+            displayPartialSuccess(
+              stat_indicator,
+              stat_message,
+              data.status_msg || ""
+            );
+          else if (data.completed == 0)
+            displayPartialSuccess(
+              stat_indicator,
+              stat_message,
+              data.status_msg || "not completed"
+            );
+          else if (data.completed == 1)
+            displaySuccess(
+              stat_indicator,
+              stat_message,
+              data.status_msg || "completed"
+            );
+          else
+            displaySuccess(
+              stat_indicator,
+              stat_message,
+              data.status_msg || "executed"
+            );
+
+          updateExecutionHistory(exercise.global_exercise_id);
+        } else {
+          hideLoading(stat_indicator, stat_message);
+        }
       })
       .catch(function (jqXHR, textStatus, errorThrown) {
         defer.reject(jqXHR, textStatus, errorThrown);
+      })
+      .finally(() => {
+        $(button).prop("disabled", false);
       });
   }
   return defer.promise();
