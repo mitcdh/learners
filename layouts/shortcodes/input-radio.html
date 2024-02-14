@@ -6,10 +6,12 @@
 {{ $input_wide := .Get "wide" | default false }}
 {{ $input_instructor := .Get "instructor" | default "" }}
 
-<div class="input-row {{ if $input_wide }}wide{{ end }}">
-  
-<label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
-
+<div class="input-row {{ if $input_wide }}wide{{ end }}">  
+<label for="{{ $input_name }}">
+  <div>
+    {{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}
+  </div>
+</label>
 <div class="input-field-wrapper">
   <div name="{{ $input_name }}" id="{{ $input_name }}" class="input radio {{ if $input_required }}required{{ end }}">
     {{- range $options -}}
