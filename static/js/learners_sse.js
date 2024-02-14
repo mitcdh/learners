@@ -21,7 +21,7 @@ function controlVisibility(pages) {
       });
     } else {
       menuItem.classList.remove('hidden');
-      $(menuItem).slideDown(400);
+      $(menuItem).slideDown(100);
     }
   }
 }
