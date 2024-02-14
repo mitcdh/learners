@@ -127,7 +127,7 @@ async function uploadFile(upload_container) {
       // Set attachment value to hidden field
       const hiddenField = $(upload_container).find("#attachment")[0];
       $(hiddenField).attr("value", response.filename);
-      defer.resolve(true);
+      defer.resolve(response);
     } else {
       // Handle the case where the server did not return the expected data
       defer.reject("Unexpected response from the server");
@@ -295,7 +295,6 @@ function minimumElements(form) {
 
 function submitForm(form, exercise) {
   var defer = $.Deferred();
-  console.log("submit:", form);
   if (minimumElements(form)) {
     formData = getFormData(exercise);
 
@@ -309,10 +308,6 @@ function submitForm(form, exercise) {
     const stat_message = $(
       `#${exercise.global_exercise_id} .stat_message`
     ).first();
-
-    console.log(button);
-    console.log(stat_indicator);
-    console.log(stat_message);
 
     // deactivate button and show loading
     $(button).prop("disabled", true);
