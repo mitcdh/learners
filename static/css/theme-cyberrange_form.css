@@ -448,7 +448,15 @@ table.input-table tr td[contenteditable="true"]::after {
 .uploader-element .btn-submit-upload {
   margin: auto !important;
   margin-left: 10px !important;
+  display: inline-flex;
 }
+
+.uploader-element .btn-submit-upload span {
+  height: fit-content;
+  margin: auto;
+}
+
+
 .uploader-element .input-field-wrapper {
   position: relative;
   display: inline-flex;
@@ -494,4 +502,78 @@ table.input-table tr td[contenteditable="true"]::after {
   max-height: 200px;
   padding-right: 2px;
   padding-left: 2px;
+}
+
+.risk-table {
+  border-color: white;
+  margin-bottom: 25px;
+}
+.risk-table .risk-header-horizontal {
+  text-transform: uppercase;
+  vertical-align: center;
+  text-align: center;
+  height: 20px;
+  background-color: white;
+}
+.risk-table .risk-header-vertical {
+  text-transform: uppercase;
+  vertical-align: center;
+  text-align: center;
+  width: 20px;
+  background-color: white;
+}
+.risk-table .risk-header-vertical span {
+  -ms-writing-mode: tb-rl;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.risk-table tr th {
+  text-align: center;
+}
+
+.risk-table tr th:empty {
+  background-color: white;
+}
+
+.risk-table tr th:nth-child(1),
+.risk-table tr th:nth-child(2) {
+  text-align: right;
+}
+
+.risk-table tr td {
+  height: 30px;
+  width: 18%;
+  text-align: center;
+  vertical-align: middle;
+  transition: 80ms;
+  cursor: pointer;
+}
+
+.risk-table:hover tr td {
+  opacity: 0.4;
+}
+.risk-table:hover tr td:hover, 
+.risk-table tr td.selected {
+  opacity: 1;
+  outline: 6px solid var(--primary-color);
+}
+
+.risk-table .very-low {
+  background-color: #b9e18b;
+}
+.risk-table .low {
+  background-color: #93c954;
+}
+.risk-table .medium {
+  background-color: #f4ea12;
+}
+.risk-table .high {
+  background-color: #fdc110;
+}
+.risk-table .very-high {
+  background-color: #ed2024;
+  color: white;
 }
