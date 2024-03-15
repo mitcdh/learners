@@ -1,6 +1,6 @@
 {{ $src := .Get "src" }}
 {{ $input_label := .Get "label" | htmlEscape | default "DrawIO Exercise" }} 
-{{ $input_name := $input_label | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}
+{{ $input_name := $input_label | lower | replaceRE "[^0-9a-zäöüß]" "_" | replaceRE "-+" "_" }}
 {{ $drawio_id := printf "%s%s" "drawio" (md5 (printf "%s%s" $src $input_name)) }}
 {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
 

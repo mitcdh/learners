@@ -33,7 +33,7 @@
 >
 
 <fieldset 
-  title='{{ htmlEscape $exercise_name | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}'
+  title='{{ htmlEscape $exercise_name | lower | replaceRE "[^0-9a-zäöüß]" "_" | replaceRE "-+" "_" }}'
   id="{{ $fieldset_id }}"
   class="input-group default-inputs"
 >

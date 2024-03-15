@@ -1,5 +1,5 @@
 {{ $input_label := .Get "label" }} 
-{{ $input_name := $input_label | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}
+{{ $input_name := $input_label | lower | replaceRE "[^0-9a-zäöüß]" "_" | replaceRE "-+" "_" }}
 {{ $default_selection := .Get "default" | default "-- please select --" }} 
 {{ $options := split (.Get "options" ) ";"}}
 {{ $input_required := .Get "required" | default false }}

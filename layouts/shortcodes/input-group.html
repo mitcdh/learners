@@ -10,7 +10,7 @@
 
 <fieldset 
   extendable="{{ $group_extendable }}" 
-  title='{{ $group_title | lower | replaceRE "[^0-9a-z]" "_" | replaceRE "-+" "_" }}'
+  title='{{ $group_title | lower | replaceRE "[^0-9a-zäöüß]" "_" | replaceRE "-+" "_" }}'
   id="{{ $fieldset_id }}"
   minInputs="{{ $group_minInputs }}"
 >
