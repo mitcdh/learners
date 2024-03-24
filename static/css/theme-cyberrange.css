@@ -131,6 +131,10 @@ ul {
   text-transform: none;
 }
 
+#body ul {
+  margin: 0.7em 0 !important;
+}
+
 h1 {
   font-size: 1.8em !important;
   font-weight: 700;
@@ -148,7 +152,8 @@ h3 {
   font-size: 1.4em;
   font-weight: 700;
   color: var(--primary-color);
-  padding: 1em 0 0.3em 0;
+  padding: 0.5em 0 0.2em 0 !important;
+  margin: 0.5em 0 0.2em 0 !important;
 }
 
 h4 {
