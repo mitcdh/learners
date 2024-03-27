@@ -103,6 +103,8 @@ def db_insert_pages(app, *args, **kwargs):
             db.session.delete(current)
             db.session.flush()
 
+    db.session.commit()
+
 
 def db_insert_exercises(app, *args, **kwargs):
     exercise_json = f"{cfg.statics.get('base_url')}/hugo/exercises.json"
