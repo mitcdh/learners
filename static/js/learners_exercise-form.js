@@ -240,12 +240,13 @@ function getFormData(exercise) {
             selected_values.push($(checked_element).val());
           });
           input_value = selected_values;
-        } else if ($(this).hasClass("input")) {
-          input_value = $(this).val();
-        } else if ($(this).hasClass("editable-table")) {
+        } else if ($(this).hasClass("input-table")) {
           input_value = $(this)
             .prop("outerHTML")
             .replaceAll('contenteditable="true"', "");
+          input_name = section_name + " table";
+        } else if ($(this).hasClass("input")) {
+          input_value = $(this).val();
         }
         section_obj[input_name] = input_value;
       }
