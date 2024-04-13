@@ -960,3 +960,24 @@ ol ol {
 #prefooter {
   margin-top: 20px;
 }
+
+/* .headline-wrapper {
+} */
+.headline-wrapper h1 {
+  display: flex;
+}
+.headline-wrapper h1 span {
+  margin: auto;
+  margin-left: 0;
+  margin-right: auto;
+  padding-top: 10px;
+}
+/* .headline-wrapper div {
+  margin: auto;
+  margin-right: 0;
+} */
+.headline-wrapper h1 img {
+  margin: auto !important;
+  margin-right: 0 !important;
+  max-width: 30%;
+}

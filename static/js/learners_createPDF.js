@@ -153,7 +153,7 @@ function cleanHTML(source) {
     "button",
     "aside",
     ".copy-to-clipboard",
-    "#comment-section"
+    ".comment-section"
   ];
   $.each(objects_to_remove, function (i) {
     $(source).find(objects_to_remove[i]).remove();
