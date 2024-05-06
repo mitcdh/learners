@@ -192,7 +192,14 @@
                   {{ end }}
                 </span>
                 {{ if .Params.logo }}
-                <img src="{{ .Params.logo }}?featherlight=false&height={{ .Params.logo_height }}&width={{ .Params.logo_width }}" />
+                
+                {{ $logo_src := .Params.logo }}
+                {{ if (not .Page.Site.Params.devStage) }}
+                {{ $pageDir := replace $.Page.File.Dir "\\" "/" }}
+                {{ $logo_src = printf "%s/res/%s/%s" .Page.Site.BaseURL $pageDir .Params.logo }}
+                {{ end }}
+
+                <img src="{{ $logo_src }}?featherlight=false&height={{ .Params.logo_height }}&width={{ .Params.logo_width }}" />
                 {{ end }}
               </h1>
             </div>
