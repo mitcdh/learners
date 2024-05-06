@@ -118,14 +118,24 @@
  {{with .sect}}
   {{if .IsSection }}
     {{safeHTML .Params.head}}
-    {{ $activeMenuEntry := eq .File.UniqueID $currentFileUniqueID}}
+
+    {{ $fileUniqueID := "placeholder" }}
+    {{ with .Page.File }}
+      {{ $fileUniqueID = .UniqueID }}
+    {{ end }}
+
+    {{ $activeMenuEntry := eq $fileUniqueID $currentFileUniqueID }}
+
     {{ $root_level_element := not .Parent.Parent }}
 
     {{ if or (not $root_level_element) .Site.Params.devStage }}
+      
       <li 
         data-nav-id="{{ .RelPermalink }}" 
         title="{{ .Title }}" 
-        id='{{ printf "%s" (md5 (printf "%s" .Page.File.Dir)) }}'
+        {{ with .Page.File }}
+          id='{{ printf "%s" (md5 (printf "%s" .Dir)) }}'
+        {{ end }}
         {{ if not .Site.Params.devStage }}
           style="display: none;"
         {{ end }}
@@ -149,7 +159,9 @@
 
     {{ if or ($activeMenuEntry) (.IsAncestor $currentNode)}}
       
-      <ul id='{{ printf "%s" (md5 (printf "%s" .Page.File.Dir)) }}' class="page-control">
+      {{ with .Page.File }}
+      <ul id='{{ printf "%s" (md5 (printf "%s" .Dir)) }}' class="page-control">
+      {{ end }}
         {{ $currentNode.Scratch.Set "pages" .Pages }}
         {{ if .Sections }}
           {{ $currentNode.Scratch.Set "pages" (.Pages | union .Sections) }}
