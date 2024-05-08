@@ -4,7 +4,12 @@
 <!-- Find the root exercise -->
 {{ $root_candidate := $.Page.CurrentSection }}
 {{ range ((where .Site.Pages "Section" $.Page.Section).ByWeight) }}
-{{ if and (in ($root_candidate.File.Dir | string ) (.File.Dir | string)) (not (eq . $.Page.FirstSection)) }} {{ $root_candidate = .}} {{ end }}
+  {{ $candidateDir := $root_candidate.File.Dir | string }}
+  {{ $currDir := "not_defined" }}
+  {{ with .File }}
+    {{ $currDir = .Dir | string }}
+  {{ end }}
+  {{ if and (in $candidateDir $currDir) (not (eq . $.Page.FirstSection)) }} {{ $root_candidate = . }} {{ end }} 
 {{ end }}
 
 <!-- Generate IDs based on the weights -->
