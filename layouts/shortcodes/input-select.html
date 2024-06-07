@@ -15,7 +15,7 @@
 </label>
 <select name="{{ $input_name }}" id="{{ $input_name }}" class="input {{ if $input_required }}required{{ end }}">
 <option value="">{{ $default_selection }}</option>
-{{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{ if $input_instructor }}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
+{{ range $options }} {{ $current_value := strings.TrimLeft " " . }} <option value='{{ $current_value }}' {{ if and $input_instructor (eq $input_instructor $current_value) }}class="instructor-notes" selected="selected"{{end}}>{{ $current_value }}</option>{{ end }}
 </select>
 </div>
 
