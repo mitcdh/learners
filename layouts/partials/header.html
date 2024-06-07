@@ -1,3 +1,44 @@
+<!-- Get questionnaires data -->
+{{ if .Params.questionnaire }}
+
+  {{ $root_candidate := $.Page.CurrentSection }}
+  {{ range ((where .Site.Pages "Section" $.Page.Section).ByWeight) }}
+    {{ if and (in ($root_candidate.File.Dir | string ) (.File.Dir | string)) (not (eq . $.Page.FirstSection)) }} {{ $root_candidate = .}} {{ end }}
+  {{ end }}
+
+  {{ $order_weight := add (add (mul $root_candidate.Weight 100) (mul $.Page.Parent.Weight 10)) $.Page.Weight | int}}
+
+  {{ $global_questionnaire_id := md5 (printf "%s%s%s" $.Page.File.Dir ( $.Page.Title | default $.Page.Params.MenuTitle ) $.Page.Lang) }}
+  {{ $.Page.Scratch.Add "local_question_id" 1 }}
+  {{ $local_question_id := ($.Page.Scratch.Get "local_question_id") }}
+
+  {{ $local_questionnaire_data := slice }}
+  {{ range $index, $element := .Params.questionnaire }}
+    {{ $element = merge $element (dict "id" (add $index 1)) }}
+    {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
+    {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
+  {{ end }}
+  {{ $.Page.Scratch.SetInMap "questionnaire_data" $.Page.Lang $local_questionnaire_data }}
+  
+  <!-- Loop over all languages to get the translated versions (if available) -->
+  {{ range .Translations }}
+    {{ $currentLang := .Lang }}
+    {{ if .Params.questionnaire }}
+      {{ $local_questionnaire_data := slice }}
+      {{ range $index, $element := .Params.questionnaire }}
+        {{ $element = merge $element (dict "id" (add $index 1)) }}
+        {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
+        {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
+      {{ end }}
+      {{ $.Page.Scratch.SetInMap "questionnaire_data" $currentLang $local_questionnaire_data }}    
+    {{ end }}
+  {{ end }}
+  
+  {{ $.Page.Scratch.SetInMap "questionnaire" $global_questionnaire_id (dict "questions" ($.Page.Scratch.Get "questionnaire_data") "global_questionnaire_id" $global_questionnaire_id "order_weight" $order_weight "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title)) }}
+
+{{ end }}
+
+
 <!DOCTYPE html>
 <html lang='{{ .Page.Language | default "en" }}' class="js csstransforms3d">
   <head>
@@ -70,7 +111,6 @@
     
     <!-- DRAW IO -->
     <script src='{{"js/drawio-diagram-editor.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
-
     <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
@@ -113,47 +153,6 @@
             overflow: hidden;
           }
         </style>
-
-        <!-- Get questionnaires data -->
-        {{ if .Params.questionnaire }}
-
-          {{ $root_candidate := $.Page.CurrentSection }}
-          {{ range ((where .Site.Pages "Section" $.Page.Section).ByWeight) }}
-            {{ if and (in ($root_candidate.File.Dir | string ) (.File.Dir | string)) (not (eq . $.Page.FirstSection)) }} {{ $root_candidate = .}} {{ end }}
-          {{ end }}
-
-          {{ $order_weight := add (add (mul $root_candidate.Weight 100) (mul $.Page.Parent.Weight 10)) $.Page.Weight | int}}
-
-          {{ $global_questionnaire_id := md5 (printf "%s%s%s" $.Page.File.Dir ( $.Page.Title | default $.Page.Params.MenuTitle ) $.Page.Lang) }}
-          {{ $.Page.Scratch.Add "local_question_id" 1 }}
-          {{ $local_question_id := ($.Page.Scratch.Get "local_question_id") }}
-
-          {{ $local_questionnaire_data := slice }}
-          {{ range $index, $element := .Params.questionnaire }}
-            {{ $element = merge $element (dict "id" (add $index 1)) }}
-            {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
-            {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
-          {{ end }}
-          {{ $.Page.Scratch.SetInMap "questionnaire_data" $.Page.Lang $local_questionnaire_data }}
-          
-          <!-- Loop over all languages to get the translated versions (if available) -->
-          {{ range .Translations }}
-            {{ $currentLang := .Lang }}
-            {{ if .Params.questionnaire }}
-              {{ $local_questionnaire_data := slice }}
-              {{ range $index, $element := .Params.questionnaire }}
-                {{ $element = merge $element (dict "id" (add $index 1)) }}
-                {{ $element = merge $element (dict "global_question_id" (md5 (printf "%s%s" $global_questionnaire_id (add $index 1)))) }}
-                {{ $local_questionnaire_data = $local_questionnaire_data | append $element }}
-              {{ end }}
-              {{ $.Page.Scratch.SetInMap "questionnaire_data" $currentLang $local_questionnaire_data }}    
-            {{ end }}
-          {{ end }}
-          
-          {{ $.Page.Scratch.SetInMap "questionnaire" $global_questionnaire_id (dict "questions" ($.Page.Scratch.Get "questionnaire_data") "global_questionnaire_id" $global_questionnaire_id "order_weight" $order_weight "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title)) }}
-  
-        {{ end }}
-
 
         <div class="slides-container">
           <object
