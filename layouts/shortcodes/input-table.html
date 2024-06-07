@@ -1,3 +1,4 @@
+{{ $input_instructor := .Get "instructor" | default "" }}
 {{ $classes := "input input-table"}}
 {{ if (.Get "autoextend") | default false }}
     {{ $classes = printf "%s autoextend" $classes }}
@@ -13,3 +14,9 @@
 {{ $htmlTable = replaceRE "<td style=\"" "<td style=\"height: 40px;" $htmlTable }}
 
 {{ $htmlTable | safeHTML }}
+
+{{ if and (.Site.Params.instructorNotes) ($input_instructor) }}
+<span class="instructor-notes" style="margin-top: 1rem; width: 100%;">
+    <strong>Instructor Note:</strong> {{ $input_instructor }}
+</span>
+{{ end }}
