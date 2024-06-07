@@ -182,7 +182,7 @@ table tr td li {
 
 #body .padding {
   padding: 4rem 8rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: auto;
 }
 
@@ -516,7 +516,6 @@ td {
   width: 100%;
   background-color: #f6f6f6;
   padding: 10px 30px;
-  max-width: 944px;
 }
 .image-container a {
   display: contents;
@@ -539,7 +538,6 @@ td {
   width: 100%;
   background-color: #f6f6f6;
   padding: 10px 30px;
-  max-width: 944px;
   display: flex;
   flex-direction: column;
 }
