@@ -8,6 +8,9 @@
 {{- if eq $target "_apps" -}}
     {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/_apps/") $destination }}
     {{ $target = "_blank" }}
+{{- else if eq $target "_slides" -}}
+    {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/_slides/") $destination }}
+    {{ $target = "_blank" }}
 {{- end -}}
 
 {{- if $windows -}}
