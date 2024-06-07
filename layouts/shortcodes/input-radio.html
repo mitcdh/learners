@@ -17,11 +17,16 @@
     {{- range $options -}}
     <div class="input-radio-option-wrapper">
       <input type="radio" id='{{ $input_name }}_{{ strings.TrimLeft " " . }}' name="{{ $input_name }}" value='{{ strings.TrimLeft " " . }}'
-      {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" checked{{end}}/>
       <label for='{{ $input_name }}_{{ strings.TrimLeft " " . }}'>{{ strings.TrimLeft " " . }}</label>
     </div>
     {{- end -}}
   </div>
 </div>
+
+{{ if and (.Site.Params.instructorNotes) ($input_instructor) }}
+<span class="instructor-notes" style="margin-top: 1rem; width: 100%;">
+    <strong>Instructor Note:</strong> {{ $input_instructor }}
+</span>
+{{ end }}
 
 </div>

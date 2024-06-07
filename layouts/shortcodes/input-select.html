@@ -15,7 +15,14 @@
 </label>
 <select name="{{ $input_name }}" id="{{ $input_name }}" class="input {{ if $input_required }}required{{ end }}">
 <option value="">{{ $default_selection }}</option>
-{{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
+{{ range $options }}<option value='{{ strings.TrimLeft " " . }}' {{ if $input_instructor }}class="instructor-notes" selected="selected"{{end}}>{{ strings.TrimLeft " " . }}</option>{{ end }}
 </select>
 </div>
+
+{{ if and (.Site.Params.instructorNotes) ($input_instructor) }}
+<span class="instructor-notes" style="margin-top: 1rem; width: 100%;">
+    <strong>Instructor Note:</strong> {{ $input_instructor }}
+</span>
+{{ end }}
+
 </div>
