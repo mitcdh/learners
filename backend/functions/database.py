@@ -1,6 +1,6 @@
 import hashlib
 import json
-from datetime import datetime, timezone
+import datetime
 import string
 from typing import Tuple
 from backend.classes.SSE import SSE_Event
@@ -10,10 +10,10 @@ from backend.conf.config import cfg
 from backend.conf.db_models import (
     Attachment,
     Cache,
-    Execution,
     Exercise,
     Notification,
     QuestionnaireAnswer,
+    Submission,
     User,
     Page,
     Comment,
@@ -21,7 +21,7 @@ from backend.conf.db_models import (
     QuestionnaireQuestion,
     Usergroup,
     UsergroupAssociation,
-    VenjixExecution,
+    Timetracker,
 )
 from backend.database import db
 from backend.functions.helpers import convert_to_dict, extract_json_content
@@ -108,7 +108,8 @@ def db_insert_exercises(app, *args, **kwargs):
     exercise_json = f"{cfg.statics.get('base_url')}/hugo/exercises.json"
     exercises = extract_json_content(app, exercise_json)
     for exercise in exercises:
-        db_create_or_update(Exercise, ["global_exercise_id"], exercise)
+        exercise["id"] = exercise.pop("global_exercise_id")
+        db_create_or_update(Exercise, ["id"], exercise)
 
 
 def db_insert_questionnaires(app, *args, **kwargs):
@@ -116,7 +117,7 @@ def db_insert_questionnaires(app, *args, **kwargs):
     questionnaires = extract_json_content(app, questionnaire_json)
     for questionnaire in questionnaires:
         new_questionnaire = {
-            "global_questionnaire_id": questionnaire["global_questionnaire_id"],
+            "id": questionnaire["global_questionnaire_id"],
             "page_title": questionnaire["page_title"],
             "parent_page_title": questionnaire["parent_page_title"],
             "root_weight": questionnaire["root_weight"],
@@ -125,22 +126,21 @@ def db_insert_questionnaires(app, *args, **kwargs):
             "order_weight": questionnaire["order_weight"],
         }
 
-        db_create_or_update(Questionnaire, ["global_questionnaire_id"], new_questionnaire)
+        db_create_or_update(Questionnaire, ["id"], new_questionnaire)
         db.session.flush()
 
         for language in questionnaire["questions"]:
             for question in questionnaire["questions"][language]:
                 new_question = {
-                    "global_question_id": question["global_question_id"],
-                    "id": question["id"],
+                    "id": question["global_question_id"],
                     "question": question["question"],
                     "answer_options": json.dumps(question["answers"]),
                     "language": language,
                     "multiple": question.get("multiple") or False,
-                    "global_questionnaire_id": questionnaire["global_questionnaire_id"],
+                    "questionnaire_id": questionnaire["global_questionnaire_id"],
                 }
 
-                db_create_or_update(QuestionnaireQuestion, ["global_question_id", "language"], new_question)
+                db_create_or_update(QuestionnaireQuestion, ["id", "language"], new_question)
 
 
 def db_create_or_update(db_model, filter_keys: list = [], passed_element: dict = None, nolog: bool = False) -> bool:
@@ -177,37 +177,9 @@ def db_create_or_update(db_model, filter_keys: list = [], passed_element: dict =
     return True
 
 
-def db_create_venjix_execution(execution_uuid: str, user_id: int, script_name: str) -> bool:
+def db_update_venjix_execution(updates) -> bool:
     try:
-        execution = VenjixExecution(
-            script=script_name,
-            execution_uuid=execution_uuid,
-            user_id=user_id,
-        )
-
-        db.session.add(execution)
-        db.session.commit()
-        return True
-
-    except Exception as e:
-        logger.exception(e)
-
-
-def db_update_venjix_execution(
-    execution_uuid: str,
-    connection_failed: bool = False,
-    response_timestamp: str = None,
-    response_content: str = None,
-    completed: bool = False,
-    msg: str = None,
-    partial: bool = False,
-) -> bool:
-    try:
-        execution = VenjixExecution.query.filter_by(execution_uuid=execution_uuid).first()
-        for key, value in list(locals().items())[:-1]:
-            if value:
-                setattr(execution, key, value)
-        db.session.commit()
+        db_create_or_update(Submission, ["execution_uuid"], updates, nolog=True)
         return True
 
     except Exception as e:
@@ -218,11 +190,11 @@ def db_update_venjix_execution(
 def db_get_running_executions_by_name(user_id: int, script: str) -> dict:
     try:
         running_executions = (
-            VenjixExecution.query.filter_by(user_id=user_id)
+            Submission.query.filter_by(user_id=user_id)
             .filter_by(script=script)
-            .filter_by(connection_failed=False)
+            .filter_by(executed=True)
             .filter_by(response_timestamp=None)
-            .order_by(VenjixExecution.execution_timestamp.desc())
+            .order_by(Submission.execution_timestamp.desc())
             .all()
         )
         return convert_to_dict(running_executions)
@@ -232,42 +204,39 @@ def db_get_running_executions_by_name(user_id: int, script: str) -> dict:
         return None
 
 
-def db_get_venjix_execution(execution_uuid: str) -> dict:
+def db_get_submission_by_execution_uuid(execution_uuid: str) -> dict:
+    return generic_getter(Submission, "execution_uuid", execution_uuid)
+
+
+def db_get_submission_by_exercise_id(exercise_id: str) -> dict:
+    return generic_getter(Submission, "exercise_id", exercise_id, all=True)
+
+
+def db_create_submission(exercise_type: str, exercise_id: str, user_id: int, data: dict = None, execution_uuid: str = None) -> bool:
     try:
-        execution = generic_getter(VenjixExecution, "execution_uuid", execution_uuid)
-        return convert_to_dict(execution)
-
-    except Exception as e:
-        logger.exception(e)
-        return None
-
-
-def db_create_execution(exercise_type: str, global_exercise_id: str, data: dict, user_id: int, execution_uuid: str) -> bool:
-    form_data = json.dumps(data, indent=4, sort_keys=False)
-
-    try:
-        exercise_id = db_get_exercise_by_global_exercise_id(global_exercise_id).id
-
-        execution = Execution(
+        submission = Submission(
             exercise_type=exercise_type,
-            script="script",
-            form_data=form_data,
-            execution_uuid=execution_uuid,
             user_id=user_id,
             exercise_id=exercise_id,
         )
 
         if exercise_type == "form":
-            execution.completed = True
-            execution.response_timestamp = datetime.now(timezone.utc)
+            form_data = json.dumps(data, indent=4, sort_keys=False)
+            submission.form_data = form_data
+            submission.completed = True
+            submission.executed = True
 
-        db.session.add(execution)
+        if exercise_type == "script":
+            submission.execution_uuid = execution_uuid
+
+        db.session.add(submission)
         db.session.commit()
-        return True
+        return submission
 
     except Exception as e:
-        logger.exception(e)
-        return False
+        logger.error(f"Error creating submission: {e}")
+        db.session.rollback()
+        return None
 
 
 def db_create_comment(comment: str, page: str, user_id: int) -> bool:
@@ -285,18 +254,84 @@ def db_create_comment(comment: str, page: str, user_id: int) -> bool:
         return False
 
 
-def db_get_current_submissions(user_id: int, global_exercise_id: string) -> Tuple[dict, dict]:
+def db_set_time(action: str, offset: int = 0) -> bool:
     try:
-        exercise = db_get_exercise_by_global_exercise_id(global_exercise_id)
+        updated_time = {
+            "id": 0,
+        }
+
+        if action == "start":
+            updated_time["start_time"] = datetime.datetime.now(datetime.timezone.utc)
+            updated_time["running"] = True
+
+        if action == "pause":
+            updated_time["pause_time"] = datetime.datetime.now(datetime.timezone.utc)
+            updated_time["running"] = False
+
+        if action == "continue":
+            current_timer = db_get_time()
+            current_start_time = current_timer.start_time or datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f%z")
+
+            _current_start_time = datetime.datetime.strptime(current_start_time, "%Y-%m-%d %H:%M:%S.%f%z")
+
+            now_timestamp = datetime.datetime.now(datetime.timezone.utc)
+            pause_time = datetime.datetime.strptime(current_timer.pause_time, "%Y-%m-%d %H:%M:%S.%f%z")
+            delta = now_timestamp - pause_time
+
+            updated_time["start_time"] = _current_start_time + delta
+            updated_time["pause_time"] = None
+            updated_time["running"] = True
+
+        if action == "reset":
+            updated_time["start_time"] = None
+            updated_time["pause_time"] = None
+            updated_time["running"] = False
+            updated_time["offset"] = 0
+
+        if action == "offset":
+            updated_time["offset"] = offset
+
+        db_create_or_update(Timetracker, ["id"], updated_time)
+
+        print("db_get_time", db_get_time().__dict__)
+        return db_get_time()
+
+    except Exception as e:
+        logger.exception(e)
+        return False
+
+
+def db_get_current_submissions(user_id: int, exercise_id: string) -> Tuple[dict, dict]:
+    try:
+        exercise = db_get_exercise_by_id(exercise_id)
+        submissions = []
+
         submissions = (
-            db.session.query(Execution)
+            db.session.query(Submission)
             .filter_by(user_id=user_id)
             .filter_by(exercise_id=exercise.id)
-            .order_by(Execution.response_timestamp.desc(), Execution.execution_timestamp.desc())
+            .order_by(Submission.execution_timestamp.desc(), Submission.response_timestamp.desc())
+            .all()
+        )
+
+        return submissions
+    except Exception as e:
+        logger.exception(e)
+        return []
+
+
+def db_get_current_submissions(user_id: int, exercise_id: string) -> Tuple[dict, dict]:
+    try:
+        exercise = db_get_exercise_by_id(exercise_id)
+        submissions = (
+            db.session.query(Submission)
+            .filter_by(user_id=user_id)
+            .filter_by(exercise_id=exercise.id)
+            .order_by(Submission.execution_timestamp.desc(), Submission.response_timestamp.desc())
             .all()
         )
         return submissions
-    except Execution as e:
+    except Exception as e:
         logger.exception(e)
         return None, None
 
@@ -305,23 +340,19 @@ def db_get_exercise_by_name(exercise_name: str) -> dict:
     return generic_getter(Exercise, "exercise_name", exercise_name)
 
 
-def db_get_exercise_by_global_exercise_id(global_exercise_id: str) -> dict:
-    return generic_getter(Exercise, "global_exercise_id", global_exercise_id)
+def db_get_questionnaire_by_id(questionnaire_id: str) -> dict:
+    return generic_getter(Questionnaire, "id", questionnaire_id)
 
 
-def db_get_questionnaire_by_global_questionnaire_id(global_questionnaire_id: str) -> dict:
-    return generic_getter(Questionnaire, "global_questionnaire_id", global_questionnaire_id)
+def db_get_questionnaire_question_by_id(question_id: str) -> dict:
+    return generic_getter(QuestionnaireQuestion, "id", question_id)
 
 
-def db_get_questionnaire_question_by_global_question_id(global_question_id: str) -> dict:
-    return generic_getter(QuestionnaireQuestion, "global_question_id", global_question_id)
-
-
-def db_get_all_questionnaires_questions(global_questionnaire_id: str) -> dict:
+def db_get_all_questionnaires_questions(questionnaire_id: str) -> dict:
     try:
         return (
             db.session.query(QuestionnaireQuestion)
-            .filter_by(global_questionnaire_id=global_questionnaire_id)
+            .filter_by(id=questionnaire_id)
             .order_by(QuestionnaireQuestion.local_question_id.asc())
             .all()
         )
@@ -330,9 +361,9 @@ def db_get_all_questionnaires_questions(global_questionnaire_id: str) -> dict:
         return None
 
 
-def db_get_questionnaire_results_by_global_question_id(global_question_id: str) -> dict:
-    questionnaire_question = generic_getter(QuestionnaireQuestion, "global_question_id", global_question_id)
-    questionnaire_answers = generic_getter(QuestionnaireAnswer, "global_question_id", global_question_id, all=True)
+def db_get_questionnaire_results_by_question_id(question_id: str) -> dict:
+    questionnaire_question = generic_getter(QuestionnaireQuestion, "id", question_id)
+    questionnaire_answers = generic_getter(QuestionnaireAnswer, "question_id", question_id, all=True)
 
     labels = json.loads(questionnaire_question.answer_options)
     results = [0] * len(labels)
@@ -368,6 +399,10 @@ def db_get_all_users() -> list:
     return generic_getter(User, "role", "participant", all=True)
 
 
+def db_get_participants_userids() -> list:
+    return [id[0] for id in db.session.query(User).filter_by(role="participant").with_entities(User.id).all()]
+
+
 def db_get_all_userids() -> list:
     return [id[0] for id in db.session.query(User).with_entities(User.id).all()]
 
@@ -394,6 +429,10 @@ def db_get_all_pages() -> dict:
 
 def db_get_page_by_id(page_id) -> dict:
     return generic_getter(Page, "page_id", page_id)
+
+
+def db_get_time() -> dict:
+    return generic_getter(Timetracker, "id", 0)
 
 
 def db_get_all_active_pages() -> dict:
@@ -553,13 +592,13 @@ def db_convert_ids_to_usernames(user_ids: list = []) -> list:
     return usernames
 
 
-def db_get_executions_by_user_exercise(user_id: int, exercise_id: int) -> list:
+def db_get_submissions_by_user_exercise(user_id: int, exercise_id: int) -> list:
     try:
         return (
-            db.session.query(Execution)
+            db.session.query(Submission)
             .filter_by(user_id=user_id)
             .filter_by(exercise_id=exercise_id)
-            .order_by(Execution.execution_timestamp.desc())
+            .order_by(Submission.execution_timestamp.desc())
             .all()
         )
     except Exception as e:
@@ -572,9 +611,9 @@ def db_get_completed_state(user_id: int, exercise_id: int) -> dict:
         return (
             db.session.query(User)
             .filter_by(id=user_id)
-            .join(Execution)
+            .join(Submission)
             .filter_by(exercise_id=exercise_id)
-            .with_entities(Execution.completed)
+            .with_entities(Submission.completed)
             .all()
         )
     except Exception as e:
@@ -603,9 +642,9 @@ def db_get_filename_from_hash(filename_hash):
         return None
 
 
-def db_get_cache_by_ids(user_id: int, global_exercise_id: str) -> dict:
+def db_get_cache_by_ids(user_id: int, exercise_id: str) -> dict:
     try:
-        return db.session.query(Cache).filter_by(user_id=user_id).filter_by(global_exercise_id=global_exercise_id).first()
+        return db.session.query(Cache).filter_by(user_id=user_id).filter_by(exercise_id=exercise_id).first()
     except Exception as e:
         logger.exception(e)
         return None
@@ -643,7 +682,6 @@ def db_get_grouped_questionnaires() -> list:
                         "answer_options": question.answer_options,
                         "language": question.language,
                         "active": question.active,
-                        "global_question_id": question.global_question_id,
                     }
                 )
 
@@ -660,16 +698,16 @@ def db_get_grouped_questionnaires() -> list:
         return None
 
 
-def db_activate_questioniare_question(global_question_id) -> bool:
+def db_activate_questioniare_question(question_id) -> bool:
     try:
-        question = db.session.query(QuestionnaireQuestion).filter_by(global_question_id=global_question_id).first()
+        question = db.session.query(QuestionnaireQuestion).filter_by(id=question_id).first()
 
         # Set active state
         setattr(question, "active", True)
         db.session.flush()
         db.session.commit()
 
-        questionnaire = db.session.query(Questionnaire).filter_by(global_questionnaire_id=question.global_questionnaire_id).first()
+        questionnaire = db.session.query(Questionnaire).filter_by(id=question.questionnaire_id).first()
         question_dict = convert_to_dict(question)
 
         # Adjust dict
@@ -684,12 +722,12 @@ def db_activate_questioniare_question(global_question_id) -> bool:
         return False
 
 
-def db_create_questionnaire_answer(global_question_id: str, answers: str, user_id: int) -> bool:
+def db_create_questionnaire_answer(question_id: str, answers: str, user_id: int) -> bool:
     try:
         if isinstance(answers, int):
             answers = [answers]
 
-        submission = QuestionnaireAnswer(answers=json.dumps(answers), user_id=user_id, global_question_id=global_question_id)
+        submission = QuestionnaireAnswer(answers=json.dumps(answers), user_id=user_id, question_id=question_id)
 
         db.session.add(submission)
         db.session.commit()
@@ -700,8 +738,8 @@ def db_create_questionnaire_answer(global_question_id: str, answers: str, user_i
         return False
 
 
-def db_get_questionnaire_question_answers_by_user(global_question_id: str, user_id: int) -> list:
-    answers = generic_getter(QuestionnaireAnswer, ["global_question_id", "user_id"], [global_question_id, user_id], all=True)
+def db_get_questionnaire_question_answers_by_user(question_id: str, user_id: int) -> list:
+    answers = generic_getter(QuestionnaireAnswer, ["question_id", "user_id"], [question_id, user_id], all=True)
     return answers
 
 
@@ -710,11 +748,11 @@ def db_get_completion_percentage(exercise_id):
 
     try:
         executions = (
-            db.session.query(Execution)
+            db.session.query(Submission)
             .filter_by(exercise_id=exercise_id)
             .join(User)
             .group_by(User.id)
-            .with_entities(db.func.max(Execution.completed))
+            .with_entities(db.func.max(Submission.completed))
             .all()
         )
         return len(executions) / len(users) * 100

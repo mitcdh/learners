@@ -18,6 +18,8 @@ export default {
   },
   SET_THEME: (state: { theme: any }, theme: any) => (state.theme = theme),
 
+  SET_TIMER: (state: { timer: any }, timer: any) => (state.timer = timer),
+
   SET_CURRENT_VIEW: (state: { currentView: string }, currentView: string) =>
     (state.currentView = currentView),
 
@@ -73,12 +75,9 @@ export default {
     if (state.questionnaires.length) state.showQuestionnaires = true;
   },
 
-  REMOVE_QUESTIONNAIRE: (
-    state: { questionnaires: any },
-    global_question_id: Number
-  ) =>
+  REMOVE_QUESTIONNAIRE: (state: { questionnaires: any }, question_id: String) =>
     (state.questionnaires = state.questionnaires.filter(
-      (q) => q.global_question_id != global_question_id
+      (q) => q.id != question_id
     )),
 
   SET_SHOW_QUESTIONNAIRE_STATE: (
@@ -91,7 +90,7 @@ export default {
     questionnaires: any;
     showQuestionnaires: boolean;
   }) => {
-    state.currentQuestionnaireIndex = state.questionnaires.length - 1;
+    state.currentQuestionnaireIndex = 0;
     if (state.questionnaires.length) {
       state.showQuestionnaires = true;
     } else {
@@ -101,4 +100,5 @@ export default {
 
   SET_QUESTIONNAIRES: (state: { questionnaires: any }, payload: any) =>
     (state.questionnaires = payload),
+
 };

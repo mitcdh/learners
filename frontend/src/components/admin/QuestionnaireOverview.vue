@@ -24,13 +24,13 @@
         <v-expansion-panel-text>
           <v-container class="px-0">
             <v-row
-              v-for="question in extractRows(questionnaire.questions)"
+              v-for="(question, index) in extractRows(questionnaire.questions)"
               :key="question.id"
               class="questionnaire-row"
             >
               <v-col cols="4">
                 <span class="question-id">
-                  {{ question.id }}
+                  {{ index + 1 }}
                 </span>
                 <span v-html="question.question"> </span>
               </v-col>
@@ -41,20 +41,20 @@
                   </li>
                 </ol>
               </v-col>
-              <v-col cols="1">
+              <v-col class="d-flex justify-end">
                 {{ question.language }}
               </v-col>
-              <v-col cols="1" class="d-flex justify-end">
+              <v-col cols="1" class="d-flex justify-end btn-col">
                 <v-btn
                   v-if="!question.active"
-                  @click="activateQuestion(question.global_question_id)"
+                  @click="activateQuestion(question)"
                   color="success"
                 >
                   send
                 </v-btn>
                 <v-btn
                   v-else
-                  @click="viewQuestion(question.global_question_id)"
+                  @click="viewQuestion(question.id)"
                   color="success"
                   variant="outlined"
                 >
@@ -91,8 +91,7 @@
 
 <script lang="ts">
 interface Question {
-  id: number;
-  global_question_id: string;
+  id: string;
   question: string;
   answer_options: string;
   language: string;
@@ -141,9 +140,7 @@ export default {
     extractRows(questions) {
       let updatedRows = [] as Question[];
       questions.forEach((question) => {
-        let found_index = updatedRows.findIndex(
-          (q) => q.global_question_id === question.global_question_id
-        );
+        let found_index = updatedRows.findIndex((q) => q.id === question.id);
         if (found_index > -1) {
           const current_language = updatedRows[found_index]["language"];
           if (!current_language.includes(question.language))
@@ -153,11 +150,13 @@ export default {
       });
       return updatedRows;
     },
-    async activateQuestion(global_question_id) {
-      await axios.put(`questionnaires/questions/${global_question_id}`);
+    async activateQuestion(question) {
+      await axios
+        .put(`questionnaires/questions/${question.id}`)
+        .then(() => (question.active = true));
     },
-    async viewQuestion(global_question_id) {
-      this.selectedQuestionnaire = global_question_id;
+    async viewQuestion(question_id) {
+      this.selectedQuestionnaire = question_id;
       this.dialog = true;
     },
     async getDataFromServer() {
@@ -287,5 +286,9 @@ export default {
 
 .autocomplete-inputs .v-input__control {
   min-height: 60px;
+}
+
+.btn-col {
+  min-width: fit-content;
 }
 </style>

@@ -29,6 +29,10 @@ export default {
     commit("SET_BACKEND_URL", backendUrl);
   },
 
+  // Timer
+  setTimer: ({ commit }: { commit: Commit }, timer: any) =>
+    commit("SET_TIMER", timer),
+
   // Tabs
   async getTabsFromServer({ commit }) {
     await axios
@@ -112,9 +116,9 @@ export default {
 
   removeQuestionnaire: (
     { commit }: { commit: Commit },
-    global_question_id: Number
+    question_id: Number
   ) => {
-    commit("REMOVE_QUESTIONNAIRE", global_question_id);
+    commit("REMOVE_QUESTIONNAIRE", question_id);
     commit("SET_CURRENT_QUESTIONNAIRE_INDEX_TO_LAST");
   },
 

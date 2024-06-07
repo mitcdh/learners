@@ -9,7 +9,7 @@
       <v-form @submit.prevent="submitHandler">
         <v-row>
           <v-col>
-            <h2>Q{{ currentQuestionnaire?.id }}</h2>
+            <h2>Quiz</h2>
           </v-col>
         </v-row>
         <v-row>
@@ -57,6 +57,16 @@
             >
               submit
             </v-btn>
+            <v-btn
+              color="white"
+              theme="dark"
+              size="large"
+              variant="plain"
+              class="ml-2"
+              @click="dismissHandler"
+            >
+              dismiss
+            </v-btn>
           </v-col>
         </v-row>
       </v-form>
@@ -97,21 +107,21 @@ export default {
     async submitHandler() {
       if (this.selectedAnswers === undefined) return;
       const response = await axios.post(
-        `questionnaires/questions/${this.currentQuestionnaire?.global_question_id}`,
+        `questionnaires/questions/${this.currentQuestionnaire?.id}`,
         {
           answers: this.selectedAnswers,
         }
       );
-      store.dispatch(
-        "removeQuestionnaire",
-        this.currentQuestionnaire?.global_question_id
-      );
+      store.dispatch("removeQuestionnaire", this.currentQuestionnaire?.id);
     },
     triggerAnimation() {
       this.contentChanging = true;
       setTimeout(() => {
         this.contentChanging = false;
       }, 600);
+    },
+    dismissHandler() {
+      store.dispatch("removeQuestionnaire", this.currentQuestionnaire?.id);
     },
   },
   watch: {

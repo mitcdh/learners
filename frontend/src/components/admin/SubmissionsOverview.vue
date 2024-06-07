@@ -102,7 +102,7 @@ export default {
         exercises.sort((a, b) => (a.order_weight > b.order_weight ? 1 : -1));
         exercises.forEach((exercise) => {
           _exercises.push({
-            value: exercise.global_exercise_id,
+            value: exercise.id,
             text: exercise.exercise_name,
             parent: exercise.parent_page_title,
           });

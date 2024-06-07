@@ -42,7 +42,7 @@ def extract_history(executions):
             "start_time": utc_to_local(execution.get("execution_timestamp"), date=True),
             "response_time": utc_to_local(execution.get("response_timestamp"), date=False),
             "completed": bool(execution.get("completed")),
-            "msg": execution.get("msg"),
+            "status_msg": execution.get("status_msg"),
             "partial": bool(execution.get("partial")),
         }
         for i, execution in enumerate(executions)
@@ -100,6 +100,7 @@ def sse_create_and_publish(
     recipients=None,
     positions=None,
     question=None,
+    timer=None,
 ) -> bool:
     # Import
     from backend.classes.SSE import SSE_Event, sse
@@ -112,6 +113,11 @@ def sse_create_and_publish(
 
     if _type == "comment":
         message = f"<h4>New Comment</h4>User: {user.name}<br>Page: {page}"
+        recipients = [admin_user.id for admin_user in db_get_admin_users()]
+
+    if _type == "timer":
+        event = "timer"
+        message = f"{json.dumps(timer)}"
         recipients = [admin_user.id for admin_user in db_get_admin_users()]
 
     if _type == "content":
@@ -129,8 +135,9 @@ def sse_create_and_publish(
 
     new_event = SSE_Event(event=event, _type=_type, message=message, question=question, recipients=recipients, positions=positions)
 
-    # Create Database entry
-    db_create_notification(new_event)
+    if event != "questionnaire" and event != "timer":
+        # Create Database entry
+        db_create_notification(new_event)
 
     # Notify Users
     sse.publish(new_event)
