@@ -1,13 +1,3 @@
-// Risk Calculation
-
-function calcRiskValue(element) {
-  let risk_id = element.id.split("_")[1]
-  let likelihood_value = $(`#likelihood_${risk_id}`)[0].value;
-  let impact_value = $(`#impact_${risk_id}`)[0].value;
-  $(`#risk_${risk_id}`)[0].value =
-    parseInt(likelihood_value.slice(0, 1)) * parseInt(impact_value.slice(0, 1));
-}
-
 
 function editDrawIO(event, button_element) {
   event.preventDefault();
@@ -20,3 +10,24 @@ function resetDrawIO(event, button_element, original_data) {
   $(drawio_obj).attr('data', original_data);
   event.preventDefault();
 }
+
+function setRiskValue(elem) {
+  const cell = $(elem)[0].target
+  
+  var rowIndex = $(cell).parent().index() - 1;
+  var colIndex = $(cell).index();
+  const valueText = `Likelihood: ${rowIndex}; Impact: ${colIndex}; Risk: ${cell.textContent}`
+
+  const riskValue = $(cell).closest(".risk-wrapper").find(".risk-value")
+  riskValue.val(valueText)
+  
+  const riskTable = $(cell).closest(".risk-table")
+  $(riskTable).find("tr td").removeClass("selected")
+  $(cell).addClass("selected")
+}
+
+$(function () {
+  $(".risk-table tr td").on('click', (elem) => {
+    setRiskValue(elem)
+  })
+})

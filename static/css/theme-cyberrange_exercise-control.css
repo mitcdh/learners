@@ -297,13 +297,13 @@ div.exercise-control button.btn-run-exercise svg.bi {
 
 /* div.exercise-control #msg-container,
 #msg-container {
-  display: flex;
-  width: auto;
-  text-align: right;
-  float: right;
-  height: 58px;
-  margin-top: 10px;
-  vertical-align: middle;
+display: flex;
+width: auto;
+text-align: right;
+float: right;
+height: 58px;
+margin-top: 10px;
+vertical-align: middle;
 } */
 
 div.exercise-control #msg-container #msg,
@@ -334,6 +334,8 @@ div.exercise-control .partial {
 
 div.exercise-control #history {
   padding: 14px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 div.exercise-control #history table {
@@ -399,22 +401,23 @@ div.exercise-control #history table tr th:last-child {
   background-color: #f9eadd;
 }
 
-#comment-section {
+.comment-section {
   margin: 50px 0 50px 0;
-  border: 1px solid #7e7e85;
+  background-color: #f6f6f6;
   padding: 0px 30px 20px 30px;
-  border-radius: 5px;
   display: inline-block;
 }
-#comment-section h2 {
+.comment-section h2 {
   padding: 0;
   color: var(--primary-color);
 }
-#comment-section .btn-submit-form {
+.comment-section .btn-submit-form {
   /* background-color: #acacb4; */
+  background-color: var(--success-color);
   border: 0;
 }
-#comment-section .btn-submit-form:hover {
+.comment-section .btn-submit-form:hover {
+  background-color: color-mix(in srgb, var(--success-color) 80%, #ffffff);
   /* background-color: #bbbbc4; */
 }
 
@@ -451,4 +454,11 @@ div.exercise-control #history table tr th:last-child {
 }
 .partial {
   color: #e3a671;
+}
+
+.script_response {
+  background-color: #f6f6f6;
+  padding: 10px 16px;
+  border-radius: 3px;
+  border-left: 6px solid #b1b1b1;
 }

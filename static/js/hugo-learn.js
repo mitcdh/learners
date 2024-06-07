@@ -38,15 +38,25 @@ images.each(function(index){
     var w = o["width"];
     var c = o["classes"];
     image.css("width", function() {
-      if (typeof w !== "undefined") {
-        return w;
+      if (w && typeof w !== "undefined") {
+        if (w.includes('px'))
+          return w;
+        else
+          if (w.includes('%25'))
+            w = w.split('%25')[0];
+          return w + '%';
       } else {
         return "auto";
       }
     });
     image.css("height", function() {
-      if (typeof h !== "undefined") {
-        return h;
+      if (h && typeof h !== "undefined") {
+        if (h.includes('px'))
+          return h;
+        else
+          if (h.includes('%25'))
+            h = h.split('%25')[0];
+          return h + '%';
       } else {
         return "auto";
       }

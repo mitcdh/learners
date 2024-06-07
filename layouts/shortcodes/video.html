@@ -1,7 +1,9 @@
 {{ $src := .Get "src" }}
+{{ $.Page.Scratch.Add "local_video_id" 1 }} 
+{{ $local_video_id := ($.Page.Scratch.Get "local_video_id") }}
 
 <div class="video-container">
-  <div id="player-wrapper"></div>
+  <div id="player-wrapper-{{ $local_video_id }}"></div>
 </div>
 
 <script
@@ -10,7 +12,7 @@
 ></script>
 
 <script>
-  var playerElement = document.getElementById("player-wrapper");
+  var playerElement = document.getElementById("player-wrapper-{{ $local_video_id }}");
 
   var player = new Clappr.Player({
     source: {{ $src }},

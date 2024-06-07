@@ -1,12 +1,16 @@
 <!-- Generate IDs  -->
-{{ $page_id := printf "%s" (md5 (printf "%s" $.Page.File.Dir)) }}
+{{ $pageDir := "" }}
+{{ with $.Page.File }}
+    {{ $pageDir = .Dir }}
+{{ end }}
+{{ $page_id := printf "%s" (md5 (printf "%s" $pageDir )) }}
 
 <!-- Get Parent Information -->
 {{ $parents := slice }}
 {{ $parent := .CurrentSection.Parent }}
 {{ range (seq 1 10) }}
     {{ if $parent }}
-        {{ $parent_page_id := printf "%s" (md5 (printf "%s" $parent.File.Dir)) }}
+        {{ $parent_page_id := printf "%s" (md5 (printf "%s" $pageDir )) }}
         {{ $parents = $parents | append $parent_page_id }}
         {{ $parent = $parent.Parent }}
     {{ end }}
