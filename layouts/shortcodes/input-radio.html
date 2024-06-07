@@ -13,10 +13,12 @@
 {{ $current_exercise = merge $current_exercise (dict "correct_answers" (merge $current_exercise.correct_answers (dict $input_label $input_correct_answer))) }}
 {{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id $current_exercise }}
 
-<div class="input-row {{ if $input_wide }}wide{{ end }}">
-  
-<label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
-
+<div class="input-row {{ if $input_wide }}wide{{ end }}">  
+<label for="{{ $input_name }}">
+  <div>
+    {{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}
+  </div>
+</label>
 <div class="input-field-wrapper">
   <div name="{{ $input_name }}" id="{{ $input_name }}" class="input checkboxes {{ if $input_required }}required{{ end }}">
     {{- range $options -}}

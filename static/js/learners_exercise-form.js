@@ -41,7 +41,6 @@ function formExercise(exercise) {
   initForm(exercise);
 
   getExecutionHistory(exercise.global_exercise_id);
-
 }
 
 // ------------------------------------------------------------------------------------------------------------
