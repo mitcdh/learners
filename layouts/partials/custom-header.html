@@ -9,7 +9,12 @@
 {{ $parents := slice }}
 {{ $parent := .CurrentSection.Parent }}
 {{ range (seq 1 10) }}
-    {{ if $parent }}
+    {{ if $parent }}        
+        
+        {{ with $parent.File }}
+            {{ $pageDir = .Dir }}
+        {{ end }}
+
         {{ $parent_page_id := printf "%s" (md5 (printf "%s" $pageDir )) }}
         {{ $parents = $parents | append $parent_page_id }}
         {{ $parent = $parent.Parent }}
