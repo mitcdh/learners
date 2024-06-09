@@ -2,18 +2,18 @@
 # See https://github.com/spf13/hugoThemes#themetoml for an example
 
 name = "Learners"
-license = "MIT"
+license = "CC BY-SA 3.0 IGO"
 licenselink = "hhttps://raw.githubusercontent.com/ait-cs-IaaS/learners/master/LICENSE.md"
 description = "Documentation theme for Hugo, based on Grav Learn theme"
-homepage = "https://github.com/ait-cs-IaaS/learners.git"
-repo = "https://github.com/ait-cs-IaaS/learners.git"
+homepage = "https://github.com/IAEAOrg/learners/tree/main-theme"
+repo = "https://github.com/iaeaorg/learners.git"
 tags = ["documentation", "grav", "learn", "doc", "search"]
 features = ["documentation", "menu", "nested sections", "search", "mermaid"]
 min_version = 0.25
 
 [author]
-  name = "AIT"
-  homepage = "https://cyberrange.at/"
+  name = "IAEA/AIT"
+  homepage = "https://iaea.org/"
 
 [original]
   name = "Hugo Learn"
