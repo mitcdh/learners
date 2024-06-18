@@ -115,6 +115,7 @@
     
     <!-- DRAW IO -->
     <script src='{{"js/drawio-diagram-editor.js"| relURL}}{{ if $assetBusting }}?{{ now.Unix }}{{ end }}'></script>
+    {{ partial "custom-drawio.html" }}
     <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;

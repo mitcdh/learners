@@ -1,0 +1,5 @@
+{{ if getenv "LEARNERS_DRAWIO_DOMAIN" }}
+<script>
+    DiagramEditor.prototype.drawDomain = '{{ getenv "LEARNERS_DRAWIO_DOMAIN" }}';
+</script>
+{{ end }}
