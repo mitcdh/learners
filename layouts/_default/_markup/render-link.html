@@ -11,6 +11,12 @@
 {{- else if eq $target "_slides" -}}
     {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/_slides/") $destination }}
     {{ $target = "_blank" }}
+{{- else if eq $target "exercises" -}}
+    {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/exercises/") $destination }}
+{{- else if eq $target "presentations" -}}
+    {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/presentations/") $destination }}
+{{- else if eq $target "documentation" -}}
+    {{ $absolute_url = printf "%s%s%s" (.Page.Site.BaseURL) ("/documentation/") $destination }}
 {{- end -}}
 
 {{- if $windows -}}
