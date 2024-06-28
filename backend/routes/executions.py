@@ -29,7 +29,7 @@ from backend.functions.execution import (
     call_venjix,
     wait_for_venjix_response,
 )
-from backend.functions.helpers import allowed_file, append_key_to_dict, append_or_update_subexercise, convert_to_dict, sse_create_and_publish
+from backend.functions.helpers import allowed_file, append_key_to_dict, append_or_update_subexercise, check_answers, convert_to_dict, sse_create_and_publish
 
 
 from werkzeug.utils import secure_filename
@@ -66,12 +66,20 @@ def getAllSubmissions():
 def postFormSubmission(exercise_id):
     response = SubmissionResponse()
 
-    data = request.get_json()
-    if db_create_submission("form", exercise_id, current_user.id, data=data):
-        response.executed = True
-        response.completed = True
+    submission_data = request.get_json()
 
-    sse_create_and_publish(_type="submission", user=current_user, exercise=db_get_exercise_by_id(exercise_id))
+    exercise = db_get_exercise_by_id(exercise_id)
+    partial, completed = check_answers(exercise, submission_data)
+
+    if db_create_submission("form", exercise_id, current_user.id, data=submission_data, partial=partial, completed=completed):
+        response.executed = True
+        response.partial = partial
+        response.completed = completed
+        response.executed = completed or partial
+        if not completed:
+            response.status_msg = "not completed"
+
+    sse_create_and_publish(_type="submission", user=current_user, exercise=exercise)
 
     return jsonify(response.__dict__)
 

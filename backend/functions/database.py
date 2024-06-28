@@ -111,6 +111,7 @@ def db_insert_exercises(app, *args, **kwargs):
     exercises = extract_json_content(app, exercise_json)
     for exercise in exercises:
         exercise["id"] = exercise.pop("global_exercise_id")
+        exercise["correct_answers"] = json.dumps(exercise.pop("correct_answers"), ensure_ascii=False)
         db_create_or_update(Exercise, ["id"], exercise)
 
 
@@ -214,7 +215,7 @@ def db_get_submission_by_exercise_id(exercise_id: str) -> dict:
     return generic_getter(Submission, "exercise_id", exercise_id, all=True)
 
 
-def db_create_submission(exercise_type: str, exercise_id: str, user_id: int, data: dict = None, execution_uuid: str = None) -> bool:
+def db_create_submission(exercise_type: str, exercise_id: str, user_id: int, data: dict = None, execution_uuid: str = None, partial: bool = False, completed: bool = True) -> bool:
     try:
         submission = Submission(
             exercise_type=exercise_type,
@@ -225,8 +226,9 @@ def db_create_submission(exercise_type: str, exercise_id: str, user_id: int, dat
         if exercise_type == "form":
             form_data = json.dumps(data, indent=4, sort_keys=False)
             submission.form_data = form_data
-            submission.completed = True
-            submission.executed = True
+            submission.completed = completed
+            submission.partial = partial
+            submission.executed = completed
 
         if exercise_type == "script":
             submission.execution_uuid = execution_uuid

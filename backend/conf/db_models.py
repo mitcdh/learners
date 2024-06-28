@@ -121,6 +121,7 @@ class Exercise(db.Model):
     child_weight = db.Column(db.Integer, nullable=False)
     order_weight = db.Column(db.Integer, nullable=False)
     script_name = db.Column(db.String(120), nullable=True)
+    correct_answers = db.Column(db.String(), nullable=True)
     submissions = db.relationship("Submission", backref="exercise", lazy=True)
 
 
