@@ -1,24 +1,24 @@
 const short_msgs = {
-  executed: "submitted",
-  completed: "exercise completed",
-  partial: "partially completed",
-  completion_failed: "exercise not completed",
-  never_executed: "not executed",
-  server_error: "server error",
-  data_fail: "error in data format",
-  history_completed: "succeeded",
-  history_partial: "partially succeeded",
-  history_fail: "failed",
+  executed: 'submitted',
+  completed: 'exercise completed',
+  partial: 'partially completed',
+  completion_failed: 'exercise not completed',
+  never_executed: 'not executed',
+  server_error: 'server error',
+  data_fail: 'error in data format',
+  history_completed: 'succeeded',
+  history_partial: 'partially succeeded',
+  history_fail: 'failed',
 };
 
 function showLoading(id) {
   $(id)
     .stop(true, true)
-    .removeClass("failed")
-    .removeClass("success")
-    .removeClass("none")
-    .removeClass("partial")
-    .addClass("loading")
+    .removeClass('failed')
+    .removeClass('success')
+    .removeClass('none')
+    .removeClass('partial')
+    .addClass('loading')
     .show();
 }
 
@@ -28,14 +28,15 @@ function showSuccess(id, delay = 200) {
     .delay(delay)
     .queue(function (next) {
       $(this)
-        .removeClass("loading")
-        .removeClass("failed")
-        .removeClass("none")
-        .removeClass("partial")
-        .addClass("success")
+        .removeClass('loading')
+        .removeClass('failed')
+        .removeClass('none')
+        .removeClass('partial')
+        .addClass('success')
         .show();
       next();
     });
+  celebrate();
 }
 
 function showPartialSuccess(id, delay = 200) {
@@ -44,11 +45,11 @@ function showPartialSuccess(id, delay = 200) {
     .delay(delay)
     .queue(function (next) {
       $(this)
-        .removeClass("loading")
-        .removeClass("failed")
-        .removeClass("none")
-        .removeClass("success")
-        .addClass("partial")
+        .removeClass('loading')
+        .removeClass('failed')
+        .removeClass('none')
+        .removeClass('success')
+        .addClass('partial')
         .show();
       next();
     });
@@ -60,11 +61,11 @@ function showError(id, delay = 200) {
     .delay(delay)
     .queue(function (next) {
       $(this)
-        .removeClass("loading")
-        .removeClass("success")
-        .removeClass("none")
-        .removeClass("partial")
-        .addClass("failed")
+        .removeClass('loading')
+        .removeClass('success')
+        .removeClass('none')
+        .removeClass('partial')
+        .addClass('failed')
         .show();
       next();
     });
@@ -76,25 +77,24 @@ function showNone(id, delay = 200) {
     .delay(delay)
     .queue(function (next) {
       $(this)
-        .removeClass("loading")
-        .removeClass("success")
-        .removeClass("failed")
-        .removeClass("partial")
-        .addClass("none")
+        .removeClass('loading')
+        .removeClass('success')
+        .removeClass('failed')
+        .removeClass('partial')
+        .addClass('none')
         .show();
       next();
     });
 }
 
-function visualFeedback(parentID = "", data = "", disable_on_success = false) {
-  console.log("visual feedback");
-  if (data == "" || data == undefined) {
+function visualFeedback(parentID = '', data = '', disable_on_success = false) {
+  if (data == '' || data == undefined) {
     showError(`#${parentID} #exercise_executed`);
     showError(`#${parentID} #exercise_completed`);
     $(`#${parentID} #msg`)
       .hide(300)
       .html(short_msgs.server_error)
-      .animate({ width: "toggle" }, 300);
+      .animate({ width: 'toggle' }, 300);
     return false;
   } else if (!data.history) {
     showNoExecution(parentID);
@@ -110,26 +110,26 @@ function showNoExecution(parentID) {
   showNone(`#${parentID} #exercise_executed`);
   showNone(`#${parentID} #exercise_completed`);
   var msg_container = $(`#${parentID} #msg-container #msg`);
-  msg_container.removeClass("success error partial");
+  msg_container.removeClass('success error partial');
   msg_container
     .hide(300)
     .html(short_msgs.never_executed)
-    .animate({ width: "toggle" }, 300);
+    .animate({ width: 'toggle' }, 300);
 }
 
 function showMsg(parentID, data) {
-  const msg_detail = $(`#${parentID} #msg-detail`).not(".upload-msg");
-  msg_detail.removeClass("success error partial");
-  if (data.partial) msg_detail.addClass("partial");
+  const msg_detail = $(`#${parentID} #msg-detail`).not('.upload-msg');
+  msg_detail.removeClass('success error partial');
+  if (data.partial) msg_detail.addClass('partial');
   else if (!data.completed || data.never_executed || !data.executed)
-    msg_detail.addClass("error");
-  else msg_detail.addClass("success");
+    msg_detail.addClass('error');
+  else msg_detail.addClass('success');
 
   if (data.status_msg) {
     msg_detail.html(data.status_msg);
     msg_detail.slideDown();
   } else {
-    msg_detail.html("");
+    msg_detail.html('');
   }
 }
 
@@ -139,34 +139,34 @@ function showExecutionState(parentID, data) {
   var msg_container = $(`#${parentID} #msg-container #msg`);
   var submit_btn = $(`#${parentID} #submitExercise`);
 
-  msg_container.removeClass("success error partial");
+  msg_container.removeClass('success error partial');
 
   if (data.executed != undefined) {
     if (data.executed || data.partial) {
       showSuccess(id_executed);
-      msg_container.addClass("success");
+      msg_container.addClass('success');
       msg_container
         .hide(300)
         .html(short_msgs.executed)
-        .animate({ width: "toggle" }, 300);
+        .animate({ width: 'toggle' }, 300);
       return true;
     } else {
       showError(id_executed);
       showError(id_completed);
-      msg_container.addClass("error");
+      msg_container.addClass('error');
       msg_container
         .hide(300)
         .html(short_msgs.execution_failed)
-        .animate({ width: "toggle" }, 300);
-      submit_btn.prop("disabled", false);
+        .animate({ width: 'toggle' }, 300);
+      submit_btn.prop('disabled', false);
       return false;
     }
   } else {
-    msg_container.addClass("error");
+    msg_container.addClass('error');
     msg_container
       .hide(300)
       .html(short_msgs.server_error)
-      .animate({ width: "toggle" }, 300);
+      .animate({ width: 'toggle' }, 300);
     return false;
   }
 }
@@ -176,46 +176,46 @@ function showCompletionState(parentID, data, disable_on_success) {
   var msg_container = $(`#${parentID} #msg-container #msg`);
   var submit_btn = $(`#${parentID} #submitExercise`);
 
-  msg_container.removeClass("success error partial");
+  msg_container.removeClass('success error partial');
 
   if (data.completed != undefined) {
     if (data.partial) {
       showPartialSuccess(id_completed);
-      msg_container.addClass("partial");
+      msg_container.addClass('partial');
       msg_container
         .hide(300)
         .html(short_msgs.partial)
-        .animate({ width: "toggle" }, 300);
-      submit_btn.prop("disabled", false);
+        .animate({ width: 'toggle' }, 300);
+      submit_btn.prop('disabled', false);
       return false;
     } else if (data.completed) {
       showSuccess(id_completed);
-      msg_container.addClass("success");
+      msg_container.addClass('success');
       //
       msg_container
         .hide(300)
         .html(short_msgs.executed)
-        .animate({ width: "toggle" }, 300);
-      if (!disable_on_success) submit_btn.prop("disabled", false);
+        .animate({ width: 'toggle' }, 300);
+      if (!disable_on_success) submit_btn.prop('disabled', false);
       return true;
     } else {
       showError(id_completed);
-      msg_container.addClass("error");
+      msg_container.addClass('error');
       msg_container
         .hide(300)
         .html(short_msgs.completion_failed)
-        .animate({ width: "toggle" }, 300);
-      submit_btn.prop("disabled", false);
+        .animate({ width: 'toggle' }, 300);
+      submit_btn.prop('disabled', false);
       return false;
     }
   } else {
     showError(id_completed);
-    msg_container.addClass("error");
+    msg_container.addClass('error');
     msg_container
       .hide(300)
       .html(short_msgs.data_fail)
-      .animate({ width: "toggle" }, 300);
-    submit_btn.prop("disabled", false);
+      .animate({ width: 'toggle' }, 300);
+    submit_btn.prop('disabled', false);
   }
 }
 
@@ -225,9 +225,9 @@ function sendAjax(type, payload) {
       type: type,
       url: `${apiUrl}${payload.url}`,
       headers: Object.assign(
-        { "Content-type": "application/json" },
-        { Authorization: `Bearer ${getCookie("jwt_cookie")}` },
-        payload.additional_headers
+        { 'Content-type': 'application/json' },
+        { Authorization: `Bearer ${getCookie('jwt_cookie')}` },
+        payload.additional_headers,
       ),
       data: payload.data,
 
@@ -249,9 +249,9 @@ function printHistory(parentID, data) {
 
   const history = data.history;
   if (history) {
-    var header = "";
+    var header = '';
 
-    if (data.exercise_type == "form") {
+    if (data.exercise_type == 'form') {
       header = `
       <table id='history-table'>
           <tr> 
@@ -260,7 +260,7 @@ function printHistory(parentID, data) {
           </tr>
       `;
     }
-    if (data.exercise_type == "script") {
+    if (data.exercise_type == 'script') {
       header = `
       <table id='history-table'>
       <tr> 
@@ -276,7 +276,7 @@ function printHistory(parentID, data) {
     $.each(history, function () {
       let start_time = this.start_time;
       let response_time = (() =>
-        this.response_time ? this.response_time : "no response")();
+        this.response_time ? this.response_time : 'no response')();
       let completed = (() => {
         if (this.partial)
           return `<span class='partial'>${short_msgs.history_partial}</span>`;
@@ -287,8 +287,8 @@ function printHistory(parentID, data) {
         }</span>`;
       })();
 
-      var table_row = "";
-      if (data.exercise_type == "form") {
+      var table_row = '';
+      if (data.exercise_type == 'form') {
         table_row = `
         <tr>
           <td> ${start_time} </td>
@@ -296,7 +296,7 @@ function printHistory(parentID, data) {
         </tr>
         `;
       }
-      if (data.exercise_type == "script") {
+      if (data.exercise_type == 'script') {
         table_row = `
         <tr>
           <td> ${start_time} </td>
@@ -309,18 +309,18 @@ function printHistory(parentID, data) {
       tbl_body += table_row;
     });
 
-    tbl_body += "</table>";
+    tbl_body += '</table>';
 
     history_container.html(tbl_body);
 
-    if (history_container.find("tr").length > 2) {
+    if (history_container.find('tr').length > 2) {
       history_container
-        .find("tr")
+        .find('tr')
         .eq(1)
-        .find("td")
+        .find('td')
         .wrapInner('<div style="display: none;" />')
         .parent()
-        .find("td > div")
+        .find('td > div')
         .slideDown(700, function () {
           var $set = $(this);
           $set.replaceWith($set.contents());
@@ -332,74 +332,8 @@ function printHistory(parentID, data) {
   }
 }
 
-// function executeAndCheck(exercise) {
-//     var defer = $.Deferred();
-//     var disable_on_success = false;
-
-//     showLoading(`#${exercise.global_exercise_id} #exercise_executed`);
-//     showLoading(`#${exercise.global_exercise_id} #exercise_completed`);
-//     $(`#${exercise.global_exercise_id} #submitExercise`).prop('disabled', true);
-//     $(`#${exercise.global_exercise_id} #error-msg`).html('');
-//     $(`#${exercise.global_exercise_id} #success-msg`).html('');
-//     $(`#${exercise.global_exercise_id} #notification-msg`).html('');
-
-//     let data = {
-//         name: exercise.global_exercise_id,
-//     };
-
-//     if (exercise.exercise_type == 'script') data['script'] = exercise.script;
-//     else data['form'] = exercise.formData;
-
-//     data = JSON.stringify(data);
-
-//     sendAjax('POST', {
-//         url: `/execution/${exercise.exercise_type}`,
-//         data: data,
-//     })
-//         .then(function (data, textStatus, jqXHR) {
-//             showExecutionState(exercise.global_exercise_id, data);
-//             sendAjax('GET', {
-//                 url: `/submissions/${exercise.global_exercise_id}`,
-//             })
-//                 .then(function (data, textStatus, jqXHR) {
-//                     visualFeedback(
-//                         exercise.global_exercise_id,
-//                         data,
-//                         disable_on_success,
-//                     );
-//                     printHistory(exercise.global_exercise_id, data);
-//                     updateProgress();
-//                     defer.resolve(data);
-//                 })
-//                 .catch(function (jqXHR, textStatus, errorThrown) {
-//                     $(`#${exercise.global_exercise_id} #submitExercise`).prop(
-//                         'disabled',
-//                         false,
-//                     );
-//                     visualFeedback(
-//                         exercise.global_exercise_id,
-//                         '',
-//                         disable_on_success,
-//                     );
-//                     defer.reject(jqXHR, textStatus, errorThrown);
-//                 });
-
-//             defer.resolve(data);
-//         })
-//         .catch(function (jqXHR, textStatus, errorThrown) {
-//             $(`#${exercise.global_exercise_id} #submitExercise`).prop(
-//                 'disabled',
-//                 false,
-//             );
-//             visualFeedback(exercise.global_exercise_id, '', disable_on_success);
-//             defer.reject(jqXHR, textStatus, errorThrown);
-//         });
-
-//     return defer.promise();
-// }
-
 function updateExecutionHistory(global_exercise_id) {
-  return sendAjax("GET", { url: `/submissions/${global_exercise_id}` })
+  return sendAjax('GET', { url: `/submissions/${global_exercise_id}` })
     .then((data) => {
       if (data) {
         printHistory(global_exercise_id, data);
@@ -428,17 +362,17 @@ function getExecutionHistory(global_exercise_id) {
 
 function updateProgress() {
   var defer = $.Deferred();
-  sendAjax("GET", { url: `/progress` })
+  sendAjax('GET', { url: `/progress` })
     .then(function (data, textStatus, jqXHR) {
       $.each(data.success_list, function (parentTitle, parentExercise) {
         let menuItem = $(`.page-control[title='${parentTitle}']`)
-          .find("a")
+          .find('a')
           .first();
         if (menuItem.length) {
           update_counter(menuItem, parentExercise.done, parentExercise.total);
           $.each(parentExercise.exercises, function (i, subExercise) {
             let subMenuItem = $(`.page-control[title='${subExercise.title}']`)
-              .find("a")
+              .find('a')
               .first();
             if (subMenuItem.length) {
               update_counter(subMenuItem, subExercise.done, subExercise.total);
@@ -456,8 +390,8 @@ function updateProgress() {
 }
 
 function update_counter(element, done, total) {
-  let icon = element.find("i").first();
-  icon.addClass("counter");
+  let icon = element.find('i').first();
+  icon.addClass('counter');
   if (element.html().match(/\(\d\/\d+\)/)) {
     element.html(element.html().replace(/\(\d\/\d+\)/, `(${done}/${total})`));
   } else if (icon.length) {
@@ -467,8 +401,8 @@ function update_counter(element, done, total) {
   }
 
   if (done == total) {
-    element.find("i").addClass("fa-check done");
+    element.find('i').addClass('fa-check done');
   } else {
-    element.find("i").removeClass("fa-check done");
+    element.find('i').removeClass('fa-check done');
   }
 }

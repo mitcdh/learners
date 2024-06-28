@@ -15,11 +15,8 @@
 <!-- Generate IDs based on the weights -->
 {{ $.Page.Scratch.Add "local_exercise_id" 1 }}
 {{ $local_exercise_id := ($.Page.Scratch.Get "local_exercise_id") }}
-{{ $global_exercise_id := printf "%s%s" "exid" (md5 (printf "%s%s" $.Page.File.Dir $local_exercise_id)) }}
+{{ $global_exercise_id := printf "%s%s" "exid" (md5 (printf "%s%d" $.Page.File.Dir $local_exercise_id)) }}
 {{ $order_weight := add (add (mul $root_candidate.Weight 1000) (mul $.Page.Parent.Weight 100)) (add (mul $.Page.Weight 10) ($local_exercise_id | int)) | int}}
-
-<!-- Set exercise information for the exercise json -->
-{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title) "exercise_type" "form" "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight)}}
 
 {{ $.Page.Scratch.Add "fieldset" 1 }}
 {{ $fieldset_id := printf "%s" (md5 (printf "fieldset%s%s" ($.Page.File.Dir) ($.Page.Scratch.Get "fieldset"))) }}
@@ -91,3 +88,10 @@
 </div>
 
 </form>
+
+{{ $exercise_info := (dict "global_exercise_id" $global_exercise_id "order_weight" $order_weight "exercise_name" (htmlEscape $exercise_name) "local_exercise_id" ($.Page.Scratch.Get "local_exercise_id") "page_title" (htmlEscape $.Page.Title) "parent_page_title" (htmlEscape $root_candidate.Title) "exercise_type" "form" "child_weight" $.Page.Weight "parent_weight" $.Page.Parent.Weight "root_weight" $root_candidate.Weight )}}
+
+{{- $current_exercise := index ($.Page.Scratch.Get "exercise") $global_exercise_id -}}
+{{- $current_exercise = merge $current_exercise $exercise_info -}}
+{{- $.Page.Scratch.SetInMap "exercise" $global_exercise_id $current_exercise -}}
+

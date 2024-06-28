@@ -9,6 +9,12 @@
                   {{- $first = false -}}
                   {{- . | jsonify (dict "indent" "    ") -}}
               {{- end -}}
+              {{- $correct_answers := $page.Scratch.Get "correct_answers" -}}
+              {{- range $correct_answers -}}
+                  {{- if not $first -}}, {{- end -}}
+                  {{- $first = false -}}
+                  {{- . | jsonify (dict "indent" "    ") -}}
+              {{- end -}}
           {{- end -}}
       {{- end -}}
       ],

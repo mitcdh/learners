@@ -5,28 +5,28 @@
 {{ $input_required := .Get "required" | default false }}
 {{ $input_wide := .Get "wide" | default false }}
 {{ $input_instructor := .Get "instructor" | default "" }}
+{{ $input_correct_answer := .Get "correct" | default "" }}
 
-<div class="input-row {{ if $input_wide }}wide{{ end }}">  
-<label for="{{ $input_name }}">
-  <div>
-    {{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}
-  </div>
-</label>
+{{ $local_exercise_id := add ($.Page.Scratch.Get "local_exercise_id" | default 0) 1 }}
+{{ $global_exercise_id := printf "%s%s" "exid" (md5 (printf "%s%d" $.Page.File.Dir $local_exercise_id)) }}
+{{ $current_exercise := index ($.Page.Scratch.Get "exercise") $global_exercise_id }}
+{{ $current_exercise = merge $current_exercise (dict "correct_answers" (merge $current_exercise.correct_answers (dict $input_label $input_correct_answer))) }}
+{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id $current_exercise }}
+
+<div class="input-row {{ if $input_wide }}wide{{ end }}">
+  
+<label for="{{ $input_name }}">{{ $input_label }}{{ if $input_required }} <span class="required_marker">(required)</span>{{ end }}</label>
+
 <div class="input-field-wrapper">
-  <div name="{{ $input_name }}" id="{{ $input_name }}" class="input radio {{ if $input_required }}required{{ end }}">
+  <div name="{{ $input_name }}" id="{{ $input_name }}" class="input checkboxes {{ if $input_required }}required{{ end }}">
     {{- range $options -}}
     <div class="input-radio-option-wrapper">
       <input type="radio" id='{{ $input_name }}_{{ strings.TrimLeft " " . }}' name="{{ $input_name }}" value='{{ strings.TrimLeft " " . }}'
+      {{if and ($.Site.Params.instructorNotes) (eq $input_instructor .)}}class="instructor-notes" checked{{end}}/>
       <label for='{{ $input_name }}_{{ strings.TrimLeft " " . }}'>{{ strings.TrimLeft " " . }}</label>
     </div>
     {{- end -}}
   </div>
 </div>
-
-{{ if and (.Site.Params.instructorNotes) ($input_instructor) }}
-<span class="instructor-notes" style="margin-top: 1rem; width: 100%;">
-    <strong>Instructor Note:</strong> {{ $input_instructor }}
-</span>
-{{ end }}
 
 </div>

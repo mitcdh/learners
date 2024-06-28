@@ -577,3 +577,53 @@ table.input-table tr td[contenteditable="true"]::after {
   background-color: #ed2024;
   color: white;
 }
+
+
+details {
+  width: 100%;
+  margin: 0 auto ;
+  background: #f6f6f6;
+  margin-bottom: -3rem;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 0 2rem;
+}
+
+summary {
+  padding: 1rem;
+  margin-left: -1rem;
+  display: block;
+  background: #f6f6f6;
+  padding-left: 2.2rem;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  font-weight: bold;
+}
+
+summary:before {
+  content: '';
+  border-width: .4rem;
+  border-style: solid;
+  border-color: transparent transparent transparent #000;
+  position: absolute;
+  top: 1.3rem;
+  left: 1rem;
+  transform: rotate(0);
+  transform-origin: .2rem 50%;
+  transition: .25s transform ease;
+}
+
+details[open] > summary:before {
+  transform: rotate(90deg);
+}
+
+
+details summary::-webkit-details-marker {
+  display:none;
+}
+
+details > ul {
+  padding-bottom: 1rem;
+  margin-bottom: 0;
+}

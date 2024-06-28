@@ -4,6 +4,13 @@
 {{ $input_wide := .Get "wide" | default false }}
 {{ $input_placeholder := (replace (.Get "placeholder") "</br>" "&#10;")}}
 {{ $input_instructor :=  (replace (.Get "instructor") "</br>" "&#10;")}}
+{{ $input_correct_answer := .Get "correct" | default "" }}
+
+{{ $local_exercise_id := add ($.Page.Scratch.Get "local_exercise_id" | default 0) 1 }}
+{{ $global_exercise_id := printf "%s%s" "exid" (md5 (printf "%s%d" $.Page.File.Dir $local_exercise_id)) }}
+{{ $current_exercise := index ($.Page.Scratch.Get "exercise") $global_exercise_id }}
+{{ $current_exercise = merge $current_exercise (dict "correct_answers" (merge $current_exercise.correct_answers (dict $input_label $input_correct_answer))) }}
+{{ $.Page.Scratch.SetInMap "exercise" $global_exercise_id $current_exercise }}
 
 <div class="input-row {{ if $input_wide }}wide{{ end }}">
   <label for="{{ $input_name }}">

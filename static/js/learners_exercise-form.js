@@ -41,6 +41,7 @@ function formExercise(exercise) {
   initForm(exercise);
 
   getExecutionHistory(exercise.global_exercise_id);
+
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -338,11 +339,12 @@ function submitForm(form, exercise) {
               data.status_msg || "not completed"
             );
           else if (data.completed == 1)
-            displaySuccess(
+            {displaySuccess(
               stat_indicator,
               stat_message,
               data.status_msg || "completed"
             );
+            celebrate()}
           else
             displaySuccess(
               stat_indicator,
