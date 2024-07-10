@@ -6,7 +6,7 @@
   border-radius: 4px;
 }
 
-/* .input-group .input-row {
+/* .input-row {
   display: inline-flex;
   align-items: left;
   width: 100%;
@@ -49,7 +49,7 @@
   transition: border-color 250ms;
 }
 
-.input-group .input-radio-option-wrapper {
+.input-radio-option-wrapper {
   display: inline-flex;
   width: 100%;
   justify-content: start;
@@ -57,12 +57,14 @@
   margin-bottom: 1rem;
 }
 
-.input-group .input-radio-option-wrapper input {
+.input-radio-option-wrapper input {
   width: 1rem;
   margin-right: 1rem;
+  align-self: start;
+  margin-top: 0.5rem;
 }
 
-.input-group .input-radio-option-wrapper label {
+.input-radio-option-wrapper label {
   margin: auto 0 auto 0 !important;
   padding: 0 0 0 0 !important;
   font-weight: normal;
@@ -70,12 +72,12 @@
 
 /* two rows */
 
-/* .input-group .input-row.wide {
+/* .input-row.wide {
   display: grid;
   align-items: left;
   width: 100%;
 } */
-.input-group .input-row {
+.input-row {
   display: flex;
   flex-direction: row;
   align-items: left;
@@ -84,41 +86,41 @@
   margin: 0 0 10px 0;
 }
 
-.input-group .input-row.wide {
+.input-row.wide {
   flex-direction: column;
   justify-content: start;
 }
 
-.input-group .input-row label {
+.input-row label {
   margin: 0 auto;
   padding: 10px 10px 10px 0;
 }
-.input-group .input-row.wide label {
+.input-row.wide label {
   padding: 10px 10px 10px 0;
   /* padding-bottom: 10px; */
 }
 
-.input-group .input-row.uploader-element.wide {
+.input-row.uploader-element.wide {
   display: table;
 }
-.input-group .input-row.uploader-element.wide #upload-submit {
+.input-row.uploader-element.wide #upload-submit {
   margin: 7px 0px 14px 0px;
 }
-.input-group .input-row.uploader-element.wide #file {
+.input-row.uploader-element.wide #file {
   align-items: left;
   width: auto;
   margin-right: 10px;
 }
-.input-group .input-row.uploader-element.wide #attachment-error {
+.input-row.uploader-element.wide #attachment-error {
   display: none !important;
 }
-/* .input-group .input-row.wide button {
+/* .input-row.wide button {
   display: grid;
   align-items: left;
   width: 40%;
 } */
 
-.input-group .wide label {
+.wide label {
   display: inline-block;
   width: 100%;
   margin: 15px 0 auto;
