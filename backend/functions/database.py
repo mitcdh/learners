@@ -111,7 +111,10 @@ def db_insert_exercises(app, *args, **kwargs):
     exercises = extract_json_content(app, exercise_json)
     for exercise in exercises:
         exercise["id"] = exercise.pop("global_exercise_id")
-        exercise["correct_answers"] = json.dumps(exercise.pop("correct_answers"), ensure_ascii=False)
+
+        if "correct_answers" in exercise and exercise["correct_answers"] is not None:
+            exercise["correct_answers"] = json.dumps(exercise.pop("correct_answers"), ensure_ascii=False)
+
         db_create_or_update(Exercise, ["id"], exercise)
 
 
