@@ -412,6 +412,7 @@ div.exercise-control #history table tr th:last-child {
 .comment-section h2 {
   padding: 0;
   color: var(--primary-color);
+  width: 100%;
 }
 .comment-section .btn-submit-form {
   display: inline-block;
