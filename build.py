@@ -174,6 +174,12 @@ def main(
         print(f"       - Environment '{hugoEnv}' built")
         if hugoEnv != "base":
             for staticFolder in staticFolders:
+                path = f"{cmdPublishDir}/{hugoEnv}/{staticFolder}"
+                if os.path.exists(path):
+                    os.system(f"rm {cmdPublishDir}/{hugoEnv}/{staticFolder} -r")
+                    print(f"         Removed: '{cmdPublishDir}/{hugoEnv}/{staticFolder}'")
+                else:
+                    print(f"         No need to remove: '{cmdPublishDir}/{hugoEnv}/{staticFolder}'")
                 createSymLink = f"ln -s ../base/{staticFolder} {cmdPublishDir}/{hugoEnv}/{staticFolder}"
                 os.system(createSymLink)
                 print(f"         Created Symlink for static Folder '{staticFolder}'")
