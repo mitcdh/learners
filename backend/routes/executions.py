@@ -29,7 +29,14 @@ from backend.functions.execution import (
     call_venjix,
     wait_for_venjix_response,
 )
-from backend.functions.helpers import allowed_file, append_key_to_dict, append_or_update_subexercise, check_answers, convert_to_dict, sse_create_and_publish
+from backend.functions.helpers import (
+    allowed_file,
+    append_key_to_dict,
+    append_or_update_subexercise,
+    check_answers,
+    convert_to_dict,
+    sse_create_and_publish,
+)
 
 
 from werkzeug.utils import secure_filename

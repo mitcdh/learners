@@ -173,38 +173,31 @@ def get_user_from_request(req):
     except:
         return ""
 
+
 def check_answers(exercise, submission_data):
-    
-    print(exercise)
-    print(exercise.correct_answers)
-    print(submission_data)
 
-    correct_answers = json.loads(exercise.correct_answers)
-    if len(correct_answers) == 0:
-        return True, True
-    print(correct_answers)
-    print(len(correct_answers))
-
-    compared_answers = compare_subdicts(submission_data, correct_answers)
-    print(compared_answers)
-
-    if len(compared_answers) == 0:
-        partial = False
-        completed = False
-    elif len(compared_answers) == len(correct_answers):
+    if not exercise.correct_answers:
         partial = False
         completed = True
     else:
-        partial = True
-        completed = False
+        compared_answers = []
+        correct_answers = []
 
-    print("###########################################")
-    print("partial", partial)
-    print("completed", completed)
-    print("###########################################")
-    # section_data = submission_data.get(key_name)
-    # print(section_data.get("id"))#
-    # correct_ansers = section_data.get("id") == "asd"
+        correct_answers = json.loads(exercise.correct_answers)
+        if len(correct_answers) == 0:
+            return True, True
+
+        compared_answers = compare_subdicts(submission_data, correct_answers)
+
+        if len(compared_answers) == 0:
+            partial = False
+            completed = False
+        elif len(compared_answers) == len(correct_answers):
+            partial = False
+            completed = True
+        else:
+            partial = True
+            completed = False
 
     return partial, completed
 
@@ -218,28 +211,22 @@ def normalize_key(key):
 
     return key.lower()
 
+
 def compare_subdicts(main_dict, reference_dict):
     # Normalize reference_dict keys to lowercase and replace spaces with underscores
     normalized_ref_dict = {normalize_key(k): v for k, v in reference_dict.items()}
 
-    print("normalized_ref_dict", normalized_ref_dict)
-    
     # Result dictionary to store matches
     results = []
-    
+
     # Iterate over each sub-dictionary in main_dict
     for _, subdict in main_dict.items():
         # Normalize sub-dictionary keys to lowercase and replace spaces with underscores
         normalized_subdict = {normalize_key(k): v for k, v in subdict.items()}
-        
-        print("normalized_subdict", normalized_subdict)
 
         # Compare values in normalized_subdict to normalized_ref_dict
         for key, ref_value in normalized_ref_dict.items():
-            print("key", key)
-            print("ref_value", ref_value)
-            print("normalized_subdict[key]", normalized_subdict.get(key))
             if key in normalized_subdict and (normalized_subdict[key] == ref_value or ref_value in normalized_subdict[key]):
                 results.append(key)
-    
+
     return results
