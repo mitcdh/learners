@@ -36,7 +36,7 @@ function showSuccess(id, delay = 200) {
         .show();
       next();
     });
-  celebrate();
+    celebrate(id);
 }
 
 function showPartialSuccess(id, delay = 200) {

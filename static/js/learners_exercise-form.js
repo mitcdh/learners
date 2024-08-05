@@ -344,7 +344,8 @@ function submitForm(form, exercise) {
               stat_message,
               data.status_msg || "completed"
             );
-            celebrate()}
+            celebrate(exercise.global_exercise_id)
+            }
           else
             displaySuccess(
               stat_indicator,

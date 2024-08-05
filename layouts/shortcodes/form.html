@@ -1,5 +1,6 @@
 <!-- Get parameters -->
 {{ $exercise_name := .Get "name" }} 
+{{ $celebrate := eq (.Get "celebrate" | string) "true" }} 
 
 <!-- Find the root exercise -->
 {{ $root_candidate := $.Page.CurrentSection }}
@@ -32,6 +33,7 @@
 <form
   id="{{ $global_exercise_id }}"
   class="form exercise-control"
+  celebrate="{{ if $celebrate }}true{{ else }}false{{ end }}"
 >
 
 <fieldset 
