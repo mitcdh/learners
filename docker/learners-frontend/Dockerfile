@@ -1,5 +1,5 @@
 # Base image
-FROM node:19 as build-stage
+FROM docker.io/library/node:19 as build-stage
 
 # Set the working directory in the container
 WORKDIR /app
@@ -31,7 +31,7 @@ RUN yarn install
 RUN yarn build
 
 # Use Nginx as the web server for serving the built Vue app
-FROM nginx:stable-alpine as production-stage
+FROM docker.io/library/nginx:stable-alpine as production-stage
 
 # Copy the built app from previous stage
 COPY --from=build-stage /app/frontend/dist /usr/share/nginx/html

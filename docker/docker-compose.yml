@@ -47,8 +47,10 @@ services:
         networks:
             - learners
         depends_on:
-            - build-hugo
-            - build-certs
+            build-hugo:
+                condition: service_completed_successfully
+            build-certs:
+                condition: service_completed_successfully
 
     learners-frontend:
         build:
