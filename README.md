@@ -64,7 +64,7 @@ The easiest and fastest way to deploy Learners is by using the docker-compose fi
 
     ```sh
     cd docker
-    docker-compose -f compose.yml up
+    docker compose -f docker-compose.yml up
     ```
 
 Misc:
