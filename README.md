@@ -47,7 +47,7 @@ Learners is a three-part framework that consists of the following modules:
 Learners runs on most major platforms that support python3.
 
 <details markdown=1>
-<summary>Docker</summary>
+<summary>Running Learners with Docker</summary>
 
 The easiest and fastest way to deploy Learners is by using the docker-compose file included in the main **learners repository.**
 
@@ -70,6 +70,7 @@ The easiest and fastest way to deploy Learners is by using the docker-compose fi
 Misc:
 
 * SSL certificates will be generated automatically unless you place your own in `docker/ssl/` as `learners.(crt|key)`
+* By default the docker compose command runs in the foreground, add the argument `-d` to run as a daemon.
 * Database:
   * In order to backup the database, copy the .db file at `docker/learners-data/data.db`
   * To provide an already existing database copy it to: `docker/learners-data/data.db` (before running the docker-compose command)
@@ -78,7 +79,9 @@ Misc:
 </details>
 
 <details markdown=1>
-<summary>Develop</summary>
+<summary>Developing Learners</summary>
+
+*Please note this mode is intended for developing the Learners application itself. If you are developing training material it is recommended to edit the material and use the installation instructions for running with Docker.*
 
 Clone the **Learners Application** repository
 
