@@ -23,7 +23,7 @@
   <div name="{{ $input_name }}" id="{{ $input_name }}" class="input checkboxes {{ if $input_required }}required{{ end }}">
     {{- range $options -}}
     <div class="input-radio-option-wrapper">
-      <input type="radio" id='{{ $input_name }}_{{ strings.TrimLeft " " . }}' name="{{ $input_name }}" value='{{ strings.TrimLeft " " . }}'
+      <input type="radio" id='{{ $input_name }}_{{ strings.TrimLeft " " . }}' name="{{ $input_name }}" value='{{ strings.TrimLeft " " . }}' />
       <label for='{{ $input_name }}_{{ strings.TrimLeft " " . }}'>{{ strings.TrimLeft " " . }}</label>
     </div>
     {{- end -}}
